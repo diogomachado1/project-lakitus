@@ -25,7 +25,9 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/microservices": "^8.0.6",
     "@nestjs/platform-express": "^8.0.0",
+    "cache-manager": "^3.4.4",
     "kafkajs": "^1.15.0",
+    "nintendo-switch-eshop": "^6.0.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
@@ -34,6 +36,7 @@
     "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
+    "@types/cache-manager": "^3.4.2",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.0.0",
@@ -58,6 +61,7 @@
       "json",
       "ts"
     ],
+    "clearMocks": true,
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
