@@ -15,8 +15,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: ls
+        run: ls
+
       - name: Go to folder
-        run: cd games-crawler
+        run: cd ./games-crawler
+
+      - name: ls
+        run: ls
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
