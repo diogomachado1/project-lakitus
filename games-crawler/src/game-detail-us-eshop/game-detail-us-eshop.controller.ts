@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { CatchCustom } from 'src/kafka.decorator';
+import { CatchCustom } from '../kafka.decorator';
 import { GameDetailUsEshopService } from './game-detail-us-eshop.service';
 
 @Controller('game-detail-us-eshop')
