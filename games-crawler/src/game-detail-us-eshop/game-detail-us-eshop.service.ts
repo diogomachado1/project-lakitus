@@ -20,7 +20,6 @@ export class GameDetailUsEshopService {
 
   async getAndSaveGameData(id: string) {
     const usEshopData = await this.eshopService.findGameByUsId(id);
-    console.log(usEshopData);
     if (usEshopData) {
       await this.repository.save({ usEshopDetail: usEshopData, usEshopId: id });
     }
