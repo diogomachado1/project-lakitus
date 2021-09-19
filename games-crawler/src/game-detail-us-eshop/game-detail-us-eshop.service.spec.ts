@@ -4,7 +4,7 @@ import { GameDetailUsEshopService } from './game-detail-us-eshop.service';
 describe('GameDetailUsEshopService', () => {
   let service: GameDetailUsEshopService;
   const GameRepository = {
-    save: async (games) => {
+    saveGameDetailUS: async (games) => {
       return;
     },
   };
@@ -29,11 +29,11 @@ describe('GameDetailUsEshopService', () => {
   });
 
   it('should get data', async () => {
-    const saveSpy = jest.spyOn(GameRepository, 'save');
+    const saveGameDetailUSSpy = jest.spyOn(GameRepository, 'saveGameDetailUS');
     const findGameSpy = jest.spyOn(EshoService, 'findGameByUsId');
     await service.getAndSaveGameData('70010000040947');
 
     expect(findGameSpy).toHaveBeenCalledTimes(1);
-    expect(saveSpy).toHaveBeenCalledTimes(1);
+    expect(saveGameDetailUSSpy).toHaveBeenCalledTimes(1);
   });
 });

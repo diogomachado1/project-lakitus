@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { GameUS } from 'nintendo-switch-eshop';
 
 export interface GameRepositoryUsEshopService {
-  save: (gameDetail: {
+  saveGameDetailUS: (gameDetail: {
     usEshopDetail: GameUS;
     usEshopId: string;
   }) => Promise<void>;
@@ -21,7 +21,10 @@ export class GameDetailUsEshopService {
   async getAndSaveGameData(id: string) {
     const usEshopData = await this.eshopService.findGameByUsId(id);
     if (usEshopData) {
-      await this.repository.save({ usEshopDetail: usEshopData, usEshopId: id });
+      await this.repository.saveGameDetailUS({
+        usEshopDetail: usEshopData,
+        usEshopId: id,
+      });
     }
   }
 }

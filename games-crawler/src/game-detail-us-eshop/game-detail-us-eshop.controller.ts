@@ -1,12 +1,5 @@
-import { Controller, Inject } from '@nestjs/common';
-import {
-  Client,
-  ClientKafka,
-  ClientProxy,
-  MessagePattern,
-  Payload,
-  Transport,
-} from '@nestjs/microservices';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { GameDetailUsEshopService } from './game-detail-us-eshop.service';
 
 @Controller('game-detail-us-eshop')
