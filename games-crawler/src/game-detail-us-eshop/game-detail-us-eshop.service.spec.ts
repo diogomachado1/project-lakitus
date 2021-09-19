@@ -4,7 +4,7 @@ import { GameDetailUsEshopService } from './game-detail-us-eshop.service';
 describe('GameDetailUsEshopService', () => {
   let service: GameDetailUsEshopService;
   const GameRepository = {
-    saveGameDetailUS: async (games) => {
+    saveGameDetailUS: async () => {
       return;
     },
   };

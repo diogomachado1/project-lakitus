@@ -87,9 +87,10 @@ services:
   #       #
   #       sleep infinity
   
-  # mongodb:
-  #   image: mongo:4.4.4
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=root
-  #     - MONGO_INITDB_ROOT_PASSWORD=root
-  #     - MONGO_INITDB_DATABASE=reports
+  mongodb:
+        image : mongo
+        volumes:
+            - /home/database:/data/db 
+        ports:
+            - 27017:27017
+        restart: unless-stopped
