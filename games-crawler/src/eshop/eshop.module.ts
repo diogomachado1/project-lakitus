@@ -3,7 +3,7 @@ import { EshopService } from './eshop.service';
 
 @Module({
   imports: [CacheModule.register({ ttl: 60 * 60 * 5 })],
-  providers: [EshopService],
-  exports: [EshopService],
+  providers: [{ useClass: EshopService, provide: 'ESHOP_SERVICE' }],
+  exports: ['ESHOP_SERVICE'],
 })
 export class EshopServicesModule {}
