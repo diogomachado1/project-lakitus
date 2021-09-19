@@ -16,7 +16,6 @@ async function bootstrap() {
           },
           consumer: {
             groupId: item.id,
-            readUncommitted: true,
           },
         },
       },
