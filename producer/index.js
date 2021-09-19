@@ -2,7 +2,7 @@ const {ProducerLib} = require('./kafka')
 
 async function sendMessage(){
   console.log('aa')
-  const message = {usId: '11111', euId: '22222'}
+  const message = {usId: '70010000040947', euId: '22222'}
   await ProducerLib.handle('game.detail', message)
 }
 

@@ -11,7 +11,7 @@ const ProducerLib = {
     await producer.connect()
     await producer.send({
       topic: kafkaTopic,
-      messages: [0,1,2,3,4,5,6,7,8,9].map((item)=>({value: JSON.stringify(messages)}))
+      messages: [0].map((item)=>({value: JSON.stringify(messages)}))
     })
   },
 }
