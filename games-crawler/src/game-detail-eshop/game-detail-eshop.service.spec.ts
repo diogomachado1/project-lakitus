@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GameDetailUsEshopService } from './game-detail-us-eshop.service';
+import { usGameDetail } from './mocks/usGameDetail';
 
 describe('GameDetailUsEshopService', () => {
   let service: GameDetailUsEshopService;
@@ -9,7 +10,7 @@ describe('GameDetailUsEshopService', () => {
     },
   };
   const EshoService = {
-    findGameByUsId: async () => ({ nsuid: '70010000040947' }),
+    findGameByUsId: async () => usGameDetail,
   };
 
   beforeEach(async () => {
