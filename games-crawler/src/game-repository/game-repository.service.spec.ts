@@ -34,7 +34,7 @@ describe('GameRepositoryService', () => {
     const oldGames = await model.find({ usEshopId: '70010000040947' });
     expect(oldGames.length).toBe(0);
 
-    await service.saveGameDetailUS({
+    await service.saveGameDetail({
       usEshopDetail: usGameDetail,
       usEshopId: '70010000040947',
     });
@@ -47,7 +47,7 @@ describe('GameRepositoryService', () => {
     const oldGames = await model.find({ usEshopId: '70010000040947' });
     expect(oldGames.length).toBe(1);
 
-    await service.saveGameDetailUS({
+    await service.saveGameDetail({
       usEshopDetail: usGameDetail,
       usEshopId: '70010000040947',
     });

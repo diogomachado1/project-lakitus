@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GameDetailUsEshopService } from './game-detail-us-eshop.service';
+import { GameDetailEshopService } from './game-detail-eshop.service';
 import { usGameDetail } from './mocks/usGameDetail';
 
-describe('GameDetailUsEshopService', () => {
-  let service: GameDetailUsEshopService;
+describe('GameDetailEshopService', () => {
+  let service: GameDetailEshopService;
   const GameRepository = {
     saveGameDetailUS: async () => {
       return;
@@ -18,11 +18,11 @@ describe('GameDetailUsEshopService', () => {
       providers: [
         { useValue: EshoService, provide: 'ESHOP_SERVICE' },
         { useValue: GameRepository, provide: 'GAME_REPOSITORY' },
-        GameDetailUsEshopService,
+        GameDetailEshopService,
       ],
     }).compile();
 
-    service = module.get(GameDetailUsEshopService);
+    service = module.get(GameDetailEshopService);
   });
 
   it('should be defined', () => {
@@ -30,11 +30,9 @@ describe('GameDetailUsEshopService', () => {
   });
 
   it('should get data', async () => {
-    const saveGameDetailUSSpy = jest.spyOn(GameRepository, 'saveGameDetailUS');
     const findGameSpy = jest.spyOn(EshoService, 'findGameByUsId');
-    await service.getAndSaveGameData('70010000040947');
+    await service.getUsGameDetail('70010000007606');
 
     expect(findGameSpy).toHaveBeenCalledTimes(1);
-    expect(saveGameDetailUSSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { EshopServicesModule } from '../eshop/eshop.module';
 import { GameRepositoryModule } from '../game-repository/game-repository.module';
-import { GameDetailUsEshopController } from './game-detail-us-eshop.controller';
-import { GameDetailUsEshopService } from './game-detail-us-eshop.service';
+import { GameDetailEshopController } from './game-detail-eshop.controller';
+import { GameDetailEshopService } from './game-detail-eshop.service';
 
 @Module({
   imports: [EshopServicesModule, GameRepositoryModule],
-  controllers: [GameDetailUsEshopController],
-  providers: [GameDetailUsEshopService],
+  controllers: [GameDetailEshopController],
+  providers: [GameDetailEshopService],
 })
-export class GameDetailUsEshopModule {
-  static id = 'game-detail-us-eshop';
+export class GameDetailEshopModule {
+  static id = 'game-detail-eshop';
 }

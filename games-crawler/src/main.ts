@@ -1,10 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { GameDetailEuEshopModule } from './game-detail-eu-eshop/game-detail-eu-eshop.module';
-import { GameDetailUsEshopModule } from './game-detail-us-eshop/game-detail-us-eshop.module';
+import { GameDetailEshopModule } from './game-detail-eshop/game-detail-eshop.module';
 
 async function bootstrap() {
-  [GameDetailEuEshopModule, GameDetailUsEshopModule].map(async (item) => {
+  [GameDetailEshopModule].map(async (item) => {
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(
       item,
       {
