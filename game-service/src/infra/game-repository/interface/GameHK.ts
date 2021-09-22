@@ -1,0 +1,37 @@
+export interface GameHk {
+  r_date: number;
+  release_date: string;
+  r_date_tw: string;
+  release_date_tw: string;
+  title: string;
+  title_sc: string;
+  sale_until: string;
+  pickup: string;
+  only_for: string;
+  media: string;
+  lang: string;
+  maker_publisher: string;
+  thumb_img: string;
+  thumb_img_sc: string;
+  thumb_img_tw: string;
+  link: string;
+  link_sc: string;
+  link_tw: string;
+  link_target: string;
+  platform: string;
+  rating: string;
+  adult_hk: string;
+  category: string;
+  category_sc: string;
+  copyright: string;
+  copyright_sc: string;
+  memo1: string;
+  memo2: string;
+  memo1_sc: string;
+  memo2_sc: string;
+  memo1_tw: string;
+  memo2_tw: string;
+  product_code: string;
+  item_code: string;
+  price: string;
+}
