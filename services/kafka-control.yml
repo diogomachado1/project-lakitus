@@ -29,7 +29,7 @@ spec:
         - name: CONTROL_CENTER_REPLICATION_FACTOR
           value: '1'
         - name: CONTROL_CENTER_BOOTSTRAP_SERVERS
-          value: 'kafka-service:9092'
+          value: 'kafka-service:30718'
         ports:
         - containerPort: 9021
         resources:
