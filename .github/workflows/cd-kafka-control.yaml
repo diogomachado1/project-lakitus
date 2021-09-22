@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths: 
       - 'services/kafka-control.yml'
+      - '.github/workflows/cd-kafka-control.yaml'
 
 jobs:
   build:
