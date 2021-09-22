@@ -1,0 +1,37 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-crawler
+  labels:
+    app: game-crawler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: game-crawler
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: game-crawler
+    spec:
+      containers:
+      - name: game-crawler
+        image: registry.digitalocean.com/leari/game-crawler:latest
+        env:
+        - name: MONGO_URL
+          value: mongodb+srv://game-service:Kxo6yVFTlDj5e8eZ@leari.qoans.mongodb.net/games?retryWrites=true&w=majority
+        - name: KAFKA_HOST
+          value: 'kafka-service:9092'
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: 100m
+          limits:
+            cpu: 100m
