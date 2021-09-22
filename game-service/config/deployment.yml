@@ -23,6 +23,11 @@ spec:
       containers:
       - name: game
         image: <IMAGE>
+        env:
+        - name: MONGO_URL
+          value: "mongodb+srv://game-service:TMx4qQvotnkjQX0N@leari.qoans.mongodb.net/games?retryWrites=true&w=majority"
+        - name: DEMO_FAREWELL
+          value: "Such a sweet sorrow"
         ports:
         - containerPort: 3000
         resources:
