@@ -22,12 +22,12 @@ spec:
     spec:
       containers:
       - name: game
-        image: <IMAGE>
+        image: game-service:latest
         env:
         - name: MONGO_URL
-          value: "mongodb+srv://game-service:TMx4qQvotnkjQX0N@leari.qoans.mongodb.net/games?retryWrites=true&w=majority"
-        - name: DEMO_FAREWELL
-          value: "Such a sweet sorrow"
+          value: mongodb+srv://game-service:Kxo6yVFTlDj5e8eZ@leari.qoans.mongodb.net/games?retryWrites=true&w=majority
+        - name: KAFKA_HOST
+          value: 'kafka-service:9092'
         ports:
         - containerPort: 3000
         resources:
@@ -41,7 +41,6 @@ kind: Service
 metadata:
   name: game-service
 spec:
-  type: LoadBalancer
   ports:
     - name: http
       protocol: TCP
