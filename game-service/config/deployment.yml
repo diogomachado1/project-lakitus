@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: game
-        image: game-service:latest
+        image: registry.digitalocean.com/leari/game-service:latest
         env:
         - name: MONGO_URL
           value: mongodb+srv://game-service:Kxo6yVFTlDj5e8eZ@leari.qoans.mongodb.net/games?retryWrites=true&w=majority
