@@ -1,5 +1,13 @@
 version: '3'
 services:
+  mongodb:
+      image : mongo
+      volumes:
+          - /home/database:/data/db 
+      ports:
+          - 27017:27017
+      restart: unless-stopped
+  
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -35,6 +43,28 @@ services:
       CONTROL_CENTER_CONNECT_CLUSTER: http://kafka-connect:8083
       PORT: 9021
   
+  games-crawler:
+    build: ../games-crawler
+    restart: always
+    volumes:
+      - ../games-crawler/src:/home/app/src:cached
+      - ../games-crawler/test:/home/app/test:cached
+      - ../games-crawler/package.json:/home/app/package.json:cached
+    environment:
+      MONGO_URL: mongodb://mongodb/games
+      KAFKA_HOST: kafka:9092
+  game-service:
+    build: ../game-service
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../game-service/src:/home/app/src:cached
+      - ../game-service/test:/home/app/test:cached
+      - ../game-service/package.json:/home/app/package.json:cached
+    environment:
+      MONGO_URL: mongodb://mongodb/games
+      KAFKA_HOST: kafka:9092
   # kafka-connect:
   #   image: confluentinc/cp-kafka-connect-base:6.0.0
   #   container_name: kafka-connect
@@ -86,11 +116,3 @@ services:
   #       /etc/confluent/docker/run &
   #       #
   #       sleep infinity
-  
-  mongodb:
-        image : mongo
-        volumes:
-            - /home/database:/data/db 
-        ports:
-            - 27017:27017
-        restart: unless-stopped
