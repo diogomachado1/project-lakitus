@@ -1,10 +1,11 @@
-name: CI
+name: CD-game-service
 
 on:
   push:
     branches: [main]
     paths: 
       - 'game-service/**'
+      - '.github/workflows/cd-game-service.yaml'
   pull_request:
     types: [opened, synchronize, reopened]
 
