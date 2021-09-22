@@ -28,8 +28,11 @@ spec:
           value: 'local'
         - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
           value: 'kafka-service:9092'
+        - name: KAFKA_CLUSTERS_0_ZOOKEEPER
+          value: zoo1:2181
         ports:
-        - containerPort: 8080
+          - containerPort: 8080
+            protocol: TCP
         resources:
           requests:
             cpu: 100m
