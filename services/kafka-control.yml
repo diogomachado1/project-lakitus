@@ -26,10 +26,10 @@ spec:
         env:
         - name: PORT
           value: '9021'
-        - name: CONTROL_CENTER_BOOTSTRAP_SERVERS
-          value: 'kafka-service:9092'
         - name: CONTROL_CENTER_REPLICATION_FACTOR
           value: '1'
+        - name: CONTROL_CENTER_BOOTSTRAP_SERVERS
+          value: 'kafka-service:9092'
         ports:
         - containerPort: 9021
         resources:
