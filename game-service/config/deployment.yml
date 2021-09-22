@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: game
-        image: game-service
+        image: <IMAGE>
         ports:
         - containerPort: 3000
         resources:
