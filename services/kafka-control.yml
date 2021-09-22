@@ -22,16 +22,14 @@ spec:
     spec:
       containers:
       - name: kafka-control
-        image: confluentinc/cp-enterprise-control-center:6.0.1
+        image: provectuslabs/kafka-ui:latest 
         env:
-        - name: PORT
-          value: '9021'
-        - name: CONTROL_CENTER_REPLICATION_FACTOR
-          value: '1'
-        - name: CONTROL_CENTER_BOOTSTRAP_SERVERS
+        - name: KAFKA_CLUSTERS_0_NAME
+          value: 'local'
+        - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
           value: 'kafka-service:9092'
         ports:
-        - containerPort: 9021
+        - containerPort: 8080
         resources:
           requests:
             cpu: 100m
@@ -46,8 +44,8 @@ spec:
   ports:
     - name: http
       protocol: TCP
-      port: 9021
-      targetPort: 9021
+      port: 8080
+      targetPort: 8080
   selector:
     app: kafka-control
 
@@ -67,5 +65,5 @@ spec:
             pathType: Prefix
             backend:
               serviceName: kafka-control
-              servicePort: 9021
+              servicePort: 8080
 
