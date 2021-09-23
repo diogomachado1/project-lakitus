@@ -9,6 +9,7 @@ export function CatchCustom(consumerName = 'unknow') {
         const data = await originalMethod.apply(this, args);
         return data;
       } catch (error) {
+        console.log(error);
         if (process.env.DISCORD_URL) {
           await axios.post(process.env.DISCORD_URL, {
             username: 'Argos',
