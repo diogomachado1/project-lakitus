@@ -27,7 +27,7 @@ export class ProducerGameDetailService {
   getNewGames(nsgGames: NsgGame[], savedGamesUsId: { usEshopId: string }[]) {
     const usIdHashTable = this.createHatableUsIdEshop(savedGamesUsId);
     return nsgGames
-      .filter((item) => !usIdHashTable.includes[item.nsuid_na?.toString()])
+      .filter((item) => !usIdHashTable[item.nsuid_na.toString()])
       .map((item) => ({ usId: item.nsuid_na, euId: item.nsuid_eu }));
   }
 
@@ -39,6 +39,9 @@ export class ProducerGameDetailService {
   }
 
   createHatableUsIdEshop(savedGamesUsId: { usEshopId: string }[]) {
-    return savedGamesUsId.map((item) => item.usEshopId?.toString());
+    return savedGamesUsId.reduce(
+      (acc, item) => ({ ...acc, [item.usEshopId]: true }),
+      {} as { [x: string]: boolean },
+    );
   }
 }
