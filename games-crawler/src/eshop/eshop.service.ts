@@ -65,12 +65,16 @@ export class EshopService {
   }
 
   async findGameByEuId(id: string) {
-    const cached = await this.cacheManager.get<GameEU[]>('eshop:games:europa');
-    const games = cached || (await getGamesEurope());
-    if (!cached) {
-      await this.cacheManager.set('eshop:games:europa', games);
+    if (id) {
+      const cached = await this.cacheManager.get<GameEU[]>(
+        'eshop:games:europa',
+      );
+      const games = cached || (await getGamesEurope());
+      if (!cached) {
+        await this.cacheManager.set('eshop:games:europa', games);
+      }
+      return games.find((item) => parseNSUID(item, 2) === id?.toString());
     }
-    return games.find((item) => parseNSUID(item, 2) === id?.toString());
   }
 
   async findGameByJpId(productCode: string) {

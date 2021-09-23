@@ -21,7 +21,7 @@ export class GameDetailEshopService {
       this.getEuGameDetail(euId),
     ]);
     console.log('us and eu');
-    if (usEshopData) {
+    if (usEshopData || euEshopData) {
       const jpAndHkDetail = await this.tryGetJPandHKDetail(euEshopData);
 
       const gameToSave = {
