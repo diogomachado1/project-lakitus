@@ -32,6 +32,7 @@
     "cache-manager-redis-store": "^2.0.0",
     "kafkajs": "^1.15.0",
     "mongoose": "^6.0.6",
+    "newrelic": "^8.3.0",
     "nintendo-switch-eshop": "^6.0.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

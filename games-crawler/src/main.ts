@@ -1,3 +1,4 @@
+import 'newrelic';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { GameDetailEshopModule } from './game-detail-eshop/game-detail-eshop.module';
