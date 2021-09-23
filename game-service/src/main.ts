@@ -1,4 +1,4 @@
-import 'newrelic';
+import newrelic from 'newrelic';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
