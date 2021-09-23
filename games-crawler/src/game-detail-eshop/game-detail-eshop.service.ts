@@ -52,6 +52,8 @@ export class GameDetailEshopService {
           hkEshopId,
         }),
       );
+    } else {
+      throw new Error('not found');
     }
   }
 
