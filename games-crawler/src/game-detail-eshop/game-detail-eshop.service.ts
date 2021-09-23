@@ -16,7 +16,7 @@ export class GameDetailEshopService {
       this.getEuGameDetail(euId),
     ]);
     console.log('us and eu');
-
+    console.log(usEshopData);
     if (usEshopData) {
       const codeGame = parseGameCode(euEshopData, 2);
       console.log('get jp e hk');
@@ -27,7 +27,7 @@ export class GameDetailEshopService {
       ]);
       const jpEshopId = jpEshopDetail && parseNSUID(jpEshopDetail, 3);
       const hkEshopId =
-        jpEshopDetail &&
+        hkEshopDetail &&
         parseNSUID({ LinkURL: hkEshopDetail.link } as GameJP, 3);
       console.log('init save');
 

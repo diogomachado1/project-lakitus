@@ -57,10 +57,11 @@ export class EshopService {
   async findGameByUsId(id: string) {
     const cached = await this.cacheManager.get<GameUS[]>('eshop:games:america');
     const games = cached || (await getGamesAmerica());
+    console.log(games);
     if (!cached) {
       await this.cacheManager.set('eshop:games:america', games);
     }
-    return games.find((item) => item.nsuid === id);
+    return games.find((item) => item.nsuid === id.toString());
   }
 
   async findGameByEuId(id: string) {
@@ -69,7 +70,7 @@ export class EshopService {
     if (!cached) {
       await this.cacheManager.set('eshop:games:europa', games);
     }
-    return games.find((item) => parseNSUID(item, 2) === id);
+    return games.find((item) => parseNSUID(item, 2) === id.toString());
   }
 
   async findGameByJpId(productCode: string) {
