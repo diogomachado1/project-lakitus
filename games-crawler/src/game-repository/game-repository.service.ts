@@ -20,7 +20,7 @@ export class GameRepositoryService {
     hkEshopId,
   }: {
     euEshopDetail?: GameEU;
-    usEshopDetail: GameUS;
+    usEshopDetail?: GameUS;
     jpEshopDetail?: GameJP;
     hkEshopDetail?: GameHk;
     usEshopId: string;

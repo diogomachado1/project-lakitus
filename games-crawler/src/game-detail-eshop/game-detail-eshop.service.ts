@@ -1,5 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GameJP, parseGameCode, parseNSUID } from 'nintendo-switch-eshop';
+import {
+  GameEU,
+  GameJP,
+  parseGameCode,
+  parseNSUID,
+} from 'nintendo-switch-eshop';
 import { EshopService } from '../eshop/eshop.service';
 import { GameRepositoryService } from '../game-repository/game-repository.service';
 @Injectable()
@@ -16,8 +21,34 @@ export class GameDetailEshopService {
       this.getEuGameDetail(euId),
     ]);
     console.log('us and eu');
-    console.log(usEshopData);
     if (usEshopData) {
+      const jpAndHkDetail = await this.tryGetJPandHKDetail(euEshopData);
+
+      const gameToSave = {
+        euEshopDetail: euEshopData,
+        usEshopDetail: usEshopData,
+        jpEshopDetail: jpAndHkDetail?.jpEshopDetail,
+        hkEshopDetail: jpAndHkDetail?.hkEshopDetail,
+        usEshopId: usId,
+        euEshopId: euId,
+        jpEshopId: jpAndHkDetail?.jpEshopId,
+        hkEshopId: jpAndHkDetail?.hkEshopId,
+      };
+      await this.repository.saveGameDetail(gameToSave);
+      console.log('saved');
+
+      console.log(JSON.stringify(gameToSave));
+    } else {
+      const gameToSave = {
+        usEshopId: usId,
+        euEshopId: euId,
+      };
+      await this.repository.saveGameDetail(gameToSave);
+    }
+  }
+
+  async tryGetJPandHKDetail(euEshopData: GameEU) {
+    if (euEshopData) {
       const codeGame = parseGameCode(euEshopData, 2);
       console.log('get jp e hk');
 
@@ -29,32 +60,14 @@ export class GameDetailEshopService {
       const hkEshopId =
         hkEshopDetail &&
         parseNSUID({ LinkURL: hkEshopDetail.link } as GameJP, 3);
-      console.log('init save');
-
-      await this.repository.saveGameDetail({
-        euEshopDetail: euEshopData,
-        usEshopDetail: usEshopData,
+      return {
         jpEshopDetail,
         hkEshopDetail,
-        usEshopId: usId,
-        euEshopId: euId,
         jpEshopId,
         hkEshopId,
-      });
-      console.log('saved');
-
-      console.log(
-        JSON.stringify({
-          status: 'success',
-          usEshopId: usId,
-          euEshopId: euId,
-          jpEshopId,
-          hkEshopId,
-        }),
-      );
-    } else {
-      throw new Error('not found');
+      };
     }
+    return undefined;
   }
 
   async getUsGameDetail(id: string) {
