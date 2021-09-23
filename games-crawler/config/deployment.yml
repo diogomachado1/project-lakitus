@@ -30,5 +30,7 @@ spec:
           value: 'kafka-0.kafka-headless.default.svc.cluster.local:9092'
         - name: REDIS_HOST
           value: 'redis'
+        - name: DISCORD_URL
+          value: https://discord.com/api/webhooks/890673551177306192/CBqJSZv_z1W0Y3XZ2z9BhF6_Ut9y7WcKULMAvyTnPdVPeyF_EBncqRT6dMbIrHRkiVYJ
         ports:
         - containerPort: 3000
