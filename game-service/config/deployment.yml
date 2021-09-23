@@ -30,11 +30,6 @@ spec:
           value: 'kafka-0.kafka-headless.default.svc.cluster.local:9092'
         ports:
         - containerPort: 3000
-        resources:
-          requests:
-            cpu: 100m
-          limits:
-            cpu: 100m
 ---
 apiVersion: v1
 kind: Service

@@ -32,8 +32,3 @@ spec:
           value: 'redis'
         ports:
         - containerPort: 3000
-        resources:
-          requests:
-            cpu: 100m
-          limits:
-            cpu: 100m
