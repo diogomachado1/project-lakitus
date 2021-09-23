@@ -29,7 +29,7 @@ spec:
         - name: KAFKA_HOST
           value: 'kafka-0.kafka-headless.default.svc.cluster.local:9092'
         - name: NEW_RELIC_APP_NAME
-          value: game-crawler
+          value: game-service
         - name: NEW_RELIC_APP_NAME
           value: NRAK-8AUMZW48IFLJGZF77IM3DS9EB15
         ports:
