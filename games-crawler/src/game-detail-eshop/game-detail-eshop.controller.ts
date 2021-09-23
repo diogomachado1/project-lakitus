@@ -7,7 +7,7 @@ import { GameDetailEshopService } from './game-detail-eshop.service';
 export class GameDetailEshopController {
   constructor(private gameService: GameDetailEshopService) {}
 
-  @MessagePattern('game.detail')
+  @MessagePattern('game-detail')
   @CatchCustom('game-detail-eshop')
   async getDetail(
     @Payload() message: { value: { usId: string; euId: string } },
