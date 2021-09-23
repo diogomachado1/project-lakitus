@@ -32,7 +32,7 @@ spec:
           value: 'redis'
         - name: NEW_RELIC_APP_NAME
           value: game-crawler
-        - name: NEW_RELIC_APP_NAME
+        - name: NEW_RELIC_LICENSE_KEY
           value: NRAK-8AUMZW48IFLJGZF77IM3DS9EB15
         - name: DISCORD_URL
           value: https://discord.com/api/webhooks/890673551177306192/CBqJSZv_z1W0Y3XZ2z9BhF6_Ut9y7WcKULMAvyTnPdVPeyF_EBncqRT6dMbIrHRkiVYJ
