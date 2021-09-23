@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths: 
       - 'games-crawler/**'
+      - '!games-crawler/config/deployment.yml'
   pull_request:
     types: [opened, synchronize, reopened]
 

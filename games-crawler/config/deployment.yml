@@ -19,7 +19,7 @@ spec:
     metadata:
       labels:
         app: game-crawler
-    spec:
+    spec: 
       containers:
       - name: game-crawler
         image: registry.digitalocean.com/leari/game-crawler:latest
