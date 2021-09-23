@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./game-crawler
+        working-directory: ./games-crawler
     steps:
       - uses: actions/checkout@v2
 
@@ -34,7 +34,7 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-leari
 
       - name: Deploy to DigitalOcean Kubernetes
-        run: kubectl apply -f $GITHUB_WORKSPACE/game-crawler/config/deployment.yml
+        run: kubectl apply -f $GITHUB_WORKSPACE/games-crawler/config/deployment.yml
 
       - name: Verify deployment
         run: kubectl rollout status deployment/game-crawler
