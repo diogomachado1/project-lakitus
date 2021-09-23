@@ -31,7 +31,7 @@ spec:
         - name: NEW_RELIC_APP_NAME
           value: game-service
         - name: NEW_RELIC_LICENSE_KEY
-          value: NRAK-8AUMZW48IFLJGZF77IM3DS9EB15
+          value: 191747ea147dbf51aecbf79cebd5d1d88644NRAL
         ports:
         - containerPort: 3000
 --- 
