@@ -57,7 +57,6 @@ export class EshopService {
   async findGameByUsId(id: string) {
     const cached = await this.cacheManager.get<GameUS[]>('eshop:games:america');
     const games = cached || (await getGamesAmerica());
-    console.log(games);
     if (!cached) {
       await this.cacheManager.set('eshop:games:america', games);
     }

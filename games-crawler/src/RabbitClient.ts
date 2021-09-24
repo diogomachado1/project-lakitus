@@ -1,0 +1,138 @@
+import { CustomTransportStrategy, Server } from '@nestjs/microservices';
+import { Connection, Channel, connect } from 'amqplib';
+import axios from 'axios';
+import * as newrelic from 'newrelic';
+
+export class RabbitClient extends Server implements CustomTransportStrategy {
+  connection: Connection;
+  channel: Channel;
+  async init(queue: string) {
+    await this.channel.assertExchange(`${queue}-retry`, 'direct');
+    await this.channel.assertExchange(queue, 'direct');
+    await this.channel.assertQueue(`${queue}-retry`, {
+      durable: true,
+      deadLetterExchange: queue,
+      deadLetterRoutingKey: queue,
+      messageTtl: 5000,
+    });
+    await this.channel.assertQueue(queue, {
+      durable: true,
+      deadLetterExchange: `${queue}-retry`,
+      deadLetterRoutingKey: `${queue}-retry`,
+    });
+    await this.channel.bindQueue(
+      `${queue}-retry`,
+      `${queue}-retry`,
+      `${queue}-retry`,
+    );
+    await this.channel.bindQueue(queue, queue, queue);
+    this.logger.log(`Starting ${queue}`);
+  }
+
+  protected async getConnection() {
+    return connect({
+      hostname: 'localhost',
+      port: 5672,
+      username: 'guest',
+      password: 'guest',
+      heartbeat: 10,
+    });
+  }
+
+  protected async createConsumers() {
+    this.messageHandlers.forEach((handle, queue) => {
+      this.channel.prefetch(1);
+      this.channel.consume(
+        queue,
+        async (message) => {
+          if (message) {
+            try {
+              await (() => {
+                return newrelic.startBackgroundTransaction(queue, async () => {
+                  const transaction = newrelic.getTransaction();
+                  this.logger.log(
+                    JSON.stringify({
+                      status: 'starting',
+                      queue,
+                      payload: JSON.parse(message.content.toString()),
+                    }),
+                  );
+                  const response = await handle(
+                    JSON.parse(message.content.toString()),
+                  );
+                  this.logger.log(
+                    JSON.stringify({
+                      status: 'finish',
+                      queue,
+                      payload: JSON.parse(message.content.toString()),
+                    }),
+                  );
+                  transaction.end();
+                  return response;
+                });
+              })();
+            } catch (error) {
+              newrelic.noticeError(error);
+              const retry = message.properties?.headers?.['x-retry']
+                ? message.properties.headers['x-retry'] + 1
+                : 1;
+              const delay = 5000 * retry;
+              if (retry >= 40) {
+                if (process.env.DISCORD_URL) {
+                  await axios.post(process.env.DISCORD_URL, {
+                    username: 'Argos',
+                    content: `:red_circle: Error in topic \`${queue}\` \`\`\`Body: ${message.content.toString()}\nError: ${
+                      error.message
+                    }\nConsumer: ${queue}\`\`\``,
+                  });
+                }
+              } else {
+                this.channel.publish(
+                  `${queue}-retry`,
+                  `${queue}-retry`,
+                  message.content,
+                  {
+                    headers: { 'x-delay': delay, 'x-retry': retry },
+                  },
+                );
+              }
+              this.logger.log(
+                JSON.stringify({
+                  error: error.message,
+                  queue,
+                  payload: JSON.parse(message.content.toString()),
+                }),
+              );
+            } finally {
+              this.channel.ack(message);
+            }
+          }
+        },
+        {},
+      );
+    });
+  }
+
+  async listen(callback: () => void) {
+    const queues = [];
+    this.messageHandlers.forEach((_, key) => key && queues.push(key));
+
+    this.connection = await connect({
+      hostname: 'localhost',
+      port: 5672,
+      username: 'guest',
+      password: 'guest',
+      heartbeat: 10,
+    });
+
+    this.channel = await this.connection.createChannel();
+    await Promise.all(queues.map((queue) => this.init(queue)));
+    await this.createConsumers();
+    callback();
+  }
+
+  async close() {
+    await this.channel.close();
+    await this.connection.close();
+  }
+}

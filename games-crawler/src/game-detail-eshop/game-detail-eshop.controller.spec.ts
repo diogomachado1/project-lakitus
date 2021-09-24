@@ -57,7 +57,8 @@ describe('GameDetailEshopController', () => {
 
   it('should save UsGameDetail', async () => {
     await controller.getDetail({
-      value: { usId: '70010000007606', euId: '70010000007605' },
+      usId: '70010000007606',
+      euId: '70010000007605',
     });
 
     const game = await model.findOne({ usEshopId: '70010000007606' });

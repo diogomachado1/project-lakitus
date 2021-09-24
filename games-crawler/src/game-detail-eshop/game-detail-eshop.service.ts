@@ -15,12 +15,11 @@ export class GameDetailEshopService {
   ) {}
 
   async getAndSaveGameData(usId: string, euId: string) {
-    console.log('start');
     const [usEshopData, euEshopData] = await Promise.all([
       this.getUsGameDetail(usId),
       this.getEuGameDetail(euId),
     ]);
-    console.log('us and eu');
+
     if (usEshopData || euEshopData) {
       const jpAndHkDetail = await this.tryGetJPandHKDetail(euEshopData);
 
@@ -35,9 +34,6 @@ export class GameDetailEshopService {
         hkEshopId: jpAndHkDetail?.hkEshopId,
       };
       await this.repository.saveGameDetail(gameToSave);
-      console.log('saved');
-
-      console.log(JSON.stringify(gameToSave));
     } else {
       const gameToSave = {
         usEshopId: usId,
@@ -50,7 +46,6 @@ export class GameDetailEshopService {
   async tryGetJPandHKDetail(euEshopData: GameEU) {
     if (euEshopData) {
       const codeGame = parseGameCode(euEshopData, 2);
-      console.log('get jp e hk');
 
       const [jpEshopDetail, hkEshopDetail] = await Promise.all([
         this.getJpGameDetail(codeGame),
