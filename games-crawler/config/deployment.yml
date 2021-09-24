@@ -20,6 +20,7 @@ spec:
       labels:
         app: game-crawler
     spec: 
+      imagePullPolicy: Always
       containers:
       - name: game-crawler
         image: registry.digitalocean.com/leari/game-crawler:latest
