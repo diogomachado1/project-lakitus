@@ -26,8 +26,12 @@ spec:
         env:
         - name: MONGO_URL
           value: mongodb+srv://game-service:Kxo6yVFTlDj5e8eZ@leari.qoans.mongodb.net/games?retryWrites=true&w=majority
-        - name: KAFKA_HOST
-          value: 'kafka-0.kafka-headless.default.svc.cluster.local:9092'
+        - name: RABBIT_HOST
+          value: 'rabbit'
+        - name: RABBIT_USER
+          value: guest
+        - name: RABBIT_PASSWORD
+          value: guest
         - name: REDIS_HOST
           value: 'redis'
         - name: NEW_RELIC_APP_NAME

@@ -37,7 +37,7 @@ describe('ProducerGameDetailService', () => {
     getGames: async () => nsgResponseMock.rows,
   };
 
-  const KafkaService = {
+  const RabbitService = {
     sendBatchToGameDetail: async () => {
       return;
     },
@@ -49,7 +49,7 @@ describe('ProducerGameDetailService', () => {
         ProducerGameDetailService,
         { useValue: NsgService, provide: 'NSG_SERVICE' },
         { useValue: GameRepository, provide: 'GAME_REPOSITORY' },
-        { useValue: KafkaService, provide: 'KAFKA_SERVICE' },
+        { useValue: RabbitService, provide: 'KAFKA_SERVICE' },
       ],
     }).compile();
 
@@ -129,7 +129,7 @@ describe('ProducerGameDetailService', () => {
 
   it('should send new games message', async () => {
     const sendBatchToGameDetailSpy = jest.spyOn(
-      KafkaService,
+      RabbitService,
       'sendBatchToGameDetail',
     );
     const messages = await service.sendGamesMessage();
@@ -140,7 +140,7 @@ describe('ProducerGameDetailService', () => {
 
   it('should send all games message', async () => {
     const sendBatchToGameDetailSpy = jest.spyOn(
-      KafkaService,
+      RabbitService,
       'sendBatchToGameDetail',
     );
     const messages = await service.sendGamesMessage(true);

@@ -1,4 +1,6 @@
-import newrelic from 'newrelic';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
+import 'newrelic';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 

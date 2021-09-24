@@ -8,7 +8,7 @@ export class ProducerGameDetailService {
   constructor(
     @Inject('GAME_REPOSITORY') private gameRepository: GameRepositoryService,
     @Inject('NSG_SERVICE') private nsgServices: NsgService,
-    @Inject('KAFKA_SERVICE') private KafkaService: any,
+    @Inject('RABBIT_SERVICE') private RabbitService: any,
   ) {}
 
   async sendGamesMessage(sendAll = false) {
@@ -21,7 +21,7 @@ export class ProducerGameDetailService {
       ? this.getAllGames(nsgGames)
       : this.getNewGames(nsgGames, savedGamesUsId);
 
-    await this.KafkaService.sendBatchToGameDetail(gamesIds);
+    await this.RabbitService.sendBatchToGameDetail(gamesIds);
     return gamesIds;
   }
   getNewGames(nsgGames: NsgGame[], savedGamesUsId: { usEshopId: string }[]) {

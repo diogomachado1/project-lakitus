@@ -13,7 +13,7 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
       durable: true,
       deadLetterExchange: queue,
       deadLetterRoutingKey: queue,
-      messageTtl: 5000,
+      messageTtl: 90000,
     });
     await this.channel.assertQueue(queue, {
       durable: true,
@@ -76,8 +76,8 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
               const retry = message.properties?.headers?.['x-retry']
                 ? message.properties.headers['x-retry'] + 1
                 : 1;
-              const delay = 5000 * retry;
-              if (retry >= 40) {
+              const delay = 60000 * retry;
+              if (retry >= 15) {
                 if (process.env.DISCORD_URL) {
                   await axios.post(process.env.DISCORD_URL, {
                     username: 'Argos',
@@ -118,10 +118,10 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
     this.messageHandlers.forEach((_, key) => key && queues.push(key));
 
     this.connection = await connect({
-      hostname: 'localhost',
+      hostname: process.env.RABBIT_HOST,
       port: 5672,
-      username: 'guest',
-      password: 'guest',
+      username: process.env.RABBIT_USER,
+      password: process.env.RABBIT_PASSWORD,
       heartbeat: 10,
     });
 
