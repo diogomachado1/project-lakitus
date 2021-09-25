@@ -1,4 +1,4 @@
-name: CD-game-service
+name: CD-rabbit-service
 
 on:
   push:
