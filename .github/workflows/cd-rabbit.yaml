@@ -28,4 +28,4 @@ jobs:
         run: kubectl apply -f $GITHUB_WORKSPACE/services/rabbit.yml
 
       - name: Verify deployment
-        run: kubectl rollout status deployment/rabbit
+        run: kubectl rollout status statefulSet/rabbit
