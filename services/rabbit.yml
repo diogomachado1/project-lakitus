@@ -24,11 +24,16 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: rabbit
+        - name: rabbitmq-config-rw
+          persistentVolumeClaim:
+            claimName: rabbit
       containers:
       - name: rabbit
         volumeMounts:
           - name: storage
-            mountPath: /var/lib/rabbitmq
+            mountPath: "/var/lib/rabbitmq/mnesia"
+          - name: rabbitmq-config-rw
+            mountPath: "/etc/rabbitmq"
         image: rabbitmq:management-alpine
         ports:
           - containerPort: 5672
@@ -75,7 +80,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: rabbit
-  namespace: dafult
+  namespace: default
 
 spec:
   accessModes:
