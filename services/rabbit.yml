@@ -1,12 +1,13 @@
 
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: rabbit
   labels:
     app: rabbit
 spec:
   replicas: 1
+  serviceName: rabbit
   selector:
     matchLabels:
       app: rabbit
