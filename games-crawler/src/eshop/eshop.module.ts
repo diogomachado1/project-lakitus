@@ -4,12 +4,18 @@ import { EshopService } from './eshop.service';
 
 @Module({
   imports: [
-    CacheModule.register({
-      store: redisStore,
-      host: process.env.REDIS_HOST,
-      port: 6379,
-      ttl: 60 * 60 * 5,
-    }),
+    CacheModule.register([
+      {
+        store: redisStore,
+        host: process.env.REDIS_HOST,
+        port: 6379,
+        ttl: 60 * 60 * 5,
+      },
+      {
+        store: 'memory',
+        ttl: 60 * 60 * 1,
+      },
+    ]),
   ],
   providers: [{ useClass: EshopService, provide: 'ESHOP_SERVICE' }],
   exports: ['ESHOP_SERVICE'],
