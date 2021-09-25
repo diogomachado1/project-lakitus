@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths: 
-      - 'services/kafka-control.yml'
-      - '.github/workflows/cd-kafka-control.yaml'
+      - 'services/rabbit.yml'
+      - '.github/workflows/cd-rabbit.yaml'
 
 jobs:
   build:
@@ -25,7 +25,7 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-leari
 
       - name: Deploy to DigitalOcean Kubernetes
-        run: kubectl apply -f $GITHUB_WORKSPACE/services/kafka-control.yml
+        run: kubectl apply -f $GITHUB_WORKSPACE/services/rabbit.yml
 
       - name: Verify deployment
-        run: kubectl rollout status deployment/kafka-control
+        run: kubectl rollout status deployment/rabbit

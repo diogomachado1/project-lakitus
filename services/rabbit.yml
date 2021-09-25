@@ -20,8 +20,15 @@ spec:
       labels:
         app: rabbit
     spec:
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: rabbit
       containers:
       - name: rabbit
+        volumeMounts:
+          - name: storage
+            mountPath: /var/lib/rabbitmq
         image: rabbitmq:management-alpine
         ports:
           - containerPort: 5672
@@ -63,4 +70,25 @@ spec:
             backend:
               serviceName: rabbit-service
               servicePort: 15672
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: rabbit
+  namespace: dafult
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  volumeMode: Filesystem
+status:
+  phase: Bound
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+
 
