@@ -52,41 +52,53 @@ export interface GameHk {
 
 @Injectable()
 export class EshopService {
+  usGames: GameUS[];
+  euGames: GameEU[];
+  jpGames: GameJP[];
+  hkGames: GameHk[];
   constructor(@Inject(CACHE_MANAGER) public cacheManager: Cache) {}
 
   async findGameByUsId(id: string) {
-    const cached = await this.cacheManager.get<GameUS[]>('eshop:games:america');
+    const cached =
+      this.usGames ||
+      (await this.cacheManager.get<GameUS[]>('eshop:games:america'));
     const games = cached || (await getGamesAmerica());
     if (!cached) {
       await this.cacheManager.set('eshop:games:america', games);
     }
+    if (!this.usGames) this.usGames = games;
     return games.find((item) => item.nsuid === id?.toString());
   }
 
   async findGameByEuId(id: string) {
     if (id) {
-      const cached = await this.cacheManager.get<GameEU[]>(
-        'eshop:games:europa',
-      );
+      const cached =
+        this.euGames ||
+        (await this.cacheManager.get<GameEU[]>('eshop:games:europa'));
       const games = cached || (await getGamesEurope());
       if (!cached) {
         await this.cacheManager.set('eshop:games:europa', games);
       }
+      if (!this.euGames) this.euGames = games;
       return games.find((item) => parseNSUID(item, 2) === id?.toString());
     }
   }
 
   async findGameByJpId(productCode: string) {
-    const cached = await this.cacheManager.get<GameJP[]>('eshop:games:japan');
+    const cached =
+      this.jpGames ||
+      (await this.cacheManager.get<GameJP[]>('eshop:games:japan'));
     const games = cached || (await getGamesJapan());
     if (!cached) {
       await this.cacheManager.set('eshop:games:japan', games);
     }
+    if (!this.jpGames) this.jpGames = games;
     return games.find((item) => parseGameCode(item, 3) === productCode);
   }
 
   async findGameByHkId(productCode: string) {
-    const cached = await this.cacheManager.get<GameHk[]>('eshop:games:hk');
+    const cached =
+      this.hkGames || (await this.cacheManager.get<GameHk[]>('eshop:games:hk'));
     try {
       const games =
         cached ||
@@ -98,6 +110,7 @@ export class EshopService {
       if (!cached) {
         await this.cacheManager.set('eshop:games:hk', games);
       }
+      if (!this.hkGames) this.hkGames = games;
       return games.find(
         (item) => this.parseGameHkCode(item.product_code) === productCode,
       );

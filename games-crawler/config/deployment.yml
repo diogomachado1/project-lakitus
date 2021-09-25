@@ -22,6 +22,7 @@ spec:
     spec: 
       containers:
       - name: game-crawler
+        imagePullPolicy: "Always"
         image: registry.digitalocean.com/leari/game-crawler:latest
         env:
         - name: MONGO_URL
