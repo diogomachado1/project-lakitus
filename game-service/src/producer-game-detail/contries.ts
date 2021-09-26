@@ -270,7 +270,7 @@ export const contries = [
     region: 4,
   },
   {
-    code: 'KR',
+    code: 'HK',
     country: 'Hong Kong',
     currency: 'HKD',
     region: 4,

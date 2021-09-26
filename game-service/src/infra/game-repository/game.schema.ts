@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Price, PriceSchema } from '../price-repository/price.schema';
 import { GameEU } from './interface/GameEU';
 import { GameHk } from './interface/GameHK';
 import { GameJP } from './interface/GameJP';
@@ -35,3 +36,9 @@ export class Game {
 }
 
 export const GameSchema = SchemaFactory.createForClass(Game);
+GameSchema.virtual('prices', {
+  ref: 'Price',
+  localField: '_id',
+  foreignField: 'gameId',
+  justOne: false,
+});
