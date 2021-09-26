@@ -10,6 +10,7 @@ import {
   getGamesJapan,
   parseGameCode,
   GameJP,
+  getPrices,
 } from 'nintendo-switch-eshop';
 
 export interface GameHk {
@@ -104,6 +105,10 @@ export class EshopService {
     } catch (error) {
       return undefined;
     }
+  }
+
+  async getPrices(ids: string[], contry: string) {
+    return getPrices(contry.toUpperCase(), ids);
   }
 
   parseGameHkCode(productCode: string) {
