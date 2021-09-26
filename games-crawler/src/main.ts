@@ -6,9 +6,10 @@ import { MicroserviceOptions } from '@nestjs/microservices';
 import { GameDetailEshopModule } from './game-detail-eshop/game-detail-eshop.module';
 import { RabbitClient } from './RabbitClient';
 import { AllExceptionsFilter } from './AllExceptionsFilter';
+import { PriceEshopModule } from './price-eshop/price-eshop.module';
 
 async function bootstrap() {
-  [GameDetailEshopModule].map(async (item) => {
+  [GameDetailEshopModule, PriceEshopModule].map(async (item) => {
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(
       item,
       {
