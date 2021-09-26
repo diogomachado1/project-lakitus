@@ -61,9 +61,10 @@ export class ProducerGameDetailService {
     games.forEach((game) => {
       contriesWithGames.forEach((contry, index) => {
         if (this.verifyRegion(game, contry.region))
-          contriesWithGames[index].games.push(
-            game[this.idFieldByRegionCode[contry.region]],
-          );
+          contriesWithGames[index].games.push({
+            externalId: game[this.idFieldByRegionCode[contry.region]],
+            _id: game._id,
+          });
       });
     });
 
