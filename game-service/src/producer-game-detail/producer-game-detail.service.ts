@@ -66,7 +66,29 @@ export class ProducerGameDetailService {
       });
     });
 
-    return contriesWithGames;
+    return contriesWithGames.reduce(
+      (acc, item) => [
+        ...acc,
+        ...this.chunkGameArray(item.games).map((gamesIds) => ({
+          ...item,
+          games: gamesIds,
+        })),
+      ],
+      [],
+    );
+  }
+
+  protected chunkGameArray(gamesArray: string[]) {
+    const perChunk = 50;
+
+    return gamesArray.reduce((resultArray, item, index) => {
+      const chunkIndex = Math.floor(index / perChunk);
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [];
+      }
+      resultArray[chunkIndex].push(item);
+      return resultArray;
+    }, []) as string[][];
   }
 
   protected verifyRegion(game: Game, region: number) {
