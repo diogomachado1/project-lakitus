@@ -10,4 +10,10 @@ export class GameRepositoryService {
   async getAllUsId() {
     return this.gameModel.find({}, 'usEshopId').lean();
   }
+
+  async getAllEshopIds() {
+    return this.gameModel
+      .find({}, ['usEshopId', 'euEshopId', 'hkEshopId', 'jpEshopId'])
+      .lean();
+  }
 }

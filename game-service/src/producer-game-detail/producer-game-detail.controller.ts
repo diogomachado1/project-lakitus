@@ -11,4 +11,10 @@ export class ProducerGameDetailController {
     );
     return sendsIds;
   }
+
+  @Post('/prices')
+  async sendPricesMessages() {
+    const sendsIds = await this.producerGameDetailService.getPriceMessages();
+    return sendsIds;
+  }
 }
