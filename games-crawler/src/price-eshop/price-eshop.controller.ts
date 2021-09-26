@@ -9,13 +9,13 @@ export class PriceEshopController {
   @MessagePattern('game-price')
   async getDetail({
     games,
-    region,
     country,
   }: {
     country: string;
     games: { _id: string; externalId: string }[];
     region: number;
   }) {
-    await this.gameService.getAndSavePriceData(games, region, country);
+    console.log(country);
+    await this.gameService.getAndSavePriceData(games, country);
   }
 }

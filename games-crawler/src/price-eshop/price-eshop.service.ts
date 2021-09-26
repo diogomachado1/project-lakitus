@@ -11,7 +11,6 @@ export class PriceEshopService {
 
   async getAndSavePriceData(
     gamesIds: { _id: string; externalId: string }[],
-    region: number,
     country: string,
   ) {
     const prices = await this.eshopService.getPrices(

@@ -107,8 +107,9 @@ export class EshopService {
     }
   }
 
-  async getPrices(ids: string[], contry: string) {
-    return getPrices(contry.toUpperCase(), ids);
+  async getPrices(ids: string[], country: string) {
+    console.log(ids, country);
+    return getPrices(country.toUpperCase(), ids);
   }
 
   parseGameHkCode(productCode: string) {
