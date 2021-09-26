@@ -10,7 +10,6 @@ import {
   getGamesJapan,
   parseGameCode,
   GameJP,
-  getPrices,
 } from 'nintendo-switch-eshop';
 
 export interface GameHk {
@@ -109,7 +108,15 @@ export class EshopService {
 
   async getPrices(ids: string[], country: string) {
     console.log(ids, country);
-    return getPrices(country.toUpperCase(), ids);
+    const reponse = await axios.get('https://api.ec.nintendo.com/v1/price', {
+      params: {
+        country: country.toUpperCase,
+        ids: ids.join(','),
+        limit: 50,
+        lang: 'en',
+      },
+    });
+    return reponse.data;
   }
 
   parseGameHkCode(productCode: string) {
