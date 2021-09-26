@@ -31,4 +31,19 @@ export class RabbitService {
       ),
     );
   }
+
+  async sendBatchToGamePrice(gamesIds: any[]) {
+    await Promise.all(
+      gamesIds.map((item) =>
+        this.channel.publish(
+          'game-price',
+          'game-price',
+          Buffer.from(JSON.stringify(item)),
+          {
+            persistent: true,
+          },
+        ),
+      ),
+    );
+  }
 }

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Game } from 'src/infra/game-repository/game.schema';
 import { NsgService } from 'src/infra/nsg/nsg.service';
+import { RabbitService } from 'src/infra/rabbit/rabbit.service';
 import { GameRepositoryService } from '../infra/game-repository/game-repository.service';
 import { contries } from './contries';
 import { NsgGame } from './interfaces/NsgGame';
@@ -10,7 +11,7 @@ export class ProducerGameDetailService {
   constructor(
     @Inject('GAME_REPOSITORY') private gameRepository: GameRepositoryService,
     @Inject('NSG_SERVICE') private nsgServices: NsgService,
-    @Inject('RABBIT_SERVICE') private RabbitService: any,
+    @Inject('RABBIT_SERVICE') private RabbitService: RabbitService,
   ) {}
 
   protected idFieldByRegionCode = {
@@ -66,7 +67,7 @@ export class ProducerGameDetailService {
       });
     });
 
-    return contriesWithGames.reduce(
+    const priceMessages = contriesWithGames.reduce(
       (acc, item) => [
         ...acc,
         ...this.chunkGameArray(item.games).map((gamesIds) => ({
@@ -76,6 +77,9 @@ export class ProducerGameDetailService {
       ],
       [],
     );
+
+    await this.RabbitService.sendBatchToGamePrice(priceMessages);
+    return { status: 'success' };
   }
 
   protected chunkGameArray(gamesArray: string[]) {
