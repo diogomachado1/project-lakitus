@@ -79,12 +79,21 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
               const delay = 60000 * retry;
               if (retry >= 15) {
                 if (process.env.DISCORD_URL) {
-                  await axios.post(process.env.DISCORD_URL, {
-                    username: 'Argos',
-                    content: `:red_circle: Error in topic \`${queue}\` \`\`\`Body: ${message.content.toString()}\nError: ${
+                  try {
+                    await axios.post(process.env.DISCORD_URL, {
+                      username: 'Argos',
+                      content: `:red_circle: Error in topic \`${queue}\` \`\`\`Body: ${message.content.toString()}\nError: ${
+                        error.message
+                      }\nConsumer: ${queue}\`\`\``,
+                    });
+                  } catch (error) {
+                    this.logger.error(error);
+                  }
+                  this.logger.error(
+                    `:red_circle: Error in topic \`${queue}\` \`\`\`Body: ${message.content.toString()}\nError: ${
                       error.message
                     }\nConsumer: ${queue}\`\`\``,
-                  });
+                  );
                 }
               } else {
                 this.channel.publish(
