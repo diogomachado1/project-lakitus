@@ -59,10 +59,10 @@ export class ProducerGameDetailService {
     const contriesWithGames = contries.map((item) => ({ ...item, games: [] }));
     const games = await this.gameRepository.getAllEshopIds();
     games.forEach((game) => {
-      contriesWithGames.forEach((contry, index) => {
-        if (this.verifyRegion(game, contry.region))
+      contriesWithGames.forEach((country, index) => {
+        if (this.verifyRegion(game, country.region))
           contriesWithGames[index].games.push({
-            externalId: game[this.idFieldByRegionCode[contry.region]],
+            externalId: game[this.idFieldByRegionCode[country.region]],
             _id: game._id,
           });
       });
