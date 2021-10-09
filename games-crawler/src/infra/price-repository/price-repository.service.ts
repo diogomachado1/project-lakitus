@@ -10,10 +10,10 @@ export class PriceRepositoryService {
   ) {}
 
   async deletePrices(gamesIds: string[], country: string) {
-    await this.gameModel.deleteMany({ gameId: { $in: gamesIds }, country });
+    this.gameModel.deleteMany({ gameId: { $in: gamesIds }, country });
   }
 
   async savePrices(pricesFormated: Price[]) {
-    await this.gameModel.insertMany(pricesFormated);
+    this.gameModel.insertMany(pricesFormated);
   }
 }

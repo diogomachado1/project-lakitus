@@ -33,3 +33,9 @@ export class Game {
 }
 
 export const GameSchema = SchemaFactory.createForClass(Game);
+GameSchema.virtual('prices', {
+  ref: 'Price',
+  localField: '_id',
+  foreignField: 'gameId',
+  justOne: false,
+});

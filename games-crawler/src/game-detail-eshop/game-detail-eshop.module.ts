@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { EshopServicesModule } from '../eshop/eshop.module';
-import { GameRepositoryModule } from '../game-repository/game-repository.module';
+import { GameRepositoryModule } from '../infra/game-repository/game-repository.module';
 import { GameDetailEshopController } from './game-detail-eshop.controller';
 import { GameDetailEshopService } from './game-detail-eshop.service';
 

@@ -107,7 +107,6 @@ export class EshopService {
   }
 
   async getPrices(ids: string[], country: string) {
-    console.log(ids, country);
     const reponse = await axios.get('https://api.ec.nintendo.com/v1/price', {
       params: {
         country: country.toUpperCase(),

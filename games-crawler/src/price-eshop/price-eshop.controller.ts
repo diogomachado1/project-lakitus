@@ -15,7 +15,11 @@ export class PriceEshopController {
     games: { _id: string; externalId: string }[];
     region: number;
   }) {
-    console.log(code);
     await this.gameService.getAndSavePriceData(games, code);
+  }
+
+  @MessagePattern('game-price-starter')
+  async startGamePrice() {
+    await this.gameService.getPriceMessages();
   }
 }

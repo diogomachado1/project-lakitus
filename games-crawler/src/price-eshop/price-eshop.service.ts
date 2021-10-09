@@ -1,13 +1,27 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { GameRepositoryService } from '../infra/game-repository/game-repository.service';
+import { Game } from '../infra/game-repository/game.schema';
+import { RabbitService } from '../infra/rabbit/rabbit.service';
 
 import { EshopService } from '../eshop/eshop.service';
-import { PriceRepositoryService } from '../price-repository/price-repository.service';
+import { PriceRepositoryService } from '../infra/price-repository/price-repository.service';
+import { contries } from './contries';
+
 @Injectable()
 export class PriceEshopService {
   constructor(
     @Inject('PRICE_REPOSITORY') private repository: PriceRepositoryService,
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
+    @Inject('GAME_REPOSITORY') private gameRepository: GameRepositoryService,
+    @Inject('RABBIT_SERVICE') private rabbitService: RabbitService,
   ) {}
+
+  protected idFieldByRegionCode = {
+    '1': 'usEshopId',
+    '2': 'euEshopId',
+    '3': 'jpEshopId',
+    '4': 'hkEshopId',
+  };
 
   async getAndSavePriceData(
     gamesIds: { _id: string; externalId: string }[],
@@ -43,5 +57,50 @@ export class PriceEshopService {
       country,
     );
     await this.repository.savePrices(pricesFormated);
+  }
+
+  async getPriceMessages() {
+    const contriesWithGames = contries.map((item) => ({ ...item, games: [] }));
+    const games = await this.gameRepository.getAllEshopIds();
+    games.forEach((game) => {
+      contriesWithGames.forEach((country, index) => {
+        if (this.verifyRegion(game, country.region))
+          contriesWithGames[index].games.push({
+            externalId: game[this.idFieldByRegionCode[country.region]],
+            _id: game._id,
+          });
+      });
+    });
+
+    const priceMessages = contriesWithGames.reduce(
+      (acc, item) => [
+        ...acc,
+        ...this.chunkGameArray(item.games).map((gamesIds) => ({
+          ...item,
+          games: gamesIds,
+        })),
+      ],
+      [],
+    );
+
+    await this.rabbitService.sendBatchToGamePrice(priceMessages);
+    return { status: 'success' };
+  }
+
+  protected chunkGameArray(gamesArray: string[]) {
+    const perChunk = 50;
+
+    return gamesArray.reduce((resultArray, item, index) => {
+      const chunkIndex = Math.floor(index / perChunk);
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [];
+      }
+      resultArray[chunkIndex].push(item);
+      return resultArray;
+    }, []) as string[][];
+  }
+
+  protected verifyRegion(game: Game, region: number) {
+    return !!game[this.idFieldByRegionCode[region]];
   }
 }

@@ -29,16 +29,6 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
     this.logger.log(`Starting ${queue}`);
   }
 
-  protected async getConnection() {
-    return connect({
-      hostname: 'localhost',
-      port: 5672,
-      username: 'guest',
-      password: 'guest',
-      heartbeat: 10,
-    });
-  }
-
   protected async createConsumers() {
     this.messageHandlers.forEach((handle, queue) => {
       this.channel.prefetch(1);

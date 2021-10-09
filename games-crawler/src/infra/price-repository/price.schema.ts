@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongoogseSchema } from 'mongoose';
 
 export type PriceDocument = Price & Document;
 

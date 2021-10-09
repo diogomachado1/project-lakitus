@@ -6,7 +6,7 @@ import {
   parseNSUID,
 } from 'nintendo-switch-eshop';
 import { EshopService } from '../eshop/eshop.service';
-import { GameRepositoryService } from '../game-repository/game-repository.service';
+import { GameRepositoryService } from '../infra/game-repository/game-repository.service';
 @Injectable()
 export class GameDetailEshopService {
   constructor(
