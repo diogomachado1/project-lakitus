@@ -110,7 +110,7 @@ export class EshopService {
     console.log(ids, country);
     const reponse = await axios.get('https://api.ec.nintendo.com/v1/price', {
       params: {
-        country: country.toUpperCase,
+        country: country.toUpperCase(),
         ids: ids.join(','),
         limit: 50,
         lang: 'en',
