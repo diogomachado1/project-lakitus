@@ -16,4 +16,8 @@ export class PriceRepositoryService {
   async savePrices(pricesFormated: Price[]) {
     await this.gameModel.insertMany(pricesFormated);
   }
+
+  async getPriceByGameId(gameId: string) {
+    return this.gameModel.find({ gameId }).lean();
+  }
 }

@@ -22,4 +22,14 @@ export class PriceEshopController {
   async startGamePrice() {
     await this.gameService.getPriceMessages();
   }
+
+  @MessagePattern('game-price-history')
+  async saveHistoryPrice({ gameId }: { gameId: string }) {
+    await this.gameService.saveHistoryPrice(gameId);
+  }
+
+  @MessagePattern('game-price-history-starter')
+  async startGamePriceHistory() {
+    await this.gameService.getPriceHistoryMessages();
+  }
 }

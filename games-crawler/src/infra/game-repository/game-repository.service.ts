@@ -54,6 +54,10 @@ export class GameRepositoryService {
       .lean();
   }
 
+  async getAllIds() {
+    return this.gameModel.find({}, ['_id']).lean();
+  }
+
   async findOneGame(id: string) {
     return this.gameModel.findById(id).populate('prices').lean();
   }

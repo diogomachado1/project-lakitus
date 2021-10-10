@@ -6,6 +6,7 @@ import { RabbitService } from '../infra/rabbit/rabbit.service';
 import { EshopService } from '../eshop/eshop.service';
 import { PriceRepositoryService } from '../infra/price-repository/price-repository.service';
 import { contries } from './contries';
+import { S3Service } from 'src/infra/s3/s3.service';
 
 @Injectable()
 export class PriceEshopService {
@@ -14,6 +15,7 @@ export class PriceEshopService {
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
     @Inject('GAME_REPOSITORY') private gameRepository: GameRepositoryService,
     @Inject('RABBIT_SERVICE') private rabbitService: RabbitService,
+    @Inject('S3_SERVICE') private s3Service: S3Service,
   ) {}
 
   protected idFieldByRegionCode = {
@@ -57,6 +59,39 @@ export class PriceEshopService {
       country,
     );
     await this.repository.savePrices(pricesFormated);
+  }
+
+  async saveHistoryPrice(gameId: string) {
+    const prices = await this.repository.getPriceByGameId(gameId);
+    const datas = prices.reduce(
+      (acc, item) => ({
+        ...acc,
+        [item.country]: Number(
+          item?.discountPrice?.rawValue || item?.regularPrice?.rawValue,
+        ),
+      }),
+      {},
+    );
+
+    const newPriceDate = prices.reduce(
+      (acc, item) =>
+        Number(item.createdAt) > Number(acc) ? item.createdAt : acc,
+      new Date(1),
+    );
+
+    await this.s3Service.append(
+      { prices: datas, date: newPriceDate },
+      `prices-history/${gameId}`,
+    );
+  }
+
+  async getPriceHistoryMessages() {
+    const games = await this.gameRepository.getAllIds();
+
+    await this.rabbitService.sendBatchToGamePriceHistory(
+      games.map((item) => ({ gameId: item._id })),
+    );
+    return { status: 'success' };
   }
 
   async getPriceMessages() {

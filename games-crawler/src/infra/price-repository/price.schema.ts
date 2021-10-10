@@ -27,6 +27,9 @@ export class Price {
     startDatetime: string;
     endDatetime: string;
   };
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const PriceSchema = SchemaFactory.createForClass(Price);

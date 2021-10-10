@@ -46,4 +46,19 @@ export class RabbitService {
       ),
     );
   }
+
+  async sendBatchToGamePriceHistory(gamesIds: any[]) {
+    await Promise.all(
+      gamesIds.map((item) =>
+        this.channel.publish(
+          'game-price-history',
+          'game-price-history',
+          Buffer.from(JSON.stringify(item)),
+          {
+            persistent: true,
+          },
+        ),
+      ),
+    );
+  }
 }

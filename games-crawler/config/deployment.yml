@@ -39,6 +39,14 @@ spec:
           value: game-crawler
         - name: NEW_RELIC_LICENSE_KEY
           value: 191747ea147dbf51aecbf79cebd5d1d88644NRAL
+        - name: 'AWS_ACCESS_KEY_ID'
+          value: 'AKIARSYY7UOTLEAPGSRY'
+        - name: 'AWS_SECRET_ACCESS_KEY'
+          value: '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'
+        - name: 'AWS_REGION'
+          value: 'us-east-1'
+        - name: 'AWS_S3_BUCKET'
+          value: 'leari-prices'
         - name: DISCORD_URL
           value: https://discord.com/api/webhooks/890673551177306192/CBqJSZv_z1W0Y3XZ2z9BhF6_Ut9y7WcKULMAvyTnPdVPeyF_EBncqRT6dMbIrHRkiVYJ
         ports:
