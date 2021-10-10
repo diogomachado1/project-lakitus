@@ -42,4 +42,15 @@ export class RabbitService {
       },
     );
   }
+
+  async sendMessageToPriceHistoryStart() {
+    await this.channel.publish(
+      'game-price-history-starter',
+      'game-price-history-starter',
+      Buffer.from(JSON.stringify({})),
+      {
+        persistent: true,
+      },
+    );
+  }
 }

@@ -50,4 +50,9 @@ export class ProducerGameDetailService {
     await this.rabbitService.sendMessageToPriceStart();
     return { status: 'success' };
   }
+
+  async getPriceHistoryMessages() {
+    await this.rabbitService.sendMessageToPriceHistoryStart();
+    return { status: 'success' };
+  }
 }
