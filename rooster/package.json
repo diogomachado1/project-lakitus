@@ -1,0 +1,9 @@
+{
+  "name": "rooster",
+  "version": "1.0.0",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.22.0"
+  }
+}

@@ -1,0 +1,21 @@
+service: rooster
+
+frameworkVersion: '2'
+
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  timeout: 10
+  memorySize: 128
+  lambdaHashingVersion: 20201221
+
+functions:
+  game-price:
+    handler: ./src/game-price.run
+    events:
+      - schedule: cron(0 2 * * ? *)
+  price-history:
+    handler: ./src/price-history.run
+    events:
+      - schedule: cron(0 5 * * ? *)
