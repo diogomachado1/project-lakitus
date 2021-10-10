@@ -31,7 +31,7 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
 
   protected async createConsumers() {
     this.messageHandlers.forEach((handle, queue) => {
-      this.channel.prefetch(1);
+      this.channel.prefetch(5);
       this.channel.consume(
         queue,
         async (message) => {
