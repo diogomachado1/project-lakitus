@@ -153,10 +153,7 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
 
   async listen(callback: () => void) {
     await this.createQueues();
-    await this.createFanoutQueue('price-updated', [
-      'game-price-history',
-      'teste',
-    ]);
+    await this.createFanoutQueue('price-updated', ['game-price-history']);
     await this.createConsumers();
     callback();
   }
