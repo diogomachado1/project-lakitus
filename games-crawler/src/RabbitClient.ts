@@ -6,6 +6,7 @@ import * as newrelic from 'newrelic';
 export class RabbitClient extends Server implements CustomTransportStrategy {
   connection: Connection;
   channel: Channel;
+
   async init(queue: string) {
     await this.channel.assertExchange(`${queue}-retry`, 'direct');
     await this.channel.assertExchange(queue, 'direct');
@@ -26,12 +27,32 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
       `${queue}-retry`,
     );
     await this.channel.bindQueue(queue, queue, queue);
-    this.logger.log(`Starting ${queue}`);
+  }
+
+  async getConnection() {
+    if (!this.connection) {
+      this.connection = await connect({
+        hostname: process.env.RABBIT_HOST,
+        port: 5672,
+        username: process.env.RABBIT_USER,
+        password: process.env.RABBIT_PASSWORD,
+        heartbeat: 10,
+      });
+    }
+    return this.connection;
+  }
+
+  async getChannel() {
+    if (!this.channel) {
+      this.channel = await (await this.getConnection()).createChannel();
+    }
+    return this.channel;
   }
 
   protected async createConsumers() {
     this.messageHandlers.forEach((handle, queue) => {
-      this.channel.prefetch(5);
+      this.channel.prefetch(1);
+      this.logger.log(`Starting ${queue}`);
       this.channel.consume(
         queue,
         async (message) => {
@@ -113,20 +134,29 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
     });
   }
 
-  async listen(callback: () => void) {
+  async createFanoutQueue(exchangeName: string, queuesToBind: string[]) {
+    await this.channel.assertExchange(exchangeName, 'fanout');
+    await Promise.all(
+      queuesToBind.map((item) =>
+        this.channel.bindQueue(item, exchangeName, ''),
+      ),
+    );
+  }
+
+  async createQueues() {
     const queues = [];
     this.messageHandlers.forEach((_, key) => key && queues.push(key));
 
-    this.connection = await connect({
-      hostname: process.env.RABBIT_HOST,
-      port: 5672,
-      username: process.env.RABBIT_USER,
-      password: process.env.RABBIT_PASSWORD,
-      heartbeat: 10,
-    });
-
-    this.channel = await this.connection.createChannel();
+    await this.getChannel();
     await Promise.all(queues.map((queue) => this.init(queue)));
+  }
+
+  async listen(callback: () => void) {
+    await this.createQueues();
+    await this.createFanoutQueue('price-updated', [
+      'game-price-history',
+      'teste',
+    ]);
     await this.createConsumers();
     callback();
   }

@@ -7,15 +7,16 @@ export class PriceEshopController {
   constructor(private gameService: PriceEshopService) {}
 
   @MessagePattern('game-price')
-  async getDetail({
-    games,
-    code,
-  }: {
-    code: string;
-    games: { _id: string; externalId: string }[];
-    region: number;
-  }) {
-    await this.gameService.getAndSavePriceData(games, code);
+  async getDetail(
+    games: {
+      _id: string;
+      usEshopId: string;
+      euEshopId: string;
+      jpEshopId: string;
+      hkEshopId: string;
+    }[],
+  ) {
+    await this.gameService.getAndSavePriceData(games);
   }
 
   @MessagePattern('game-price-starter')
@@ -24,12 +25,13 @@ export class PriceEshopController {
   }
 
   @MessagePattern('game-price-history')
-  async saveHistoryPrice({ gameId }: { gameId: string }) {
-    await this.gameService.saveHistoryPrice(gameId);
-  }
-
-  @MessagePattern('game-price-history-starter')
-  async startGamePriceHistory() {
-    await this.gameService.getPriceHistoryMessages();
+  async saveHistoryPrice({
+    gameId,
+    oldPrice,
+  }: {
+    gameId: string;
+    oldPrice: any;
+  }) {
+    await this.gameService.saveHistoryPrice(gameId, oldPrice);
   }
 }

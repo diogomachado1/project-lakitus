@@ -3,21 +3,21 @@ require('dotenv').config();
 import 'newrelic';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions } from '@nestjs/microservices';
-import { GameDetailEshopModule } from './game-detail-eshop/game-detail-eshop.module';
 import { RabbitClient } from './RabbitClient';
 import { AllExceptionsFilter } from './AllExceptionsFilter';
-import { PriceEshopModule } from './price-eshop/price-eshop.module';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
-  [GameDetailEshopModule, PriceEshopModule].map(async (item) => {
-    const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-      item,
-      {
-        strategy: new RabbitClient(),
-      },
-    );
-    app.useGlobalFilters(new AllExceptionsFilter());
-    await app.listen();
-  });
+  const rabbit = new RabbitClient();
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      strategy: rabbit,
+    },
+  );
+  // await rabbit.createQueues();
+
+  app.useGlobalFilters(new AllExceptionsFilter());
+  await app.listen();
 }
 bootstrap();

@@ -5,8 +5,8 @@ import { RabbitService } from '../infra/rabbit/rabbit.service';
 
 import { EshopService } from '../eshop/eshop.service';
 import { PriceRepositoryService } from '../infra/price-repository/price-repository.service';
-import { contries } from './contries';
-import { S3Service } from 'src/infra/s3/s3.service';
+import { countries } from './countries';
+import { PriceHistoryRepositoryService } from 'src/infra/game-history-repository/price-history-repository.service';
 
 @Injectable()
 export class PriceEshopService {
@@ -14,8 +14,9 @@ export class PriceEshopService {
     @Inject('PRICE_REPOSITORY') private repository: PriceRepositoryService,
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
     @Inject('GAME_REPOSITORY') private gameRepository: GameRepositoryService,
+    @Inject('PRICE_HISTORY_REPOSITORY')
+    private priceHistoryRepository: PriceHistoryRepositoryService,
     @Inject('RABBIT_SERVICE') private rabbitService: RabbitService,
-    @Inject('S3_SERVICE') private s3Service: S3Service,
   ) {}
 
   protected idFieldByRegionCode = {
@@ -26,63 +27,114 @@ export class PriceEshopService {
   };
 
   async getAndSavePriceData(
-    gamesIds: { _id: string; externalId: string }[],
-    country: string,
+    games: {
+      _id: string;
+      usEshopId: string;
+      euEshopId: string;
+      jpEshopId: string;
+      hkEshopId: string;
+    }[],
   ) {
-    const prices = await this.eshopService.getPrices(
-      gamesIds.map((item) => item.externalId),
-      country,
+    const prices = [];
+    for (const country of countries) {
+      const gamesInThisRegion = games.reduce(
+        (acc, game) =>
+          game[this.idFieldByRegionCode[country.region]]
+            ? [...acc, game[this.idFieldByRegionCode[country.region]]]
+            : acc,
+        [] as string[],
+      );
+      if (gamesInThisRegion.length) {
+        const reponse = await this.eshopService.getPrices(
+          gamesInThisRegion,
+          country.code,
+        );
+        const pricesFormated = reponse.prices.map((item) => ({
+          country: country.code,
+          gameId: games.find(
+            (game) =>
+              game[this.idFieldByRegionCode[country.region]] ===
+              item.title_id.toString(),
+          )._id,
+          salesStatus: item.sales_status,
+          regularPrice: item.regular_price && {
+            amount: item.regular_price.amount,
+            currency: item.regular_price.currency,
+            rawValue: item.regular_price.raw_value,
+            startDatetime: item.regular_price.start_datetime,
+            endDatetime: item.regular_price.end_datetime,
+          },
+          discountPrice: item.discount_price && {
+            amount: item.discount_price.amount,
+            currency: item.discount_price.currency,
+            rawValue: item.discount_price.raw_value,
+            startDatetime: item.discount_price.start_datetime,
+            endDatetime: item.discount_price.end_datetime,
+          },
+        }));
+        prices.push(...pricesFormated);
+      }
+    }
+
+    const gameIds = games.map((item) => item._id);
+
+    const oldPrices = await this.repository.getPriceByGameIds(gameIds);
+
+    await this.repository.deletePrices(gameIds);
+    await this.repository.savePrices(prices);
+
+    await this.rabbitService.sendBatchToGameUpdated(
+      games.map((item) => ({
+        gameId: item._id,
+        oldPrice: oldPrices
+          .filter((price) => price.gameId === item._id)
+          .reduce(
+            (acc, price) => ({
+              ...acc,
+              [price.country]:
+                price.salesStatus !== 'not_found'
+                  ? price?.discountPrice?.rawValue ||
+                    price?.regularPrice?.rawValue ||
+                    null
+                  : null,
+            }),
+            {},
+          ),
+      })),
     );
-    const pricesFormated = prices.prices.map((item) => ({
-      country,
-      gameId: gamesIds.find(
-        (game) => game.externalId === item.title_id.toString(),
-      )._id,
-      salesStatus: item.sales_status,
-      regularPrice: item.regular_price && {
-        amount: item.regular_price.amount,
-        currency: item.regular_price.currency,
-        rawValue: item.regular_price.raw_value,
-        startDatetime: item.regular_price.start_datetime,
-        endDatetime: item.regular_price.end_datetime,
-      },
-      discountPrice: item.discount_price && {
-        amount: item.discount_price.amount,
-        currency: item.discount_price.currency,
-        rawValue: item.discount_price.raw_value,
-        startDatetime: item.discount_price.start_datetime,
-        endDatetime: item.discount_price.end_datetime,
-      },
-    }));
-    await this.repository.deletePrices(
-      gamesIds.map((item) => item._id),
-      country,
-    );
-    await this.repository.savePrices(pricesFormated);
   }
 
-  async saveHistoryPrice(gameId: string) {
+  async saveHistoryPrice(
+    gameId: string,
+    oldPrice: { [x: string]: number | null },
+  ) {
     const prices = await this.repository.getPriceByGameId(gameId);
     const datas = prices.reduce(
       (acc, item) => ({
         ...acc,
-        [item.country]: Number(
-          item?.discountPrice?.rawValue || item?.regularPrice?.rawValue,
-        ),
+        [item.country]:
+          item.salesStatus !== 'not_found'
+            ? item?.discountPrice?.rawValue ||
+              item?.regularPrice?.rawValue ||
+              null
+            : null,
       }),
       {},
     );
 
-    const newPriceDate = prices.reduce(
-      (acc, item) =>
-        Number(item.createdAt) > Number(acc) ? item.createdAt : acc,
-      new Date(1),
+    const changedCountryPrice = countries.filter(
+      (item) => (oldPrice[item.code] || null) !== (datas[item.code] || null),
     );
 
-    await this.s3Service.append(
-      { prices: datas, date: newPriceDate },
-      `prices-history/${gameId}`,
-    );
+    const changedPrices = changedCountryPrice.map((item) => ({
+      newPrice: datas[item.code] ? Number(datas[item.code]) : null,
+      oldPrice: datas[oldPrice.code] ? Number(datas[oldPrice.code]) : null,
+      date: new Date(),
+      gameId: gameId,
+      country: item.code,
+    }));
+
+    await this.priceHistoryRepository.savePriceHistories(changedPrices);
   }
 
   async getPriceHistoryMessages() {
@@ -95,34 +147,15 @@ export class PriceEshopService {
   }
 
   async getPriceMessages() {
-    const contriesWithGames = contries.map((item) => ({ ...item, games: [] }));
     const games = await this.gameRepository.getAllEshopIds();
-    games.forEach((game) => {
-      contriesWithGames.forEach((country, index) => {
-        if (this.verifyRegion(game, country.region))
-          contriesWithGames[index].games.push({
-            externalId: game[this.idFieldByRegionCode[country.region]],
-            _id: game._id,
-          });
-      });
-    });
 
-    const priceMessages = contriesWithGames.reduce(
-      (acc, item) => [
-        ...acc,
-        ...this.chunkGameArray(item.games).map((gamesIds) => ({
-          ...item,
-          games: gamesIds,
-        })),
-      ],
-      [],
-    );
+    const priceMessages = this.chunkGameArray(games);
 
     await this.rabbitService.sendBatchToGamePrice(priceMessages);
     return { status: 'success' };
   }
 
-  protected chunkGameArray(gamesArray: string[]) {
+  protected chunkGameArray(gamesArray: any[]) {
     const perChunk = 50;
 
     return gamesArray.reduce((resultArray, item, index) => {
@@ -132,7 +165,7 @@ export class PriceEshopService {
       }
       resultArray[chunkIndex].push(item);
       return resultArray;
-    }, []) as string[][];
+    }, []) as any[][];
   }
 
   protected verifyRegion(game: Game, region: number) {

@@ -17,48 +17,38 @@ export class RabbitService {
     this.channel = await this.connection.createChannel();
   }
 
-  async sendBatchToGameDetail(gamesIds: { usId: number; euId: number }[]) {
-    await Promise.all(
-      gamesIds.map((item) =>
-        this.channel.publish(
-          'game-detail',
-          'game-detail',
-          Buffer.from(JSON.stringify(item)),
-          {
-            persistent: true,
-          },
-        ),
-      ),
+  protected async publish(exchange: string, queue: string, item) {
+    return this.channel.publish(
+      exchange,
+      queue,
+      Buffer.from(JSON.stringify(item)),
+      {
+        persistent: true,
+      },
     );
+  }
+
+  protected async batchPublish(exchange: string, queue: string, itens: any[]) {
+    await Promise.all(itens.map((item) => this.publish(exchange, queue, item)));
+  }
+
+  async sendBatchToGameUpdated(datas: any[]) {
+    await this.batchPublish('price-updated', '', datas);
+  }
+
+  async sendBatchToGameDetail(gamesIds: { usId: number; euId: number }[]) {
+    await this.batchPublish('game-detail', 'game-detail', gamesIds);
   }
 
   async sendBatchToGamePrice(gamesIds: any[]) {
-    await Promise.all(
-      gamesIds.map((item) =>
-        this.channel.publish(
-          'game-price',
-          'game-price',
-          Buffer.from(JSON.stringify(item)),
-          {
-            persistent: true,
-          },
-        ),
-      ),
-    );
+    await this.batchPublish('game-price', 'game-price', gamesIds);
   }
 
   async sendBatchToGamePriceHistory(gamesIds: any[]) {
-    await Promise.all(
-      gamesIds.map((item) =>
-        this.channel.publish(
-          'game-price-history',
-          'game-price-history',
-          Buffer.from(JSON.stringify(item)),
-          {
-            persistent: true,
-          },
-        ),
-      ),
+    await this.batchPublish(
+      'game-price-history',
+      'game-price-history',
+      gamesIds,
     );
   }
 }

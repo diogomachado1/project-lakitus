@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type PriceDocument = Price & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, autoIndex: false })
 export class Price {
   @Prop()
   country: string;

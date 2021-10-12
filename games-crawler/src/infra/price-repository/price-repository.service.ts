@@ -9,8 +9,8 @@ export class PriceRepositoryService {
     @InjectModel(Price.name) private gameModel: Model<PriceDocument>,
   ) {}
 
-  async deletePrices(gamesIds: string[], country: string) {
-    await this.gameModel.deleteMany({ gameId: { $in: gamesIds }, country });
+  async deletePrices(gamesIds: string[]) {
+    await this.gameModel.deleteMany({ gameId: { $in: gamesIds } });
   }
 
   async savePrices(pricesFormated: Price[]) {
@@ -19,5 +19,9 @@ export class PriceRepositoryService {
 
   async getPriceByGameId(gameId: string) {
     return this.gameModel.find({ gameId }).lean();
+  }
+
+  async getPriceByGameIds(gamesIds: string[]) {
+    return this.gameModel.find({ gameId: { $in: gamesIds } }).lean();
   }
 }

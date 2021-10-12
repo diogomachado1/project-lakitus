@@ -1,4 +1,4 @@
-export const contries = [
+export const countries = [
   {
     code: 'BR',
     country: 'Brazil',

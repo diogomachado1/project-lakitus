@@ -15,7 +15,3 @@ functions:
     handler: ./src/game-price.run
     events:
       - schedule: cron(0 2 * * ? *)
-  price-history:
-    handler: ./src/price-history.run
-    events:
-      - schedule: cron(0 5 * * ? *)

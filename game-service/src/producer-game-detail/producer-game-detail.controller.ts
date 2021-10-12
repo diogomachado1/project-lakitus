@@ -17,11 +17,4 @@ export class ProducerGameDetailController {
     const sendsIds = await this.producerGameDetailService.getPriceMessages();
     return sendsIds;
   }
-
-  @Post('/prices-history')
-  async sendPricesHistoryMessages() {
-    const sendsIds =
-      await this.producerGameDetailService.getPriceHistoryMessages();
-    return sendsIds;
-  }
 }
