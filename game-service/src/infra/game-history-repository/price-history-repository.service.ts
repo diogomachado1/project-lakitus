@@ -10,9 +10,13 @@ export class PriceHistoryRepositoryService {
     private priceHistoryModel: Model<PriceHistoryDocument>,
   ) {}
 
-  async findPriceHistory(gameId: string, countryFilter: string) {
-    const country =
-      countryFilter === 'all' ? undefined : countryFilter.toUpperCase();
-    return this.priceHistoryModel.find({ gameId, country }).lean();
+  async findPriceHistory(gameId: string, country: string) {
+    const filter =
+      country === 'all'
+        ? { gameId }
+        : { gameId, country: country.toUpperCase() };
+    const prices = this.priceHistoryModel.find(filter).lean();
+
+    return prices;
   }
 }

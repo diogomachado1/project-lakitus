@@ -1,22 +1,22 @@
-import { Inject, Injectable } from '@nestjs/common';
-import {
-  differenceInDays,
-  format,
-  parseISO,
-  startOfDay,
-  subDays,
-} from 'date-fns';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { differenceInDays, format, startOfDay, subDays } from 'date-fns';
 import { PriceHistory } from '../infra/game-history-repository/priceHistory.schema';
 import { PriceHistoryRepositoryService } from '../infra/game-history-repository/price-history-repository.service';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class PriceHistoryService {
   constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @Inject('PRICE_HISTORY_REPOSITORY')
     private repository: PriceHistoryRepositoryService,
   ) {}
 
   async getPriceHistoryByGameIdAndCountry(gameId: string, country = 'all') {
+    const cached = await this.cacheManager.get<any[]>(
+      `price-history:${gameId}:${country}`,
+    );
+    if (cached) return cached;
     const pricesChanges = await this.repository.findPriceHistory(
       gameId,
       country,
@@ -65,6 +65,12 @@ export class PriceHistoryService {
     const flatHistory = Object.keys(groupByDate).reduce(
       (acc, item) => [...acc, groupByDate[item]],
       [],
+    );
+
+    await this.cacheManager.set(
+      `price-history:${gameId}:${country}`,
+      flatHistory,
+      { ttl: 60 * 5 },
     );
 
     return flatHistory;
