@@ -6,6 +6,7 @@ on:
     paths: 
       - 'game-service/**'
       - '!game-service/config/deployment.yml'
+      - '.github/workflows/cd-game-service-build.yaml'
 
 jobs:
   build:
