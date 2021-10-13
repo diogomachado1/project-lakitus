@@ -6,6 +6,7 @@ on:
     paths: 
       - 'games-crawler/**'
       - '!games-crawler/config/deployment.yml'
+      - '.github/workflows/cd-game-crawler-build.yaml'
 
 jobs:
   build:
@@ -15,29 +16,12 @@ jobs:
         working-directory: ./games-crawler
     steps:
       - uses: actions/checkout@v2
-
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
+      - name: test
+        run: ls
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
-      - name: Build container image
-        run: docker build -t registry.digitalocean.com/leari/game-crawler:latest .
-
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 1200
-
-      - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/leari/game-crawler:latest
-      
-      - name: Save DigitalOcean kubeconfig with short-lived credentials
-        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-leari
-
-      - name: Deploy to DigitalOcean Kubernetes
-        run: kubectl apply -f $GITHUB_WORKSPACE/games-crawler/config/deployment.yml
-
-      - name: Restart Deployment
-        run: kubectl rollout restart deployment game-crawler
-
-      - name: Verify deployment
-        run: kubectl rollout status deployment/game-crawler
+          name: diogo8machado/game-service
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          workdir: ./game-crawler

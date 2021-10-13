@@ -5,30 +5,16 @@ on:
     branches: [main]
     paths: 
       - '.github/workflows/cd-game-service.yaml'
-      - 'game-service/config/deployment.yml'
+      - 'config/game.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./game-service
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
+      - name: Webhook
+        uses: distributhor/workflow-webhook
         with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-      
-      - name: Save DigitalOcean kubeconfig with short-lived credentials
-        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-leari
-
-      - name: Deploy to DigitalOcean Kubernetes
-        run: kubectl apply -f $GITHUB_WORKSPACE/game-service/config/deployment.yml
-      
-      - name: Restart Deployment
-        run: kubectl rollout restart deployment game
-
-      - name: Verify deployment
-        run: kubectl rollout status deployment/game
+          url: "https://167.71.31.79:9443/api/stacks/webhooks/1b74ef9b-7ebf-44ec-a347-765f4fe1e2f0"
+          
