@@ -2,13 +2,6 @@ version: '3'
 services:
   game-service:
       image: diogo8machado/game-service
-      env:
-        MONGO_URL: /run/secrets/mongo-url
-        RABBIT_HOST: rabbit
-        RABBIT_USER: /run/secrets/rabbit-user
-        RABBIT_PASSWORD: /run/secrets/rabbit-password
-        NEW_RELIC_APP_NAME: game-api
-        NEW_RELIC_LICENSE_KEY: /run/secrets/new-relic-token
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.rabbit.rule=Host(`api.leari.xyz`)"
