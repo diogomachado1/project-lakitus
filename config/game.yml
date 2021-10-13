@@ -8,6 +8,11 @@ services:
         - "traefik.http.routers.rabbit.entrypoints=websecure"
         - "traefik.http.routers.rabbit.tls.certresolver=myresolver"
         - "traefik.http.services.myservice.loadbalancer.server.port=3000"
+      secret:
+        - mongo-url
+        - rabbit-user
+        - rabbit-password
+        - new-relic-token
   rabbit:
       image: rabbitmq:management-alpine
       volumes:
