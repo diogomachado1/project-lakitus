@@ -4,8 +4,7 @@ on:
   push:
     branches: [main]
     paths: 
-      - 'games-crawler/**'
-      - '!games-crawler/config/deployment.yml'
+      - 'game-crawler/**'
       - '.github/workflows/cd-game-crawler-build.yaml'
 
 jobs:
@@ -13,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./games-crawler
+        working-directory: ./game-crawler
     steps:
       - uses: actions/checkout@v2
       - name: test
@@ -21,7 +20,7 @@ jobs:
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          name: diogo8machado/game-service
+          name: diogo8machado/game-crawler
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           workdir: ./game-crawler
