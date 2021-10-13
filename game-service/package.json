@@ -28,6 +28,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "amqplib": "^0.8.0",
     "axios": "^0.21.4",
+    "date-fns": "^2.25.0",
     "mongoose": "^6.0.7",
     "newrelic": "^8.3.0",
     "reflect-metadata": "^0.1.13",
