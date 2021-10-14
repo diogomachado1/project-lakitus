@@ -11,10 +11,10 @@ services:
         - NEW_RELIC_LICENSE_KEY=191747ea147dbf51aecbf79cebd5d1d88644NRAL
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.rabbit.rule=Host(`api.leari.xyz`)"
-        - "traefik.http.routers.rabbit.entrypoints=websecure"
-        - "traefik.http.routers.rabbit.tls.certresolver=myresolver"
-        - "traefik.http.services.myservice.loadbalancer.server.port=3000"
+        - "traefik.http.routers.gameapi.rule=Host(`api.leari.xyz`)"
+        - "traefik.http.routers.gameapi.entrypoints=websecure"
+        - "traefik.http.routers.gameapi.tls.certresolver=myresolver"
+        - "traefik.http.services.gameapi.loadbalancer.server.port=3000"
   rabbit:
       image: rabbitmq:management-alpine
       volumes:
@@ -26,6 +26,6 @@ services:
         - "traefik.http.routers.rabbit.rule=Host(`mrabbit.leari.xyz`)"
         - "traefik.http.routers.rabbit.entrypoints=websecure"
         - "traefik.http.routers.rabbit.tls.certresolver=myresolver"
-        - "traefik.http.services.myservice.loadbalancer.server.port=15672"
+        - "traefik.http.services.rabbit.loadbalancer.server.port=15672"
 volumes:
   rabbitmq:
