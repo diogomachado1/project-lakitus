@@ -15,6 +15,8 @@ services:
         - "traefik.http.routers.gameapi.entrypoints=websecure"
         - "traefik.http.routers.gameapi.tls.certresolver=myresolver"
         - "traefik.http.services.gameapi.loadbalancer.server.port=3000"
+      networks:
+        - traefik-net
   rabbit:
       image: rabbitmq:management-alpine
       volumes:
@@ -27,5 +29,11 @@ services:
         - "traefik.http.routers.rabbit.entrypoints=websecure"
         - "traefik.http.routers.rabbit.tls.certresolver=myresolver"
         - "traefik.http.services.rabbit.loadbalancer.server.port=15672"
+      networks:
+        - traefik-net
 volumes:
   rabbitmq:
+
+networks:
+  traefik-net:
+    external: true
