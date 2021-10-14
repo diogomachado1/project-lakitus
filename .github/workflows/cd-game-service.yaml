@@ -1,4 +1,4 @@
-name: CD-game-service
+name: Update-game-stack
 
 on:
   push:
@@ -8,13 +8,14 @@ on:
       - 'config/game.yml'
 
 jobs:
-  build:
+  update-stack:
     runs-on: ubuntu-latest
     steps:
     - name: Webhook
       uses: distributhor/workflow-webhook@v2
       with:
-        webhook_url: "https://167.71.31.79:9443/api/stacks/webhooks/1b74ef9b-7ebf-44ec-a347-765f4fe1e2f0"
+        webhook_url: "https://167.71.31.79:9443/api/stacks/webhooks/11c1cb03-3c69-4bd6-abd9-c1a53e3fac4b"
+        webhook_secret: "Y0uR5ecr3t"
 
       
           
