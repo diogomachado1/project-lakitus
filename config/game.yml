@@ -21,8 +21,6 @@ services:
       image: rabbitmq:management-alpine
       volumes:
         - "rabbitmq:/var/lib/rabbitmq/mnesia"
-      ports:
-        - 15672:15672
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.rabbit.rule=Host(`mrabbit.leari.xyz`)"
