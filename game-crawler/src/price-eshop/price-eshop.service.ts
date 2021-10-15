@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { GameRepositoryService } from '../infra/game-repository/game-repository.service';
 import { Game } from '../infra/game-repository/game.schema';
 import { RabbitService } from '../infra/rabbit/rabbit.service';
@@ -10,6 +10,8 @@ import { PriceHistoryRepositoryService } from 'src/infra/game-history-repository
 
 @Injectable()
 export class PriceEshopService {
+  private readonly priceHistoryLogger = new Logger('price-history');
+
   constructor(
     @Inject('PRICE_REPOSITORY') private repository: PriceRepositoryService,
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
@@ -133,6 +135,12 @@ export class PriceEshopService {
       gameId: gameId,
       country: item.code,
     }));
+
+    changedPrices.forEach((item) =>
+      this.priceHistoryLogger.log(
+        `price history created: ${JSON.stringify(item)}`,
+      ),
+    );
 
     await this.priceHistoryRepository.savePriceHistories(changedPrices);
   }
