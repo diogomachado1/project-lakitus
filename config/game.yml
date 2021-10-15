@@ -34,10 +34,10 @@ services:
       networks:
         - traefik-net
   rabbit:
-      hostname: rabbit
+      hostname: mabbit
       image: rabbitmq:management-alpine
       volumes:
-        - "rabbitmq:/var/lib/rabbitmq"
+        - "rabbitmq:/var/lib/rabbitmq/mnesia/"
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.rabbit.rule=Host(`mrabbit.leari.xyz`)"
