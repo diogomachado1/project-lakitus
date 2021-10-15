@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths: 
       - 'game-service/**'
-      - '!game-service/config/deployment.yml'
       - '.github/workflows/cd-game-service-build.yaml'
 
 jobs:
@@ -25,3 +24,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           workdir: ./game-service
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Webhook
+      uses: distributhor/workflow-webhook@v2
+      env:
+        webhook_url: "https://portainer.leari.xyz/api/webhooks/50780a28-ce79-4c0e-982d-f8465ba13656"
+        webhook_secret: "Y0uR5ecr3t"

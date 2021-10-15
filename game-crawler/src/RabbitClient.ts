@@ -83,7 +83,6 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
                 });
               })();
             } catch (error) {
-              console.log(error);
               newrelic.noticeError(error);
               const retry = message.properties?.headers?.['x-retry']
                 ? message.properties.headers['x-retry'] + 1
