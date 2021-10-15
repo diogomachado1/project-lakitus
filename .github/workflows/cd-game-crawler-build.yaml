@@ -25,6 +25,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           workdir: ./game-crawler
   deploy:
+      needs: build
       runs-on: ubuntu-latest
       steps:
       - name: Webhook
