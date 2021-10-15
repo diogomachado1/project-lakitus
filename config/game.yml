@@ -34,7 +34,7 @@ services:
       networks:
         - traefik-net
   rabbit:
-      hostname: mabbit
+      hostname: rabbit
       image: rabbitmq:management-alpine
       volumes:
         - "rabbitmq:/var/lib/rabbitmq/mnesia/"
