@@ -34,6 +34,7 @@ services:
       networks:
         - traefik-net
   rabbit:
+      hostname: rabbit
       image: rabbitmq:management-alpine
       volumes:
         - "rabbitmq:/var/lib/rabbitmq"
