@@ -44,7 +44,7 @@ services:
         - "traefik.http.routers.rabbit.entrypoints=websecure"
         - "traefik.http.routers.rabbit.tls.certresolver=myresolver"
         - "traefik.http.services.rabbit.loadbalancer.server.port=15672"
-        - "com.datadoghq.ad.check_names=[rabbitmq]"
+        - "com.datadoghq.ad.check_names=[\"rabbitmq\"]"
         - "com.datadoghq.ad.init_configs=[{}]"
         - "com.datadoghq.ad.instances=[{\"rabbitmq_api_url\":\"%%host%%:15672/api/\",\"username\": datadog, \"password\": datadog}]"
       networks:
