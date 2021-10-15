@@ -61,6 +61,13 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
               await (() => {
                 return newrelic.startBackgroundTransaction(queue, async () => {
                   const transaction = newrelic.getTransaction();
+                  this.logger.log(
+                    JSON.stringify({
+                      status: 'starting',
+                      queue,
+                      payload: JSON.parse(message.content.toString()),
+                    }),
+                  );
                   const response = await handle(
                     JSON.parse(message.content.toString()),
                   );
@@ -102,7 +109,7 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
                   },
                 );
               }
-              this.logger.log(
+              this.logger.error(
                 JSON.stringify({
                   error: error.message,
                   queue,

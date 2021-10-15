@@ -130,7 +130,7 @@ export class PriceEshopService {
 
     const changedPrices = changedCountryPrice.map((item) => ({
       newPrice: datas[item.code] ? Number(datas[item.code]) : null,
-      oldPrice: datas[oldPrice.code] ? Number(datas[oldPrice.code]) : null,
+      oldPrice: oldPrice[item.code] ? Number(oldPrice[item.code]) : null,
       date: new Date(),
       gameId: gameId,
       country: item.code,
