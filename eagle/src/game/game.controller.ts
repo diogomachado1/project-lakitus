@@ -7,20 +7,29 @@ import { GameFilter } from './GameFilter';
 export class GameController {
   constructor(private service: GameService) {}
   @Get('/:id')
-  async getOneGame(
-    @Param('id') id: string,
-    @Query()
-    { fullDetail }: { fullDetail: boolean },
-  ) {
-    return this.service.getOneGame(id, fullDetail);
+  async getOneGame(@Param('id') id: string) {
+    return this.service.getOneGame(id, false);
+  }
+
+  @Get('/full/:id')
+  async getFullGame(@Param('id') id: string) {
+    return this.service.getOneGame(id, true);
   }
 
   @Get('/')
   async getMany(
     @Query()
-    { ids, search, page, fullDetail }: GameFilter,
+    { ids, search, page }: GameFilter,
   ) {
-    return this.service.getManyGame(ids?.split(','), search, page, fullDetail);
+    return this.service.getManyGame(ids?.split(','), search, page, false);
+  }
+
+  @Get('/full')
+  async getManyFull(
+    @Query()
+    { ids, search, page }: GameFilter,
+  ) {
+    return this.service.getManyGame(ids?.split(','), search, page, true);
   }
 
   @MessagePattern('game-detail')

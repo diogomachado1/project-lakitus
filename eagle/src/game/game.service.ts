@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { GameRepositoryService } from '../infra/game-repository/game-repository.service';
 import {
   GameEU,
@@ -7,16 +7,28 @@ import {
   parseNSUID,
 } from 'nintendo-switch-eshop';
 import { EshopService } from '../infra/eshop/eshop.service';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class GameService {
   constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @Inject('GAME_REPOSITORY') private gameRepository: GameRepositoryService,
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
   ) {}
 
   async getOneGame(id: string, fullDetail: boolean) {
-    return this.gameRepository.findOneGame(id, fullDetail);
+    const cached = await this.cacheManager.get<any[]>(
+      `game:${id}:${fullDetail ? 'true' : 'false'}`,
+    );
+    if (cached) return cached;
+    const game = this.gameRepository.findOneGame(id, fullDetail);
+    await this.cacheManager.set(
+      `game:${id}:${fullDetail ? 'true' : 'false'}`,
+      game,
+      { ttl: 60 * 5 },
+    );
+    return game;
   }
 
   async getManyGame(
