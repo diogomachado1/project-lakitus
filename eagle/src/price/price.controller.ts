@@ -1,10 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { PriceEshopService } from './price.service';
+import { PriceService } from './price.service';
 
 @Controller('price')
-export class PriceEshopController {
-  constructor(private gameService: PriceEshopService) {}
+export class PriceController {
+  constructor(private gameService: PriceService) {}
 
   @MessagePattern('game-price')
   async getDetail(

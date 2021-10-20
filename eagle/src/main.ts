@@ -9,6 +9,8 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const rabbit = new RabbitClient();
+  const restApi = await NestFactory.create(AppModule);
+
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
@@ -18,5 +20,6 @@ async function bootstrap() {
 
   app.useGlobalFilters(new AllExceptionsFilter());
   await app.listen();
+  await restApi.listen(3000);
 }
 bootstrap();

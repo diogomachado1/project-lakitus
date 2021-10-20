@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { InfraModule } from '../infra/infra.module';
 import { EshopServicesModule } from '../infra/eshop/eshop.module';
-import { PriceEshopController } from './price.controller';
-import { PriceEshopService } from './price.service';
+import { PriceController } from './price.controller';
+import { PriceService } from './price.service';
 
 @Module({
   imports: [EshopServicesModule, InfraModule],
-  controllers: [PriceEshopController],
-  providers: [PriceEshopService],
+  controllers: [PriceController],
+  providers: [PriceService],
 })
-export class PriceEshopModule {}
+export class PriceModule {}

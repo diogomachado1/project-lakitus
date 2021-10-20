@@ -7,7 +7,7 @@ import { EshopService } from '../infra/eshop/eshop.service';
 import { PriceRepositoryService } from '../infra/price-repository/price-repository.service';
 import { countries } from '../infra/countries';
 @Injectable()
-export class PriceEshopService {
+export class PriceService {
   constructor(
     @Inject('PRICE_REPOSITORY') private repository: PriceRepositoryService,
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,

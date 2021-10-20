@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { GameEU, GameJP, GameUS } from 'nintendo-switch-eshop';
-import { GameHk } from '../../eshop/eshop.service';
+import { GameHk } from '../eshop/eshop.service';
 
 export type GameDocument = Game & Document;
 

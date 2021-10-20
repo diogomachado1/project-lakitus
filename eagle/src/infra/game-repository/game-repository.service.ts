@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { GameEU, GameJP, GameUS } from 'nintendo-switch-eshop';
-import { GameHk } from '../../eshop/eshop.service';
+import { GameHk } from '../eshop/eshop.service';
 import { Game, GameDocument } from './game.schema';
 
 @Injectable()

@@ -1,8 +1,17 @@
 import { Module } from '@nestjs/common';
-import { GameDetailEshopModule } from './game-detail-eshop/game-detail-eshop.module';
-import { PriceEshopModule } from './price-eshop/price-eshop.module';
+import { GameModule } from './game/game.module';
+import { InfraModule } from './infra/infra.module';
+import { PriceHistoryModule } from './price-history/price-history.module';
+import { PriceModule } from './price/price.module';
+import { ProducerGameDetailModule } from './producer-message/producer-message.module';
 
 @Module({
-  imports: [GameDetailEshopModule, PriceEshopModule],
+  imports: [
+    ProducerGameDetailModule,
+    PriceHistoryModule,
+    PriceModule,
+    InfraModule,
+    GameModule,
+  ],
 })
 export class AppModule {}

@@ -138,7 +138,6 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
   async createQueues() {
     const queues = [];
     this.messageHandlers.forEach((_, key) => key && queues.push(key));
-
     await this.getChannel();
     await Promise.all(queues.map((queue) => this.init(queue)));
   }
