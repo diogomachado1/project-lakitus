@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   api-gateway:
-    build: diogo8machado/api-gateway
+    image: diogo8machado/api-gateway
     environment:
       KONG_PLUGINS: kong-jwt2header,jwt
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
