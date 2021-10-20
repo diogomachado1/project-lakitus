@@ -1,8 +1,8 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-import { PriceEshopService } from './price-eshop.service';
+import { PriceEshopService } from './price.service';
 
-@Controller('game-price')
+@Controller('price')
 export class PriceEshopController {
   constructor(private gameService: PriceEshopService) {}
 
@@ -22,16 +22,5 @@ export class PriceEshopController {
   @MessagePattern('game-price-starter')
   async startGamePrice() {
     await this.gameService.getPriceMessages();
-  }
-
-  @MessagePattern('game-price-history')
-  async saveHistoryPrice({
-    gameId,
-    oldPrice,
-  }: {
-    gameId: string;
-    oldPrice: any;
-  }) {
-    await this.gameService.saveHistoryPrice(gameId, oldPrice);
   }
 }

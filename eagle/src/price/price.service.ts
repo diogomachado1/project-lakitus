@@ -1,23 +1,17 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { GameRepositoryService } from '../infra/game-repository/game-repository.service';
 import { Game } from '../infra/game-repository/game.schema';
 import { RabbitService } from '../infra/rabbit/rabbit.service';
 
-import { EshopService } from '../eshop/eshop.service';
+import { EshopService } from '../infra/eshop/eshop.service';
 import { PriceRepositoryService } from '../infra/price-repository/price-repository.service';
-import { countries } from './countries';
-import { PriceHistoryRepositoryService } from '../infra/game-history-repository/price-history-repository.service';
-
+import { countries } from '../infra/countries';
 @Injectable()
 export class PriceEshopService {
-  private readonly priceHistoryLogger = new Logger('price-history');
-
   constructor(
     @Inject('PRICE_REPOSITORY') private repository: PriceRepositoryService,
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
     @Inject('GAME_REPOSITORY') private gameRepository: GameRepositoryService,
-    @Inject('PRICE_HISTORY_REPOSITORY')
-    private priceHistoryRepository: PriceHistoryRepositoryService,
     @Inject('RABBIT_SERVICE') private rabbitService: RabbitService,
   ) {}
 
@@ -104,45 +98,6 @@ export class PriceEshopService {
           ),
       })),
     );
-  }
-
-  async saveHistoryPrice(
-    gameId: string,
-    oldPrice: { [x: string]: number | null },
-  ) {
-    const prices = await this.repository.getPriceByGameId(gameId);
-    const datas = prices.reduce(
-      (acc, item) => ({
-        ...acc,
-        [item.country]:
-          item.salesStatus !== 'not_found'
-            ? item?.discountPrice?.rawValue ||
-              item?.regularPrice?.rawValue ||
-              null
-            : null,
-      }),
-      {},
-    );
-
-    const changedCountryPrice = countries.filter(
-      (item) => (oldPrice[item.code] || null) !== (datas[item.code] || null),
-    );
-
-    const changedPrices = changedCountryPrice.map((item) => ({
-      newPrice: datas[item.code] ? Number(datas[item.code]) : null,
-      oldPrice: oldPrice[item.code] ? Number(oldPrice[item.code]) : null,
-      date: new Date(),
-      gameId: gameId,
-      country: item.code,
-    }));
-
-    changedPrices.forEach((item) =>
-      this.priceHistoryLogger.log(
-        `price history created: ${JSON.stringify(item)}`,
-      ),
-    );
-
-    await this.priceHistoryRepository.savePriceHistories(changedPrices);
   }
 
   async getPriceHistoryMessages() {

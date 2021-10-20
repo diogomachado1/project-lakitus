@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { InfraModule } from '../infra/infra.module';
-import { EshopServicesModule } from '../eshop/eshop.module';
-import { PriceEshopController } from './price-eshop.controller';
-import { PriceEshopService } from './price-eshop.service';
+import { EshopServicesModule } from '../infra/eshop/eshop.module';
+import { PriceEshopController } from './price.controller';
+import { PriceEshopService } from './price.service';
 
 @Module({
   imports: [EshopServicesModule, InfraModule],
