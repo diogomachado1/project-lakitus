@@ -4,8 +4,8 @@
 #   push:
 #     branches: [main]
 #     paths: 
-#       - 'games-crawler/**'
-#       - '!games-crawler/config/deployment.yml'
+#       - 'eagle/**'
+#       - '!eagle/config/deployment.yml'
 #   pull_request:
 #     types: [opened, synchronize, reopened]
 
@@ -15,7 +15,7 @@
 #     container: node:12
 #     defaults:
 #       run:
-#         working-directory: ./games-crawler
+#         working-directory: ./eagle
 #     steps:
 #       - uses: actions/checkout@v2
 

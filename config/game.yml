@@ -51,14 +51,14 @@ services:
         - postgres
     networks:
         - traefik-net
-  game-crawler:
-      image: diogo8machado/game-crawler
+  eagle:
+      image: diogo8machado/eagle
       environment: 
         - MONGO_URL=mongodb+srv://game-service:Kxo6yVFTlDj5e8eZ@leari.qoans.mongodb.net/games?retryWrites=true&w=majority
         - RABBIT_HOST=rabbit
         - RABBIT_USER=guest
         - RABBIT_PASSWORD=guest
-        - NEW_RELIC_APP_NAME=game-crawler
+        - NEW_RELIC_APP_NAME=eagle
         - NEW_RELIC_LICENSE_KEY=191747ea147dbf51aecbf79cebd5d1d88644NRAL
         - AWS_ACCESS_KEY_ID=AKIARSYY7UOTLEAPGSRY
         - AWS_SECRET_ACCESS_KEY=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

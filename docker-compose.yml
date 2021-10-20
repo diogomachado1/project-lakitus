@@ -50,12 +50,12 @@ services:
       ports:
           - 27017:27017
       restart: unless-stopped
-  game-crawler:
-      build: ./game-crawler
+  eagle:
+      build: ./eagle
       command: yarn start:dev
       volumes:
-        - ./game-crawler/src:/home/app/src:cached
-        - ./game-crawler/package.json:/home/app/package.json:cached
+        - ./eagle/src:/home/app/src:cached
+        - ./eagle/package.json:/home/app/package.json:cached
       environment: 
         MONGO_URL: mongodb://mongodb:27017/games
         RABBIT_HOST: rabbit
