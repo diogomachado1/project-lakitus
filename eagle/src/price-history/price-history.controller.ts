@@ -1,5 +1,6 @@
 import { Controller, Param, Get, Query } from '@nestjs/common';
 import { PriceHistoryService } from './price-history.service';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('price-history')
 export class PriceHistoryController {
@@ -11,5 +12,16 @@ export class PriceHistoryController {
     { country }: { country: string },
   ) {
     return this.service.getPriceHistoryByGameIdAndCountry(gameId, country);
+  }
+
+  @MessagePattern('game-price-history')
+  async saveHistoryPrice({
+    gameId,
+    oldPrice,
+  }: {
+    gameId: string;
+    oldPrice: any;
+  }) {
+    await this.service.saveHistoryPrice(gameId, oldPrice);
   }
 }
