@@ -11,7 +11,7 @@ export class Game {
   usEshopDetail: GameUS;
 
   @Prop({ type: {} })
-  euEshopDetail: GameEU;
+  euEshopDetail: GameEU & { popularity?: number };
 
   @Prop({ type: {} })
   jpEshopDetail: GameJP;
@@ -30,6 +30,9 @@ export class Game {
 
   @Prop()
   hkEshopId: string;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const GameSchema = SchemaFactory.createForClass(Game);

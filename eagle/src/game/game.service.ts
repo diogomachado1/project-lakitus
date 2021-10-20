@@ -15,12 +15,17 @@ export class GameService {
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
   ) {}
 
-  async getOneGame(id: string) {
-    return this.gameRepository.findOneGame(id);
+  async getOneGame(id: string, fullDetail: boolean) {
+    return this.gameRepository.findOneGame(id, fullDetail);
   }
 
-  async getManyGame(ids: string[], search: string, page: number) {
-    return this.gameRepository.findGames({ ids, search }, page);
+  async getManyGame(
+    ids: string[],
+    search: string,
+    page: number,
+    fullDetail: boolean,
+  ) {
+    return this.gameRepository.findGames({ ids, search }, page, fullDetail);
   }
 
   async getAndSaveGameData(usId: string, euId: string) {
