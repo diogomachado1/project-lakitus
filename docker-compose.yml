@@ -1,0 +1,93 @@
+version: '3.7'
+services:
+  postgres:
+    build: 
+      context: ./keycloak
+      dockerfile: db-dockerfile
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: password
+    volumes:
+      - ./keycloak/themes/leari:/opt/jboss/keycloak/themes/leari
+    ports:
+      - 8080:8080
+    depends_on:
+        - postgres
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8001:8001"
+      - "8000:8000"
+    environment:
+      KONG_PLUGINS: kong-jwt2header,jwt
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: '0.0.0.0:8001'
+      KONG_DATABASE: 'off'
+      KONG_DECLARATIVE_CONFIG: kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+  mongodb:
+      image : mongo
+      volumes:
+          - /home/database:/data/db 
+      ports:
+          - 27017:27017
+      restart: unless-stopped
+  game-crawler:
+      build: ./game-crawler
+      command: yarn start:dev
+      volumes:
+        - ./game-crawler/src:/home/app/src:cached
+        - ./game-crawler/package.json:/home/app/package.json:cached
+      environment: 
+        MONGO_URL: mongodb://mongodb:27017/games
+        RABBIT_HOST: rabbit
+        RABBIT_USER: guest
+        RABBIT_PASSWORD: guest
+      depends_on:
+        - rabbit
+        - mongodb
+
+  game-service:
+      build: ./game-service
+      command: yarn start:dev
+      volumes:
+        - ./game-service/src:/home/app/src:cached
+        - ./game-service/package.json:/home/app/package.json:cached
+      environment: 
+        MONGO_URL: mongodb://mongodb:27017/games
+        RABBIT_HOST: rabbit
+        RABBIT_USER: guest
+        RABBIT_PASSWORD: guest
+      depends_on:
+        - rabbit
+        - mongodb
+  rabbit:
+      hostname: mabbit
+      image: rabbitmq:management-alpine
+      volumes:
+        - "rabbitmq:/var/lib/rabbitmq/mnesia/"
+volumes:
+  rabbitmq:
+  postgres:
+
+networks:
+  traefik-net:
+    external: true

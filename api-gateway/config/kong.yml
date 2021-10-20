@@ -1,0 +1,25 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: game-services
+    url: http://game-service:3000
+    # plugins:
+    # - name: kong-jwt2header
+    # - name: jwt
+    #   config: 
+    #     key_claim_name: kid
+    #     claims_to_verify: 
+    #       - exp
+    routes:
+    - name: game
+      paths:
+      - /
+
+
+# consumers:
+# - username: login_server_issuer
+#   jwt_secrets:
+#     - algorithm: RS256
+#       key: sremYRUeLhCE_dK2mvY0jEP2iigLFXrhY9B15LSRmiY
+#       rsa_public_key: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr3QHyCKWAIuLTh++7IXIaDqXCJ6ht8daqvO9cthberGmZ0URHdl80JICNy7HdBs9HqtiUqBxcp5VdeH4zufp1CJMtldXxsmc1ekpETEnV0r4rFDEF66kKuUL44cspBw0BkshOQveSGUWbHFYLfFrAYPoMeyftDt2gPKpyRpNYGElUttwLk+dBui8T7zVqYR0wd5m3bkShFL3i4nEupdBBgz4zV9yg2tfBfe0E6HtmUXUY6F/5SIEYNR7qGOLRkLT5y3IHHaxORgi917CCY9xiF5mFCophURvO6gdRGv8eaVRwuNQXbn9yb1dIo0eEnP8JQZVSOzM80a2Rz2G1l8UmQIDAQAB\n-----END PUBLIC KEY-----"

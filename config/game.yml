@@ -1,5 +1,53 @@
 version: '3.7'
 services:
+  api-gateway:
+    build: diogo8machado/api-gateway
+    environment:
+      KONG_PLUGINS: kong-jwt2header,jwt
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: '0.0.0.0:8001'
+      KONG_DATABASE: 'off'
+      KONG_DECLARATIVE_CONFIG: kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gateway.rule=Host(`api.leari.xyz`)"
+      - "traefik.http.routers.gateway.entrypoints=websecure"
+      - "traefik.http.routers.gateway.tls.certresolver=myresolver"
+      - "traefik.http.services.gateway.loadbalancer.server.port=8000"
+    networks:
+        - traefik-net
+  postgres:
+    image: postgres:alpine
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: password
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.auth.rule=Host(`auth.leari.xyz`)"
+      - "traefik.http.routers.auth.entrypoints=websecure"
+      - "traefik.http.routers.auth.tls.certresolver=myresolver"
+      - "traefik.http.services.auth.loadbalancer.server.port=8080"
+    depends_on:
+        - postgres
+    networks:
+        - traefik-net
   game-crawler:
       image: diogo8machado/game-crawler
       environment: 
@@ -25,12 +73,6 @@ services:
         - RABBIT_PASSWORD=guest
         - NEW_RELIC_APP_NAME=game-api
         - NEW_RELIC_LICENSE_KEY=191747ea147dbf51aecbf79cebd5d1d88644NRAL
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.gameapi.rule=Host(`api.leari.xyz`)"
-        - "traefik.http.routers.gameapi.entrypoints=websecure"
-        - "traefik.http.routers.gameapi.tls.certresolver=myresolver"
-        - "traefik.http.services.gameapi.loadbalancer.server.port=3000"
       networks:
         - traefik-net
   rabbit:
@@ -51,6 +93,7 @@ services:
         - traefik-net
 volumes:
   rabbitmq:
+  postgres:
 
 networks:
   traefik-net:

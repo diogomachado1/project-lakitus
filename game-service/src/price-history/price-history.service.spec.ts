@@ -1,3 +1,4 @@
+import { CACHE_MANAGER } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { format, subDays } from 'date-fns';
 import { PriceHistoryService } from './price-history.service';
@@ -106,6 +107,11 @@ describe('PriceHistoryService', () => {
     },
   };
 
+  const cache = {
+    get: async () => undefined,
+    set: async () => undefined,
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -113,6 +119,10 @@ describe('PriceHistoryService', () => {
         {
           useValue: PriceHistoryRepository,
           provide: 'PRICE_HISTORY_REPOSITORY',
+        },
+        {
+          useValue: cache,
+          provide: CACHE_MANAGER,
         },
       ],
     }).compile();

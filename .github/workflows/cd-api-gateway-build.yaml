@@ -1,0 +1,35 @@
+name: CD-api-gateway
+
+on:
+  push:
+    branches: [main]
+    paths: 
+      - 'api-gateway/**'
+      - '.github/workflows/cd-api-gateway-build.yaml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api-gateway
+    steps:
+      - uses: actions/checkout@v2
+      - name: test
+        run: ls
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: diogo8machado/api-gateway
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          workdir: ./api-gateway
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Webhook
+  #     uses: distributhor/workflow-webhook@v2
+  #     env:
+  #       webhook_url: "https://portainer.leari.xyz/api/webhooks/50780a28-ce79-4c0e-982d-f8465ba13656"
+  #       webhook_secret: "Y0uR5ecr3t"

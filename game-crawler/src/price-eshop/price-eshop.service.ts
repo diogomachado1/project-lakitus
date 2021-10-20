@@ -6,7 +6,7 @@ import { RabbitService } from '../infra/rabbit/rabbit.service';
 import { EshopService } from '../eshop/eshop.service';
 import { PriceRepositoryService } from '../infra/price-repository/price-repository.service';
 import { countries } from './countries';
-import { PriceHistoryRepositoryService } from 'src/infra/game-history-repository/price-history-repository.service';
+import { PriceHistoryRepositoryService } from '../infra/game-history-repository/price-history-repository.service';
 
 @Injectable()
 export class PriceEshopService {

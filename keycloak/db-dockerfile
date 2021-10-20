@@ -1,0 +1,3 @@
+FROM postgres:alpine
+ENV POSTGRES_DB keycloak
+COPY ./keycloak.sql ./docker-entrypoint-initdb.d/

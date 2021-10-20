@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { GameRepositoryService } from 'src/infra/game-repository/game-repository.service';
+import { GameRepositoryService } from '../infra/game-repository/game-repository.service';
 
 @Injectable()
 export class GameService {

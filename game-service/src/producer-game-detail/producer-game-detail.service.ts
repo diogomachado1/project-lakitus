@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { NsgService } from 'src/infra/nsg/nsg.service';
-import { RabbitService } from 'src/infra/rabbit/rabbit.service';
+import { NsgService } from '../infra/nsg/nsg.service';
+import { RabbitService } from '../infra/rabbit/rabbit.service';
 import { GameRepositoryService } from '../infra/game-repository/game-repository.service';
 import { NsgGame } from './interfaces/NsgGame';
 
@@ -25,24 +25,21 @@ export class ProducerGameDetailService {
     await this.rabbitService.sendBatchToGameDetail(gamesIds);
     return gamesIds;
   }
-  protected getNewGames(
-    nsgGames: NsgGame[],
-    savedGamesUsId: { usEshopId: string }[],
-  ) {
+  getNewGames(nsgGames: NsgGame[], savedGamesUsId: { usEshopId: string }[]) {
     const usIdHashTable = this.createHatableUsIdEshop(savedGamesUsId);
     return nsgGames
       .filter((item) => !usIdHashTable.includes(item.nsuid_na.toString()))
       .map((item) => ({ usId: item.nsuid_na, euId: item.nsuid_eu }));
   }
 
-  protected getAllGames(nsgGames: NsgGame[]) {
+  getAllGames(nsgGames: NsgGame[]) {
     return nsgGames.map((item) => ({
       usId: item.nsuid_na,
       euId: item.nsuid_eu,
     }));
   }
 
-  protected createHatableUsIdEshop(savedGamesUsId: { usEshopId: string }[]) {
+  createHatableUsIdEshop(savedGamesUsId: { usEshopId: string }[]) {
     return savedGamesUsId.map((item) => item.usEshopId.toString());
   }
 

@@ -49,7 +49,7 @@ describe('ProducerGameDetailService', () => {
         ProducerGameDetailService,
         { useValue: NsgService, provide: 'NSG_SERVICE' },
         { useValue: GameRepository, provide: 'GAME_REPOSITORY' },
-        { useValue: RabbitService, provide: 'KAFKA_SERVICE' },
+        { useValue: RabbitService, provide: 'RABBIT_SERVICE' },
       ],
     }).compile();
 
@@ -62,28 +62,28 @@ describe('ProducerGameDetailService', () => {
 
   it('should generate hash table', () => {
     const gameHash = service.createHatableUsIdEshop(gamesUsId);
-    const gameHashExpected = {
-      '70010000033731': true,
-      '70010000045157': true,
-      '70010000045348': true,
-      '70010000038924': true,
-      '70010000044778': true,
-      '70010000045759': true,
-      '70010000033499': true,
-      '70010000040371': true,
-      '70010000043052': true,
-      '70010000037238': true,
-      '70010000045391': true,
-      '70010000037532': true,
-      '70010000041461': true,
-      '70010000043167': true,
-      '70010000028255': true,
-      '70010000046033': true,
-      '70010000039353': true,
-      '70010000044091': true,
-      '70010000044750': true,
-      '70010000022882': true,
-    };
+    const gameHashExpected = [
+      '70010000033731',
+      '70010000045157',
+      '70010000045348',
+      '70010000038924',
+      '70010000044778',
+      '70010000045759',
+      '70010000033499',
+      '70010000040371',
+      '70010000043052',
+      '70010000037238',
+      '70010000045391',
+      '70010000037532',
+      '70010000041461',
+      '70010000043167',
+      '70010000028255',
+      '70010000046033',
+      '70010000039353',
+      '70010000044091',
+      '70010000044750',
+      '70010000022882',
+    ];
     expect(gameHash).toStrictEqual(gameHashExpected);
   });
 
