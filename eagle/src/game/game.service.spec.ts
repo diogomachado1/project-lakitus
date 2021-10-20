@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GameDetailEshopService } from './game-detail-eshop.service';
+import { GameService } from './game.service';
 import { usGameDetail } from './mocks/usGameDetail';
 
-describe('GameDetailEshopService', () => {
-  let service: GameDetailEshopService;
+describe('GameService', () => {
+  let service: GameService;
   const GameRepository = {
     saveGameDetailUS: async () => {
       return;
@@ -18,11 +18,11 @@ describe('GameDetailEshopService', () => {
       providers: [
         { useValue: EshoService, provide: 'ESHOP_SERVICE' },
         { useValue: GameRepository, provide: 'GAME_REPOSITORY' },
-        GameDetailEshopService,
+        GameService,
       ],
     }).compile();
 
-    service = module.get(GameDetailEshopService);
+    service = module.get(GameService);
   });
 
   it('should be defined', () => {

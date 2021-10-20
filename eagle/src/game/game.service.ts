@@ -1,18 +1,27 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { GameRepositoryService } from '../infra/game-repository/game-repository.service';
 import {
   GameEU,
   GameJP,
   parseGameCode,
   parseNSUID,
 } from 'nintendo-switch-eshop';
-import { EshopService } from '../eshop/eshop.service';
-import { GameRepositoryService } from '../infra/game-repository/game-repository.service';
+import { EshopService } from '../infra/eshop/eshop.service';
+
 @Injectable()
-export class GameDetailEshopService {
+export class GameService {
   constructor(
-    @Inject('GAME_REPOSITORY') private repository: GameRepositoryService,
+    @Inject('GAME_REPOSITORY') private gameRepository: GameRepositoryService,
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
   ) {}
+
+  async getOneGame(id: string) {
+    return this.gameRepository.findOneGame(id);
+  }
+
+  async getManyGame(ids: string[], search: string, page: number) {
+    return this.gameRepository.findGames({ ids, search }, page);
+  }
 
   async getAndSaveGameData(usId: string, euId: string) {
     const [usEshopData, euEshopData] = await Promise.all([
@@ -33,13 +42,13 @@ export class GameDetailEshopService {
         jpEshopId: jpAndHkDetail?.jpEshopId,
         hkEshopId: jpAndHkDetail?.hkEshopId,
       };
-      await this.repository.saveGameDetail(gameToSave);
+      await this.gameRepository.saveGameDetail(gameToSave);
     } else {
       const gameToSave = {
         usEshopId: usId,
         euEshopId: euId,
       };
-      await this.repository.saveGameDetail(gameToSave);
+      await this.gameRepository.saveGameDetail(gameToSave);
     }
   }
 

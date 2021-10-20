@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { EshopServicesModule } from './eshop/eshop.module';
 import { PriceHistoryRepositoryModule } from './game-history-repository/price-history-repository.module';
 import { GameRepositoryModule } from './game-repository/game-repository.module';
 import { PriceRepositoryModule } from './price-repository/price-repository.module';
@@ -12,6 +13,7 @@ import { S3Module } from './s3/s3.module';
     PriceHistoryRepositoryModule,
     S3Module,
     RabbitModule,
+    EshopServicesModule
   ],
   exports: [
     GameRepositoryModule,
@@ -19,6 +21,7 @@ import { S3Module } from './s3/s3.module';
     PriceHistoryRepositoryModule,
     S3Module,
     RabbitModule,
+    EshopServicesModule,
   ],
 })
 export class InfraModule {}
