@@ -17,4 +17,14 @@ export class PriceHistoryRepositoryService {
   async getPriceHistoryByGameId(gameId: string) {
     return this.priceHistoryModel.find({ gameId }).lean();
   }
+
+  async findPriceHistory(gameId: string, country: string) {
+    const filter =
+      country === 'all'
+        ? { gameId }
+        : { gameId, country: country.toUpperCase() };
+    const prices = this.priceHistoryModel.find(filter).lean();
+
+    return prices;
+  }
 }
