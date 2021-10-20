@@ -18,11 +18,11 @@ export class GameService {
   ) {}
 
   async getOneGame(id: string, fullDetail: boolean) {
-    const cached = await this.cacheManager.get<any[]>(
+    const cached = await this.cacheManager.get<any>(
       `game:${id}:${fullDetail ? 'true' : 'false'}`,
     );
     if (cached) return cached;
-    const game = this.gameRepository.findOneGame(id, fullDetail);
+    const game = await this.gameRepository.findOneGame(id, fullDetail);
     await this.cacheManager.set(
       `game:${id}:${fullDetail ? 'true' : 'false'}`,
       game,
