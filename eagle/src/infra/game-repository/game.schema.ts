@@ -31,6 +31,7 @@ export class Game {
   @Prop()
   hkEshopId: string;
 
+  prices: any[];
   createdAt: Date;
   updatedAt: Date;
 }

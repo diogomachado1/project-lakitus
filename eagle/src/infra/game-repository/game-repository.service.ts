@@ -85,6 +85,7 @@ export class GameRepositoryService {
             game.usEshopDetail?.releaseDateDisplay ||
             game.euEshopDetail?.date_from,
           popularity: game.euEshopDetail?.popularity,
+          prices: game.prices,
           createdAt: game.createdAt,
           updatedAt: game.updatedAt,
         };
