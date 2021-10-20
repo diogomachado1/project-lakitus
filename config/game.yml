@@ -30,7 +30,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     ports:
-      - 8080:8080
+      - 8080:8081
     environment:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
