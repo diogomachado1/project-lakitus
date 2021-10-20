@@ -4,8 +4,7 @@ on:
   push:
     branches: [main]
     paths: 
-      - '.github/workflows/cd-eagle.yaml'
-      - 'config/game.yml'
+      - '.github/workflows/cd-api-gateway.yaml'
 
 jobs:
   update-stack:
@@ -14,7 +13,7 @@ jobs:
     - name: Webhook
       uses: distributhor/workflow-webhook@v2
       env:
-        webhook_url: "https://portainer.leari.xyz/api/stacks/webhooks/11c1cb03-3c69-4bd6-abd9-c1a53e3fac4b"
+        webhook_url: "https://portainer.leari.xyz/api/webhooks/03470fbf-a6a7-47dd-aae5-fbbe83ae458d"
         webhook_secret: "Y0uR5ecr3t"
 
       

@@ -24,12 +24,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           workdir: ./api-gateway
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Webhook
-  #     uses: distributhor/workflow-webhook@v2
-  #     env:
-  #       webhook_url: "https://portainer.leari.xyz/api/webhooks/50780a28-ce79-4c0e-982d-f8465ba13656"
-  #       webhook_secret: "Y0uR5ecr3t"
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Webhook
+      uses: distributhor/workflow-webhook@v2
+      env:
+        webhook_url: "https://portainer.leari.xyz/api/webhooks/03470fbf-a6a7-47dd-aae5-fbbe83ae458d"
+        webhook_secret: "Y0uR5ecr3t"
