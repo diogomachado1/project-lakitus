@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { PriceService } from './price.service';
 
-@Controller('price')
+@Controller('game/price')
 export class PriceController {
   constructor(private gameService: PriceService) {}
 

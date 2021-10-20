@@ -1,7 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ProducerGameDetailService } from './producer-message.service';
 
-@Controller('send-games-ids')
+@Controller('game/send-games-ids')
 export class ProducerGameDetailController {
   constructor(private producerGameDetailService: ProducerGameDetailService) {}
   @Post('/')

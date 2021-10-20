@@ -2,7 +2,7 @@ import { Controller, Param, Get, Query } from '@nestjs/common';
 import { PriceHistoryService } from './price-history.service';
 import { MessagePattern } from '@nestjs/microservices';
 
-@Controller('price-history')
+@Controller('game/price-history')
 export class PriceHistoryController {
   constructor(private service: PriceHistoryService) {}
   @Get('/:gameId')

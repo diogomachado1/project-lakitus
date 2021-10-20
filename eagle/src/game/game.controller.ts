@@ -2,7 +2,7 @@ import { Controller, Param, Get, Query } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { GameService } from './game.service';
 
-@Controller('games')
+@Controller('game/detail')
 export class GameController {
   constructor(private service: GameService) {}
   @Get('/:id')

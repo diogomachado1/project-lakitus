@@ -3,7 +3,7 @@ _transform: true
 
 services:
   - name: eagle
-    url: http://eagle:3000
+    url: http://eagle:3000/game
     # plugins:
     # - name: kong-jwt2header
     # - name: jwt
@@ -12,9 +12,9 @@ services:
     #     claims_to_verify: 
     #       - exp
     routes:
-    - name: game
+    - name: games
       paths:
-      - /
+      - /game
 
 
 # consumers:
