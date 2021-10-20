@@ -45,7 +45,7 @@ services:
       - "traefik.http.routers.auth.rule=Host(`auth.leari.xyz`)"
       - "traefik.http.routers.auth.entrypoints=websecure"
       - "traefik.http.routers.auth.tls.certresolver=myresolver"
-      - "traefik.http.services.auth.loadbalancer.server.port=8080"
+      - "traefik.http.services.auth.loadbalancer.server.port=8443"
     depends_on:
         - postgres
     networks:
