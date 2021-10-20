@@ -2,8 +2,8 @@ _format_version: "2.1"
 _transform: true
 
 services:
-  - name: game-services
-    url: http://game-service:3000
+  - name: eagle
+    url: http://eagle:3000
     # plugins:
     # - name: kong-jwt2header
     # - name: jwt

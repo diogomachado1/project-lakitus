@@ -67,17 +67,6 @@ services:
         - DISCORD_URL=https://discord.com/api/webhooks/890673551177306192/CBqJSZv_z1W0Y3XZ2z9BhF6_Ut9y7WcKULMAvyTnPdVPeyF_EBncqRT6dMbIrHRkiVYJ
       networks:
         - traefik-net
-  game-service:
-      image: diogo8machado/game-service
-      environment: 
-        - MONGO_URL=mongodb+srv://game-service:Kxo6yVFTlDj5e8eZ@leari.qoans.mongodb.net/games?retryWrites=true&w=majority
-        - RABBIT_HOST=rabbit
-        - RABBIT_USER=guest
-        - RABBIT_PASSWORD=guest
-        - NEW_RELIC_APP_NAME=game-api
-        - NEW_RELIC_LICENSE_KEY=191747ea147dbf51aecbf79cebd5d1d88644NRAL
-      networks:
-        - traefik-net
   rabbit:
       hostname: mabbit
       image: rabbitmq:management-alpine
