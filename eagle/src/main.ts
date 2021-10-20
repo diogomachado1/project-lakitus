@@ -15,7 +15,6 @@ async function bootstrap() {
       strategy: rabbit,
     },
   );
-  // await rabbit.createQueues();
 
   app.useGlobalFilters(new AllExceptionsFilter());
   await app.listen();

@@ -51,4 +51,15 @@ export class RabbitService {
       gamesIds,
     );
   }
+
+  async sendMessageToPriceStart() {
+    await this.channel.publish(
+      'game-price-starter',
+      'game-price-starter',
+      Buffer.from(JSON.stringify({})),
+      {
+        persistent: true,
+      },
+    );
+  }
 }
