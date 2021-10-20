@@ -31,6 +31,8 @@ services:
         - traefik-net
   keycloak:
     image: quay.io/keycloak/keycloak:latest
+    ports:
+      - 8080:8080
     environment:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
@@ -40,12 +42,12 @@ services:
       DB_USER: keycloak
       DB_SCHEMA: public
       DB_PASSWORD: password
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.auth.rule=Host(`auth.leari.xyz`)"
-      - "traefik.http.routers.auth.entrypoints=websecure"
-      - "traefik.http.routers.auth.tls.certresolver=myresolver"
-      - "traefik.http.services.auth.loadbalancer.server.port=8443"
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.auth.rule=Host(`auth.leari.xyz`)"
+    #   - "traefik.http.routers.auth.entrypoints=websecure"
+    #   - "traefik.http.routers.auth.tls.certresolver=myresolver"
+    #   - "traefik.http.services.auth.loadbalancer.server.port=8080"
     depends_on:
         - postgres
     networks:
