@@ -5,8 +5,5 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.22.0"
-  },
-  "devDependencies": {
-    "serverless": "^2.64.1"
   }
 }
