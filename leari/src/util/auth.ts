@@ -22,8 +22,7 @@ export function getPayload(token: string) {
   );
 }
 
-export type Payload = KeycloakTokenParsed &
-  KeycloakProfile;
+export type Payload = KeycloakTokenParsed & KeycloakProfile;
 
 export type Token = { token: string; payload: Payload };
 

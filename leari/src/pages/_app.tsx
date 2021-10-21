@@ -1,11 +1,9 @@
-
-  
 import type { AppContext, AppProps } from "next/app";
 import { SSRKeycloakProvider, SSRCookies } from "@react-keycloak/ssr";
 import { KEYCLOAK_CONFIG } from "../util/auth";
-import { parseCookies } from "../util/cookies"; 
+import { parseCookies } from "../util/cookies";
 function MyApp({ Component, pageProps, cookies }: AppProps & { cookies: any }) {
-  console.log(KEYCLOAK_CONFIG)
+  console.log(KEYCLOAK_CONFIG);
   return (
     <SSRKeycloakProvider
       keycloakConfig={KEYCLOAK_CONFIG as any}

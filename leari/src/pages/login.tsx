@@ -1,14 +1,14 @@
 import { useKeycloak } from "@react-keycloak/ssr";
 import { KeycloakInstance } from "keycloak-js";
 import { useEffect } from "react";
-import Router from 'next/router';
+import Router from "next/router";
 
 const LoginPage = () => {
   const { initialized, keycloak } = useKeycloak<KeycloakInstance>();
 
   const { login = () => {}, authenticated } = keycloak || {};
   useEffect(() => {
-    console.log(initialized, authenticated)
+    console.log(initialized, authenticated);
     if (!initialized) {
       return;
     }
@@ -18,14 +18,14 @@ const LoginPage = () => {
   }, [login, authenticated, initialized]);
 
   useEffect(() => {
-    if(!initialized){
+    if (!initialized) {
       return;
     }
 
-    if(authenticated){
-      Router.replace('/games');
+    if (authenticated) {
+      Router.replace("/games");
     }
-  })
+  });
 
   return null;
 };
