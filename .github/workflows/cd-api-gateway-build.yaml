@@ -15,8 +15,6 @@ jobs:
         working-directory: ./api-gateway
     steps:
       - uses: actions/checkout@v2
-      - name: test
-        run: ls
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
