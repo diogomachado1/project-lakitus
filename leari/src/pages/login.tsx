@@ -23,7 +23,7 @@ const LoginPage = () => {
     }
 
     if(authenticated){
-      Router.replace('/private');
+      Router.replace('/games');
     }
   })
 
