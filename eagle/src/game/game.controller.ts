@@ -3,28 +3,27 @@ import { MessagePattern } from '@nestjs/microservices';
 import { GameService } from './game.service';
 import { GameFilter } from './GameFilter';
 
-@Controller('game/detail')
+@Controller('game')
 export class GameController {
   constructor(private service: GameService) {}
-  @Get('/:id')
+  @Get('/detail/:id')
   async getOneGame(@Param('id') id: string) {
     return this.service.getOneGame(id, false);
   }
 
-  @Get('/full/:id')
-  async getFullGame(@Param('id') id: string) {
-    return this.service.getOneGame(id, true);
-  }
-
-  @Get('/')
+  @Get('/detail/')
   async getMany(
     @Query()
     { ids, search, page }: GameFilter,
   ) {
     return this.service.getManyGame(ids?.split(','), search, page, false);
   }
+  @Get('/detail-full/:id')
+  async getFullGame(@Param('id') id: string) {
+    return this.service.getOneGame(id, true);
+  }
 
-  @Get('/full')
+  @Get('/detail-full/')
   async getManyFull(
     @Query()
     { ids, search, page }: GameFilter,
