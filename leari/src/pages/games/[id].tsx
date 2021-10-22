@@ -54,7 +54,7 @@ export default GamesHome;
 
 export async function getStaticPaths() {
   return {
-    paths: [{ params: { id: "614be0065c60a0ac3c5ba781" } }],
+    paths: [],
     fallback: true,
   };
 }
