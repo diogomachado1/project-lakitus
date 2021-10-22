@@ -20,17 +20,11 @@ describe('EshopService', () => {
     .spyOn(eshop, 'getGamesAmerica')
     .mockResolvedValue(usGamesDetails);
 
-  const getGamesEuropeSpy = jest
-    .spyOn(eshop, 'getGamesEurope')
-    .mockResolvedValue([euGameDetail]);
+  jest.spyOn(eshop, 'getGamesEurope').mockResolvedValue([euGameDetail]);
 
-  const getGamesJapanSpy = jest
-    .spyOn(eshop, 'getGamesJapan')
-    .mockResolvedValue([jpGameDetail]);
+  jest.spyOn(eshop, 'getGamesJapan').mockResolvedValue([jpGameDetail]);
 
-  const getGamesHkSpy = jest
-    .spyOn(axios, 'get')
-    .mockResolvedValue({ data: [hkGameDetail] });
+  jest.spyOn(axios, 'get').mockResolvedValue({ data: [hkGameDetail] });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

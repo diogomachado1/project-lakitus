@@ -15,7 +15,7 @@ import { S3Module } from './s3/s3.module';
     S3Module,
     RabbitModule,
     EshopServicesModule,
-    NsgModule
+    NsgModule,
   ],
   exports: [
     GameRepositoryModule,
@@ -24,7 +24,7 @@ import { S3Module } from './s3/s3.module';
     S3Module,
     RabbitModule,
     EshopServicesModule,
-    NsgModule
+    NsgModule,
   ],
 })
 export class InfraModule {}
