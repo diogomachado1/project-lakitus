@@ -64,21 +64,6 @@ services:
       depends_on:
         - rabbit
         - mongodb
-
-  game-service:
-      build: ./game-service
-      command: yarn start:dev
-      volumes:
-        - ./game-service/src:/home/app/src:cached
-        - ./game-service/package.json:/home/app/package.json:cached
-      environment: 
-        MONGO_URL: mongodb://mongodb:27017/games
-        RABBIT_HOST: rabbit
-        RABBIT_USER: guest
-        RABBIT_PASSWORD: guest
-      depends_on:
-        - rabbit
-        - mongodb
   rabbit:
       hostname: mabbit
       image: rabbitmq:management-alpine
@@ -90,7 +75,3 @@ services:
 volumes:
   rabbitmq:
   postgres:
-
-networks:
-  traefik-net:
-    external: true
