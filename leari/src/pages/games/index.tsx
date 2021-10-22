@@ -60,9 +60,7 @@ const GamesHome: NextPage<GamesHomeProps> = (props) => {
 export default GamesHome;
 
 export const getServerSideProps = async (ctx: any) => {
-  console.log(ctx);
   const { data } = await http.get("game/detail", { params: ctx.query });
-  console.log("aa");
   return {
     props: { data },
   };

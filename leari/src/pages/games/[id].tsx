@@ -60,7 +60,6 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }: any) {
-  console.log("resquest1");
   return {
     props: {
       game: (await http.get(`game/detail/${params.id}`)).data,
