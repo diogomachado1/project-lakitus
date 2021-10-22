@@ -6,9 +6,10 @@ import { GameFilter } from './GameFilter';
 @Controller('game')
 export class GameController {
   constructor(private service: GameService) {}
+
   @Get('/detail/:id')
   async getOneGame(@Param('id') id: string) {
-    return this.service.getOneGame(id, false);
+    return this.service.getOneGame(id);
   }
 
   @Get('/detail/')
@@ -16,11 +17,12 @@ export class GameController {
     @Query()
     { ids, search, page }: GameFilter,
   ) {
-    return this.service.getManyGame(ids?.split(','), search, page, false);
+    return this.service.getManyGame(ids?.split(','), search, page);
   }
+
   @Get('/detail-full/:id')
   async getFullGame(@Param('id') id: string) {
-    return this.service.getOneGame(id, true);
+    return this.service.getOneGameFull(id);
   }
 
   @Get('/detail-full/')
@@ -28,7 +30,7 @@ export class GameController {
     @Query()
     { ids, search, page }: GameFilter,
   ) {
-    return this.service.getManyGame(ids?.split(','), search, page, true);
+    return this.service.getManyGameFull(ids?.split(','), search, page);
   }
 
   @MessagePattern('game-detail')

@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Document, LeanDocument, Model } from 'mongoose';
 import { GameEU, GameJP, GameUS } from 'nintendo-switch-eshop';
 import { GameHk } from '../eshop/eshop.service';
 import { Game, GameDocument } from './game.schema';
+import { SimpleDetail } from './SimpleDetail';
 
 @Injectable()
 export class GameRepositoryService {
@@ -58,43 +59,63 @@ export class GameRepositoryService {
     return this.gameModel.find({}, ['_id']).lean();
   }
 
-  async findOneGame(id: string, fullDetail = false) {
-    const game = await this.gameModel.findById(id).populate('prices').lean();
-    return fullDetail
-      ? game
-      : {
-          id: game._id,
-          externalIds: {
-            usEshopId: game.usEshopId,
-            euEshopId: game.euEshopId,
-            hkEshopId: game.hkEshopId,
-            jpEshopId: game.jpEshopId,
-          },
-          title: game.usEshopDetail?.title || game.euEshopDetail?.title,
-          description: game.usEshopDetail?.description || '',
-          developer:
-            game.usEshopDetail?.developers?.[0] ||
-            game.euEshopDetail?.developer,
-          publisher:
-            game.usEshopDetail?.publishers?.[0] ||
-            game.euEshopDetail?.publisher,
-          image:
-            game.euEshopDetail?.image_url ||
-            game.usEshopDetail?.horizontalHeaderImage,
-          releaseDate:
-            game.usEshopDetail?.releaseDateDisplay ||
-            game.euEshopDetail?.date_from,
-          popularity: game.euEshopDetail?.popularity,
-          prices: game.prices,
-          createdAt: game.createdAt,
-          updatedAt: game.updatedAt,
-        };
+  async findOneGame(id: string) {
+    return this.gameModel.findById(id).populate('prices').lean();
+  }
+
+  async findOneGameSimple(id: string) {
+    const game = await this.findOneGame(id);
+    return this.trasformData(game);
+  }
+
+  trasformData(
+    value: LeanDocument<
+      Game &
+        Document<any, any, any> & {
+          _id: any;
+        }
+    >,
+  ) {
+    const gameDetail = {
+      id: value._id,
+      externalIds: {
+        usEshopId: value.usEshopId,
+        euEshopId: value.euEshopId,
+        hkEshopId: value.hkEshopId,
+        jpEshopId: value.jpEshopId,
+      },
+      title: value.usEshopDetail?.title || value.euEshopDetail?.title,
+      description: value.usEshopDetail?.description || '',
+      developer:
+        value.usEshopDetail?.developers?.[0] || value.euEshopDetail?.developer,
+      publisher:
+        value.usEshopDetail?.publishers?.[0] || value.euEshopDetail?.publisher,
+      image:
+        value.euEshopDetail?.image_url ||
+        value.usEshopDetail?.horizontalHeaderImage,
+      releaseDate:
+        value.usEshopDetail?.releaseDateDisplay ||
+        value.euEshopDetail?.date_from,
+      popularity: value.euEshopDetail?.popularity,
+      createdAt: value.createdAt,
+      updatedAt: value.updatedAt,
+    } as unknown as SimpleDetail;
+    if (value.prices) gameDetail.prices = value.prices;
+    return gameDetail;
+  }
+
+  async findGamesSimpleDetail(
+    { ids, search }: { ids?: string[]; search?: string },
+    page = 1,
+  ) {
+    const games = await this.findGames({ ids, search }, page);
+
+    return games.map(this.trasformData);
   }
 
   async findGames(
     { ids, search }: { ids?: string[]; search?: string },
     page = 1,
-    fullDetail = false,
   ) {
     const searchRegex = new RegExp(search, 'i');
     const filter =
@@ -117,41 +138,6 @@ export class GameRepositoryService {
       .skip(20 * (page - 1))
       .lean();
 
-    return fullDetail
-      ? games
-      : games.map(
-          ({
-            _id,
-            usEshopDetail,
-            euEshopDetail,
-            usEshopId,
-            euEshopId,
-            hkEshopId,
-            jpEshopId,
-            createdAt,
-            updatedAt,
-          }) => ({
-            id: _id,
-            externalIds: {
-              usEshopId: usEshopId,
-              euEshopId: euEshopId,
-              hkEshopId: hkEshopId,
-              jpEshopId: jpEshopId,
-            },
-            title: usEshopDetail?.title || euEshopDetail?.title,
-            description: usEshopDetail?.description || '',
-            developer:
-              usEshopDetail?.developers?.[0] || euEshopDetail?.developer,
-            publisher:
-              usEshopDetail?.publishers?.[0] || euEshopDetail?.publisher,
-            image:
-              euEshopDetail?.image_url || usEshopDetail?.horizontalHeaderImage,
-            releaseDate:
-              usEshopDetail?.releaseDateDisplay || euEshopDetail?.date_from,
-            popularity: euEshopDetail?.popularity,
-            createdAt,
-            updatedAt,
-          }),
-        );
+    return games;
   }
 }

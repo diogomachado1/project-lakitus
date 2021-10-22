@@ -8,6 +8,9 @@ import {
 } from 'nintendo-switch-eshop';
 import { EshopService } from '../infra/eshop/eshop.service';
 import { Cache } from 'cache-manager';
+import { Document, LeanDocument } from 'mongoose';
+import { Game } from '../infra/game-repository/game.schema';
+import { SimpleDetail } from '../infra/game-repository/SimpleDetail';
 
 @Injectable()
 export class GameService {
@@ -17,27 +20,35 @@ export class GameService {
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
   ) {}
 
-  async getOneGame(id: string, fullDetail: boolean) {
-    const cached = await this.cacheManager.get<any>(
-      `game:${id}:${fullDetail ? 'true' : 'false'}`,
-    );
+  async getOneGame(id: string) {
+    const cached = await this.cacheManager.get<SimpleDetail>(`game:${id}`);
     if (cached) return cached;
-    const game = await this.gameRepository.findOneGame(id, fullDetail);
-    await this.cacheManager.set(
-      `game:${id}:${fullDetail ? 'true' : 'false'}`,
-      game,
-      { ttl: 60 * 5 },
-    );
+    const game = await this.gameRepository.findOneGameSimple(id);
+    await this.cacheManager.set(`game:${id}`, game, { ttl: 60 * 5 });
     return game;
   }
 
-  async getManyGame(
-    ids: string[],
-    search: string,
-    page: number,
-    fullDetail: boolean,
-  ) {
-    return this.gameRepository.findGames({ ids, search }, page, fullDetail);
+  async getOneGameFull(id: string) {
+    const cached = await this.cacheManager.get<
+      LeanDocument<
+        Game &
+          Document<any, any, any> & {
+            _id: any;
+          }
+      >
+    >(`game-full:${id}`);
+    if (cached) return cached;
+    const game = await this.gameRepository.findOneGame(id);
+    await this.cacheManager.set(`game-full:${id}`, game, { ttl: 60 * 5 });
+    return game;
+  }
+
+  async getManyGame(ids?: string[], search?: string, page?: number) {
+    return this.gameRepository.findGamesSimpleDetail({ ids, search }, page);
+  }
+
+  async getManyGameFull(ids?: string[], search?: string, page?: number) {
+    return this.gameRepository.findGames({ ids, search }, page);
   }
 
   async getAndSaveGameData(usId: string, euId: string) {
@@ -69,7 +80,7 @@ export class GameService {
     }
   }
 
-  async tryGetJPandHKDetail(euEshopData: GameEU) {
+  async tryGetJPandHKDetail(euEshopData?: GameEU) {
     if (euEshopData) {
       const codeGame = parseGameCode(euEshopData, 2);
 

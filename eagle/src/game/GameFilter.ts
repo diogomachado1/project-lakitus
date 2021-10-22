@@ -1,9 +1,9 @@
 export class GameFilter {
-  ids: string;
+  ids?: string;
 
-  search: string;
+  search?: string;
 
-  page: number;
+  page?: number;
 
-  fullDetail: boolean;
+  fullDetail?: boolean;
 }

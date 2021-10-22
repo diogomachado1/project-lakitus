@@ -121,6 +121,10 @@ describe('PriceHistoryService', () => {
           provide: 'PRICE_HISTORY_REPOSITORY',
         },
         {
+          useValue: { getPriceByGameId: async () => ({}) },
+          provide: 'PRICE_REPOSITORY',
+        },
+        {
           useValue: cache,
           provide: CACHE_MANAGER,
         },

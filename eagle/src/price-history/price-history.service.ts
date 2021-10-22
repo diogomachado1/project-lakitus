@@ -3,7 +3,7 @@ import { differenceInDays, format, startOfDay, subDays } from 'date-fns';
 import { PriceHistory } from '../infra/game-history-repository/priceHistory.schema';
 import { PriceHistoryRepositoryService } from '../infra/game-history-repository/price-history-repository.service';
 import { Cache } from 'cache-manager';
-import { PriceRepositoryService } from 'src/infra/price-repository/price-repository.service';
+import { PriceRepositoryService } from '../infra/price-repository/price-repository.service';
 import { countries } from '../infra/countries';
 
 @Injectable()

@@ -1,0 +1,39 @@
+name: ci-eagle
+
+on:
+  push:
+    branches: [main]
+    paths: 
+      - 'eagle/**'
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    container: node:12
+    defaults:
+      run:
+        working-directory: ./eagle
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache yarn directory
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn
+
+      - name: Run tests
+        run: yarn test --passWithNoTests
+
+      - name: Run lint
+        run: yarn lint
