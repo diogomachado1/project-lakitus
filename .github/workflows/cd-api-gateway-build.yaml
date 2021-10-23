@@ -23,6 +23,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           workdir: ./api-gateway
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     container: node:14-alpine
     defaults:

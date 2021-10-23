@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  tests:
+  ci:
     runs-on: ubuntu-latest
     container: node:12
     defaults:
