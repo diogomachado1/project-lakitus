@@ -22,10 +22,10 @@ jobs:
       SWARM_ID: ${{ secrets.SWARM_ID }}
     steps:
     - name: cd
-      run: cd ci-cd
+      run: cd ./ci-cd
     - name: Install
       run: yarn
-    - name: Install
+    - name: Deploy
       run: node ./main
       
 
