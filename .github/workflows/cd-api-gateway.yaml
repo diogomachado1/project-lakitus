@@ -13,7 +13,7 @@ jobs:
     container: node:14-alpine
     defaults:
       run:
-        working-directory: /ci-cd
+        working-directory: ./ci-cd
     env:
       STACK_NAME: "api-gateway"
       STACK_FILE: "/config/api-gateway.yml"
@@ -24,10 +24,11 @@ jobs:
       REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
       SWARM_ID: ${{ secrets.SWARM_ID }}
     steps:
-    - name: Install
-      run: yarn
-    - name: Deploy
-      run: node ./main
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn install
+      - name: Deploy
+        run: node ./main
       
 
       
