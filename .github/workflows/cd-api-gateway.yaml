@@ -21,6 +21,8 @@ jobs:
       REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
       SWARM_ID: ${{ secrets.SWARM_ID }}
     steps:
+    - name: ls
+      run: ls
     - name: cd
       run: cd ./ci-cd
     - name: Install
