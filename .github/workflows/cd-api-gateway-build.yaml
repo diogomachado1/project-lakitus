@@ -29,7 +29,7 @@ jobs:
       run:
         working-directory: ./ci-cd
     env:
-      STACK_NAME: "api-gateway"
+      STACK_NAME: "apigateway"
       STACK_FILE: "/config/api-gateway.yml"
       PORTAINER_URL: ${{ secrets.PORTAINER_URL }}
       PORTAINER_USER: ${{ secrets.PORTAINER_USER }}
