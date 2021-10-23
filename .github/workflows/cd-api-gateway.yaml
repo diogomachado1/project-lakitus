@@ -11,6 +11,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     container: node:14-alpine
+    defaults:
+      run:
+        working-directory: ./ci-cd
     env:
       STACK_NAME: "api-gateway"
       STACK_FILE: "/config/api-gateway.yml"
@@ -21,10 +24,6 @@ jobs:
       REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
       SWARM_ID: ${{ secrets.SWARM_ID }}
     steps:
-    - name: ls
-      run: ls
-    - name: cd
-      run: cd ./ci-cd
     - name: Install
       run: yarn
     - name: Deploy
