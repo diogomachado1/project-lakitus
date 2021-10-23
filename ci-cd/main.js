@@ -14,7 +14,7 @@ const githubRepo = process.env.GITHUB_REPOSITORY
 
 async function deployStack() {
   const requieredEnv = [portainerUrl, portainerUser, portainerPassword, stackName, githubUser, githubPassword, stackFile, swarmID]
-  if(requieredEnv.some(item=> !item)) throw new Error(`Missing required envs`)
+  if (requieredEnv.some(item => !item)) throw new Error(`Missing required envs`)
   const { data: { jwt } } = await axios.post(`${portainerUrl}/api/auth`, { Username: portainerUser, Password: portainerPassword })
   const headers = { authorization: `Bearer ${jwt}` }
   const { data } = await axios.get(`${portainerUrl}/api/stacks`, { headers })
@@ -32,15 +32,15 @@ async function deployStack() {
     await axios.post(`${portainerUrl}/api/stacks?endpointId=2&method=repository&type=1`, {
       "Name": stackName,
       "SwarmID": swarmID,
-      "RepositoryURL": `https://${githubUrl}/${githubRepo}`,
+      "RepositoryURL": `${githubUrl}/${githubRepo}`,
       "RepositoryReferenceName": `refs/heads/${branch}`,
       "ComposeFile": stackFile,
       "RepositoryAuthentication": true,
       "RepositoryUsername": githubUser,
       "RepositoryPassword": githubPassword,
-      "Env":  envs,
+      "Env": envs,
     }, { headers })
   }
 }
 
-deployStack().then(() => console.log('Success')).catch(e => console.log(e))
+deployStack().then(() => console.log('Success')).catch(e => { console.log(e); process.exit(1) })
