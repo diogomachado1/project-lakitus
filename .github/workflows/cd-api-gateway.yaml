@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install
         run: yarn install
-      - name: Deploy
+      - name: Deploy 
         run: node ./main
       
 
