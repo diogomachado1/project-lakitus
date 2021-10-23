@@ -35,17 +35,13 @@ services:
   eagle:
       image: diogo8machado/eagle
       environment: 
-        - MONGO_URL=mongodb+srv://game-service:Kxo6yVFTlDj5e8eZ@leari.qoans.mongodb.net/games?retryWrites=true&w=majority
+        - MONGO_URL=${MONGO_URL}
         - RABBIT_HOST=rabbit
-        - RABBIT_USER=guest
-        - RABBIT_PASSWORD=guest
+        - RABBIT_USER=${RABBIT_USER}
+        - RABBIT_PASSWORD=${RABBIT_PASSWORD}
         - NEW_RELIC_APP_NAME=eagle
-        - NEW_RELIC_LICENSE_KEY=191747ea147dbf51aecbf79cebd5d1d88644NRAL
-        - AWS_ACCESS_KEY_ID=AKIARSYY7UOTLEAPGSRY
-        - AWS_SECRET_ACCESS_KEY=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
-        - AWS_REGION=us-east-1
-        - AWS_S3_BUCKET=leari-prices
-        - DISCORD_URL=https://discord.com/api/webhooks/890673551177306192/CBqJSZv_z1W0Y3XZ2z9BhF6_Ut9y7WcKULMAvyTnPdVPeyF_EBncqRT6dMbIrHRkiVYJ
+        - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+        - DISCORD_URL=${DISCORD_URL}
       networks:
         - traefik-net
   rabbit:

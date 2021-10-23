@@ -23,11 +23,23 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           workdir: ./api-gateway
   deploy:
-    needs: build
     runs-on: ubuntu-latest
+    container: node:14-alpine
+    defaults:
+      run:
+        working-directory: ./ci-cd
+    env:
+      STACK_NAME: "api-gateway"
+      STACK_FILE: "/config/api-gateway.yml"
+      PORTAINER_URL: ${{ secrets.PORTAINER_URL }}
+      PORTAINER_USER: ${{ secrets.PORTAINER_USER }}
+      PORTAINER_PASSWORD: ${{ secrets.PORTAINER_PASSWORD }}
+      REPO_USER: ${{ secrets.REPO_USER }}
+      REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
+      SWARM_ID: ${{ secrets.SWARM_ID }}
     steps:
-    - name: Webhook
-      uses: distributhor/workflow-webhook@v2
-      env:
-        webhook_url: "https://portainer.leari.xyz/api/webhooks/03470fbf-a6a7-47dd-aae5-fbbe83ae458d"
-        webhook_secret: "Y0uR5ecr3t"
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn install
+      - name: Deploy 
+        run: node ./main
