@@ -8,10 +8,23 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
-    ports:
-      - 5432:5432
     networks:
         - traefik-net
+  pgbackups3:
+    image: schickling/postgres-backup-s3
+    links:
+      - postgres
+    environment:
+      SCHEDULE: '@daily'
+      S3_REGION: us-east-1
+      S3_ACCESS_KEY_ID: AKIARSYY7UOTLEAPGSRY
+      S3_SECRET_ACCESS_KEY: 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
+      S3_BUCKET: leari-keycloak-backup
+      S3_PREFIX: backup
+      POSTGRES_DATABASE: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+      POSTGRES_EXTRA_OPTS: '--schema=public --blobs'
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     environment:
