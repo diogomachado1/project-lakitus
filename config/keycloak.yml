@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: ${KEYCLOAK_POSTGRES_DB}
       POSTGRES_USER: ${KEYCLOAK_POSTGRES_USER}
       POSTGRES_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
     networks:
         - traefik-net
   pgbackups3:
