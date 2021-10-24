@@ -1,10 +1,11 @@
-name: CD-keycloak-build
+name: CD-keycloak
 
 on:
   push:
     branches: [main]
     paths: 
-      - '.github/workflows/cd-keycloak-build.yaml'
+      - '.github/workflows/cd-keycloak.yaml'
+      - 'config/keycloak.yml'
 
 jobs:
   deploy:
