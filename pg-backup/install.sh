@@ -10,9 +10,13 @@ apk update
 apk add postgresql
 
 # install s3 tools
-apk add python3 py3-pip
-
-python -m pip install awscli
+apk add --no-cache \
+        python3 \
+        py3-pip \
+    && pip3 install --upgrade pip \
+    && pip3 install --no-cache-dir \
+        awscli \
+    && rm -rf /var/cache/apk/*
 
 # install go-cron
 apk add curl
