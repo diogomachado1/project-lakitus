@@ -10,7 +10,7 @@ apk update
 apk add postgresql
 
 # install s3 tools
-apk add aws-cli
+apk add python3 py3-pip
 
 # install go-cron
 apk add curl
