@@ -1,53 +1,5 @@
 version: '3.7'
 services:
-  postgres:
-    image: postgres:alpine
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
-    networks:
-        - traefik-net
-  pgbackups3:
-    image: diogo8machado/pg-backup
-    environment:
-      SCHEDULE: '@daily'
-      S3_REGION: us-east-1
-      S3_ACCESS_KEY_ID: AKIARSYY7UOTLEAPGSRY
-      S3_SECRET_ACCESS_KEY: 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
-      S3_BUCKET: leari-keycloak-backup
-      S3_PREFIX: backup
-      POSTGRES_DATABASE: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
-      POSTGRES_HOST: postgres
-      POSTGRES_EXTRA_OPTS: '--schema=public --blobs'
-    networks:
-      - traefik-net
-  keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-      DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_SCHEMA: public
-      DB_PASSWORD: password
-      PROXY_ADDRESS_FORWARDING: "true"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.auth.rule=Host(`auth.leari.xyz`)"
-      - "traefik.http.routers.auth.entrypoints=websecure"
-      - "traefik.http.routers.auth.tls.certresolver=myresolver"
-      - "traefik.http.services.auth.loadbalancer.server.port=8080"
-    depends_on:
-        - postgres
-    networks:
-        - traefik-net
   eagle:
       image: diogo8machado/eagle
       environment: 
