@@ -1,11 +1,8 @@
 name: ci-eagle
 
 on:
-  push:
-    branches: [main]
-    paths: 
-      - 'eagle/**'
   pull_request:
+    branches: [main]
     types: [opened, synchronize, reopened]
 
 jobs:
