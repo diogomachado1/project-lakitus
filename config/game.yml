@@ -8,14 +8,10 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
     networks:
         - traefik-net
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.postgres.rule=Host(`postgres.leari.xyz`)"
-      - "traefik.http.routers.postgres.entrypoints=websecure"
-      - "traefik.http.routers.postgres.tls.certresolver=myresolver"
-      - "traefik.http.services.postgres.loadbalancer.server.port=5432"
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     environment:
