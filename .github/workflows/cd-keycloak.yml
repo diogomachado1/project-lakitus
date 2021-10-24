@@ -1,0 +1,39 @@
+name: CD-keycloak-build
+
+on:
+  push:
+    branches: [main]
+    paths: 
+      - '.github/workflows/cd-keycloak-build.yaml'
+
+jobs:
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    container: node:14-alpine
+    defaults:
+      run:
+        working-directory: ./ci-cd
+    env:
+      STACK_NAME: "keycloak"
+      STACK_FILE: "/config/keycloak.yml"
+      PORTAINER_URL: ${{ secrets.PORTAINER_URL }}
+      PORTAINER_USER: ${{ secrets.PORTAINER_USER }}
+      PORTAINER_PASSWORD: ${{ secrets.PORTAINER_PASSWORD }}
+      REPO_USER: ${{ secrets.REPO_USER }}
+      REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
+      SWARM_ID: ${{ secrets.SWARM_ID }}
+      STACK_ENV_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      STACK_ENV_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      STACK_ENV_KEYCLOAK_BACKUP_S3_BUCKET: ${{ secrets.KEYCLOAK_BACKUP_S3_BUCKET }}
+      STACK_ENV_KEYCLOAK_POSTGRES_DB: ${{ secrets.KEYCLOAK_POSTGRES_DB }}
+      STACK_ENV_KEYCLOAK_POSTGRES_USER: ${{ secrets.KEYCLOAK_POSTGRES_USER }}
+      STACK_ENV_KEYCLOAK_POSTGRES_PASSWORD: ${{ secrets.KEYCLOAK_POSTGRES_PASSWORD }}
+      STACK_ENV_KEYCLOAK_USER: ${{ secrets.KEYCLOAK_USER }}
+      STACK_ENV_KEYCLOAK_PASSWORD: ${{ secrets.KEYCLOAK_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn install
+      - name: Deploy 
+        run: node ./main
