@@ -24,8 +24,8 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_HOST: postgres
       POSTGRES_EXTRA_OPTS: '--schema=public --blobs'
-      networks:
-        - traefik-net
+    networks:
+      - traefik-net
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     environment:
