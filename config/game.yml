@@ -11,7 +11,7 @@ services:
     networks:
         - traefik-net
   pgbackups3:
-    image: schickling/postgres-backup-s3
+    image: diogo8machado/pg-backup
     environment:
       SCHEDULE: '@daily'
       S3_REGION: us-east-1

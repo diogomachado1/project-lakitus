@@ -1,0 +1,51 @@
+name: CD-pg-backup-build
+
+on:
+  push:
+    branches: [main]
+    paths: 
+      - 'pg-backup/**'
+      - '.github/workflows/cd-pg-backup-build.yaml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./pg-backup
+    steps:
+      - uses: actions/checkout@v2
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: diogo8machado/pg-backup
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          workdir: ./pg-backup
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    container: node:14-alpine
+    defaults:
+      run:
+        working-directory: ./ci-cd
+    env:
+      STACK_NAME: "gamestack"
+      STACK_FILE: "/config/game.yml"
+      PORTAINER_URL: ${{ secrets.PORTAINER_URL }}
+      PORTAINER_USER: ${{ secrets.PORTAINER_USER }}
+      PORTAINER_PASSWORD: ${{ secrets.PORTAINER_PASSWORD }}
+      REPO_USER: ${{ secrets.REPO_USER }}
+      REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
+      SWARM_ID: ${{ secrets.SWARM_ID }}
+      STACK_ENV_MONGO_URL: ${{ secrets.MONGO_URL }}
+      STACK_ENV_RABBIT_USER: ${{ secrets.RABBIT_USER }}
+      STACK_ENV_RABBIT_PASSWORD: ${{ secrets.RABBIT_PASSWORD }}
+      STACK_ENV_NEW_RELIC_LICENSE_KEY: ${{ secrets.NEW_RELIC_LICENSE_KEY }}
+      STACK_ENV_DISCORD_URL: ${{ secrets.DISCORD_URL }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn install
+      - name: Deploy 
+        run: node ./main
