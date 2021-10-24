@@ -1,4 +1,4 @@
-name: CD-keycloak
+name: CD-keycloak 
 
 on:
   push:
