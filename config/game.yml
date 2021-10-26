@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  api:
+  eagle-api:
       image: diogo8machado/eagle
       environment: 
         - MONGO_URL=${MONGO_URL}
@@ -12,8 +12,8 @@ services:
         - DISCORD_URL=${DISCORD_URL}
       networks:
         - traefik-net
-      command: yarn start api
-  job:
+      command: yarn start:prod:api
+  eagle-job:
       image: diogo8machado/eagle
       environment: 
         - MONGO_URL=${MONGO_URL}
@@ -25,7 +25,7 @@ services:
         - DISCORD_URL=${DISCORD_URL}
       networks:
         - traefik-net
-      command: yarn start job
+      command: yarn start:prod:job
   rabbit:
       hostname: mabbit
       image: rabbitmq:management-alpine

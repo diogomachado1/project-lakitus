@@ -3,7 +3,7 @@ _transform: true
 
 services:
   - name: eagle
-    url: http://eagle:3000/game
+    url: http://eagle-api:3000/game
     # plugins:
     # - name: kong-jwt2header
     # - name: jwt
