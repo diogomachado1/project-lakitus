@@ -11,7 +11,7 @@ services:
     ports:
       - 5432:5432
     networks:
-        - traefik
+        - traefik-net
   pgbackups3:
     image: diogo8machado/pg-backup
     environment:
@@ -27,7 +27,7 @@ services:
       POSTGRES_HOST: postgres-keycloak
       POSTGRES_EXTRA_OPTS: '--schema=public --blobs'
     networks:
-      - traefik
+      - traefik-net
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     environment:
@@ -49,10 +49,22 @@ services:
     depends_on:
         - postgres
     networks:
-        - traefik
+        - traefik-net
+    deploy:
+        update_config:
+          delay: 60s
+          monitor: 30s
+          order: stop-first
+          failure_action: rollback
+        labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.auth.rule=Host(`auth.leari.xyz`)"
+        - "traefik.http.routers.auth.entrypoints=websecure"
+        - "traefik.http.routers.auth.tls.certresolver=myresolver"
+        - "traefik.http.services.auth.loadbalancer.server.port=8080"
 volumes:
   postgres:
 
 networks:
-  traefik:
+  traefik-net:
     external: true

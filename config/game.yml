@@ -11,7 +11,7 @@ services:
         - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
         - DISCORD_URL=${DISCORD_URL}
       networks:
-        - traefik
+        - traefik-net
       command: yarn start api
   job:
       image: diogo8machado/eagle
@@ -24,7 +24,7 @@ services:
         - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
         - DISCORD_URL=${DISCORD_URL}
       networks:
-        - traefik
+        - traefik-net
       command: yarn start job
   rabbit:
       hostname: mabbit
@@ -41,11 +41,26 @@ services:
         - "com.datadoghq.ad.init_configs=[{}]"
         - "com.datadoghq.ad.instances=[{\"rabbitmq_api_url\":\"%%host%%:15672/api/\",\"username\": \"datadog\", \"password\": \"datadog\"}]"
       networks:
-        - traefik
+        - traefik-net
+      deploy:
+        update_config:
+          delay: 60s
+          monitor: 30s
+          order: stop-first
+          failure_action: rollback
+        labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.rabbit.rule=Host(`mrabbit.leari.xyz`)"
+        - "traefik.http.routers.rabbit.entrypoints=websecure"
+        - "traefik.http.routers.rabbit.tls.certresolver=myresolver"
+        - "traefik.http.services.rabbit.loadbalancer.server.port=15672"
+        - "com.datadoghq.ad.check_names=[\"rabbitmq\"]"
+        - "com.datadoghq.ad.init_configs=[{}]"
+        - "com.datadoghq.ad.instances=[{\"rabbitmq_api_url\":\"%%host%%:15672/api/\",\"username\": \"datadog\", \"password\": \"datadog\"}]"
 volumes:
   rabbitmq:
   postgres:
 
 networks:
-  traefik:
+  traefik-net:
     external: true

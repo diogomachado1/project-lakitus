@@ -18,8 +18,20 @@ services:
       - "traefik.http.routers.gateway.tls.certresolver=myresolver"
       - "traefik.http.services.gateway.loadbalancer.server.port=8000"
     networks:
-        - traefik
+        - traefik-net
+    deploy:
+        update_config:
+          delay: 60s
+          monitor: 30s
+          order: stop-first
+          failure_action: rollback 
+        labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.gateway.rule=Host(`api.leari.xyz`)"
+        - "traefik.http.routers.gateway.entrypoints=websecure"
+        - "traefik.http.routers.gateway.tls.certresolver=myresolver"
+        - "traefik.http.services.gateway.loadbalancer.server.port=8000"
 
 networks:
-  traefik:
+  traefik-net:
     external: true
