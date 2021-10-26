@@ -1,17 +1,31 @@
 version: '3.7'
 services:
-  eagle:
+  api:
       image: diogo8machado/eagle
       environment: 
         - MONGO_URL=${MONGO_URL}
         - RABBIT_HOST=rabbit
         - RABBIT_USER=${RABBIT_USER}
         - RABBIT_PASSWORD=${RABBIT_PASSWORD}
-        - NEW_RELIC_APP_NAME=eagle
+        - NEW_RELIC_APP_NAME=eagle-api
         - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
         - DISCORD_URL=${DISCORD_URL}
       networks:
         - traefik-net
+      command: yarn start api
+  job:
+      image: diogo8machado/eagle
+      environment: 
+        - MONGO_URL=${MONGO_URL}
+        - RABBIT_HOST=rabbit
+        - RABBIT_USER=${RABBIT_USER}
+        - RABBIT_PASSWORD=${RABBIT_PASSWORD}
+        - NEW_RELIC_APP_NAME=eagle-job
+        - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+        - DISCORD_URL=${DISCORD_URL}
+      networks:
+        - traefik-net
+      command: yarn start job
   rabbit:
       hostname: mabbit
       image: rabbitmq:management-alpine

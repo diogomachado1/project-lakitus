@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { NsgGameResponse } from '../../producer-message/interfaces/NsgGameResponse';
+import { NsgGameResponse } from './interfaces/NsgGameResponse';
 
 @Injectable()
 export class NsgService {
