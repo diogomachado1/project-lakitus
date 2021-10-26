@@ -11,7 +11,7 @@ services:
         - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
         - DISCORD_URL=${DISCORD_URL}
       networks:
-        - traefik-net
+        - traefik
       command: yarn start api
   job:
       image: diogo8machado/eagle
@@ -24,7 +24,7 @@ services:
         - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
         - DISCORD_URL=${DISCORD_URL}
       networks:
-        - traefik-net
+        - traefik
       command: yarn start job
   rabbit:
       hostname: mabbit
@@ -41,11 +41,11 @@ services:
         - "com.datadoghq.ad.init_configs=[{}]"
         - "com.datadoghq.ad.instances=[{\"rabbitmq_api_url\":\"%%host%%:15672/api/\",\"username\": \"datadog\", \"password\": \"datadog\"}]"
       networks:
-        - traefik-net
+        - traefik
 volumes:
   rabbitmq:
   postgres:
 
 networks:
-  traefik-net:
+  traefik:
     external: true

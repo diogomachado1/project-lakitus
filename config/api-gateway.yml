@@ -18,8 +18,8 @@ services:
       - "traefik.http.routers.gateway.tls.certresolver=myresolver"
       - "traefik.http.services.gateway.loadbalancer.server.port=8000"
     networks:
-        - traefik-net
+        - traefik
 
 networks:
-  traefik-net:
+  traefik:
     external: true

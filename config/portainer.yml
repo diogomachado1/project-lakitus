@@ -12,7 +12,7 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
       - "--api.insecure=true"
       - "--providers.docker.swarmMode=true"
-      - "--providers.docker.network=traefik-net"
+      - "--providers.docker.network=traefik"
       - "--api"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -30,7 +30,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "letsencrypt:/letsencrypt"
     networks:
-        - traefik-net
+        - traefik
   agent:
     image: portainer/agent:2.9.0
     volumes:
@@ -52,7 +52,7 @@ services:
       - portainer_data:/data
     networks:
       - agent_network
-      - traefik-net
+      - traefik
     labels:     
       - "traefik.enable=true"     
       - "traefik.http.routers.portainer.rule=Host(`portainer.leari.xyz`)"     
@@ -73,8 +73,8 @@ services:
 networks:
   agent_network:
     driver: overlay
+  traefik:
     attachable: true
-  traefik-net:
     external: true
 
 volumes:
