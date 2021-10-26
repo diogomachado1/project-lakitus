@@ -46,6 +46,7 @@ services:
         labels:
         - "traefik.enable=true"
         - "traefik.http.routers.rabbit.rule=Host(`mrabbit.leari.xyz`)"
+        - "traefik.http.routers.rabbit.service=rabbit"
         - "traefik.http.routers.rabbit.entrypoints=websecure"
         - "traefik.http.routers.rabbit.tls.certresolver=myresolver"
         - "traefik.http.services.rabbit.loadbalancer.server.port=15672"
