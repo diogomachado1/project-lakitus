@@ -18,7 +18,7 @@ services:
       - "traefik.http.routers.gateway.tls.certresolver=myresolver"
       - "traefik.http.services.gateway.loadbalancer.server.port=8000"
     networks:
-        - traefik-net
+        - traefik-new
     deploy:
       placement:
         constraints: [node.role==manager]
@@ -35,5 +35,5 @@ services:
       - "traefik.http.services.gateway.loadbalancer.server.port=8000"
 
 networks:
-  traefik-net:
+  traefik-new:
     external: true

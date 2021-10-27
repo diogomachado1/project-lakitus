@@ -11,7 +11,7 @@ services:
     ports:
       - 5432:5432
     networks:
-        - traefik-net
+        - traefik-new
   pgbackups3:
     image: diogo8machado/pg-backup
     environment:
@@ -27,7 +27,7 @@ services:
       POSTGRES_HOST: postgres-keycloak
       POSTGRES_EXTRA_OPTS: '--schema=public --blobs'
     networks:
-      - traefik-net
+      - traefik-new
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     environment:
@@ -49,7 +49,7 @@ services:
     depends_on:
         - postgres
     networks:
-        - traefik-net
+        - traefik-new
     deploy:
         update_config:
           delay: 60s
@@ -66,5 +66,5 @@ volumes:
   postgres:
 
 networks:
-  traefik-net:
+  traefik-new:
     external: true
