@@ -13,6 +13,9 @@ services:
       networks:
         - traefik-new
       command: yarn start:prod:api
+      deploy:
+        placement:
+          constraints: [node.role==manager]
   eagle-job:
       image: diogo8machado/eagle
       environment: 
@@ -26,6 +29,9 @@ services:
       networks:
         - traefik-new
       command: yarn start:prod:job
+      deploy:
+        placement:
+          constraints: [node.role==manager]
   rabbit:
       hostname: mabbit
       image: rabbitmq:management-alpine
@@ -38,6 +44,8 @@ services:
       networks:
         - traefik-new
       deploy:
+        placement:
+          constraints: [node.role==manager]
         update_config:
           delay: 60s
           monitor: 30s
