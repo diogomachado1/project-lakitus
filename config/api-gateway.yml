@@ -20,8 +20,6 @@ services:
     networks:
         - traefik-new
     deploy:
-      placement:
-        constraints: [node.role==manager]
       update_config:
         delay: 60s
         monitor: 30s

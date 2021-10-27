@@ -14,8 +14,22 @@ services:
         - traefik-new
       command: yarn start:prod:api
       deploy:
-        placement:
-          constraints: [node.role==manager]
+        replicas: 1
+        update_config:
+          parallelism: 2
+          order: start-first
+          failure_action: rollback
+          delay: 10s
+        rollback_config:
+          parallelism: 0
+          order: stop-first
+        restart_policy:
+          condition: any
+          delay: 5s
+          max_attempts: 3
+          window: 120s
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:3000 || exit 1"]
   eagle-job:
       image: diogo8machado/eagle
       environment: 
@@ -30,8 +44,22 @@ services:
         - traefik-new
       command: yarn start:prod:job
       deploy:
-        placement:
-          constraints: [node.role==manager]
+        replicas: 2
+        update_config:
+          parallelism: 2
+          order: start-first
+          failure_action: rollback
+          delay: 10s
+        rollback_config:
+          parallelism: 0
+          order: stop-first
+        restart_policy:
+          condition: any
+          delay: 5s
+          max_attempts: 3
+          window: 120s
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:3000 || exit 1"]
   rabbit:
       hostname: mabbit
       image: rabbitmq:management-alpine

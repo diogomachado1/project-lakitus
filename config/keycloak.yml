@@ -12,6 +12,9 @@ services:
       - 5432:5432
     networks:
         - traefik-new
+    deploy:
+      placement:
+        constraints: [node.role==manager]
   pgbackups3:
     image: diogo8machado/pg-backup
     environment:
