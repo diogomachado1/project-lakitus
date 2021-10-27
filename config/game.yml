@@ -16,7 +16,7 @@ services:
       deploy:
         replicas: 1
         update_config:
-          parallelism: 2
+          parallelism: 1
           order: start-first
           failure_action: rollback
           delay: 10s
@@ -28,8 +28,6 @@ services:
           delay: 5s
           max_attempts: 3
           window: 120s
-        healthcheck:
-          test: ["CMD", "curl", "-f", "http://localhost:3000 || exit 1"]
   eagle-job:
       image: diogo8machado/eagle
       environment: 
@@ -46,7 +44,7 @@ services:
       deploy:
         replicas: 2
         update_config:
-          parallelism: 2
+          parallelism: 1
           order: start-first
           failure_action: rollback
           delay: 10s
@@ -58,8 +56,6 @@ services:
           delay: 5s
           max_attempts: 3
           window: 120s
-        healthcheck:
-          test: ["CMD", "curl", "-f", "http://localhost:3000 || exit 1"]
   rabbit:
       hostname: mabbit
       image: rabbitmq:management-alpine
