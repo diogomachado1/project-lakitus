@@ -9,6 +9,8 @@ COPY . ./
 RUN yarn
 
 RUN yarn build
+
+RUN apk --no-cache add curl
  
 EXPOSE 3000
 
