@@ -8,39 +8,39 @@ on:
       - '.github/workflows/cd-eagle-build.yaml'
 
 jobs:
-  ci:
-    runs-on: ubuntu-latest
-    container: node:12
-    defaults:
-      run:
-        working-directory: ./eagle
-    steps:
-      - uses: actions/checkout@v2
+  # ci:
+  #   runs-on: ubuntu-latest
+  #   container: node:12
+  #   defaults:
+  #     run:
+  #       working-directory: ./eagle
+  #   steps:
+  #     - uses: actions/checkout@v2
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+  #     - name: Get yarn cache directory path
+  #       id: yarn-cache-dir-path
+  #       run: echo "::set-output name=dir::$(yarn cache dir)"
 
-      - name: Cache yarn directory
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Install dependencies
-        run: yarn
+  #     - name: Cache yarn directory
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+  #         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-yarn-
+  #     - name: Install dependencies
+  #       run: yarn
 
-      - name: Run tests
-        run: yarn test:cov --passWithNoTests
+  #     - name: Run tests
+  #       run: yarn test:cov --passWithNoTests
       
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-            token: ${{ secrets.CODECOV_TOKEN }}
+  #     - name: Upload coverage to Codecov
+  #       uses: codecov/codecov-action@v1
+  #       with:
+  #           token: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Run lint
-        run: yarn lint
+  #     - name: Run lint
+  #       run: yarn lint
   build:
     needs: ci
     runs-on: ubuntu-latest
