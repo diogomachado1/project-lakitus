@@ -30,7 +30,7 @@ jobs:
       STACK_ENV_DISCORD_URL: ${{ secrets.DISCORD_URL }}
       STACK_ENV_SONIC_HOST: ${{ secrets.SONIC_HOST }}
       STACK_ENV_SONIC_PASSWORD: ${{ secrets.SONIC_PASSWORD }}
-      STACK_ENV_SONIC_PORT: ${{ secrets.SONIC_PORT }}
+      STACK_ENV_SONIC_PORT: ${{ secrets.SONIC_PORT }} 
     steps:
       - uses: actions/checkout@v2
       - name: Install
