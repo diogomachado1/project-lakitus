@@ -42,7 +42,7 @@ jobs:
   #     - name: Run lint
   #       run: yarn lint
   build:
-    needs: ci
+    # needs: ci
     runs-on: ubuntu-latest
     defaults:
       run:
