@@ -6,6 +6,7 @@ import { NsgModule } from './nsg/nsg.module';
 import { PriceRepositoryModule } from './price-repository/price-repository.module';
 import { RabbitModule } from './rabbit/rabbit.module';
 import { S3Module } from './s3/s3.module';
+import { SonicModule } from './sonic/sonic.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { S3Module } from './s3/s3.module';
     RabbitModule,
     EshopServicesModule,
     NsgModule,
+    SonicModule,
   ],
   exports: [
     GameRepositoryModule,
@@ -25,6 +27,7 @@ import { S3Module } from './s3/s3.module';
     RabbitModule,
     EshopServicesModule,
     NsgModule,
+    SonicModule,
   ],
 })
 export class InfraModule {}

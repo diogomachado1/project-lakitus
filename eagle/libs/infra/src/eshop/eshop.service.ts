@@ -54,6 +54,78 @@ export interface GameHk {
 export class EshopService {
   constructor(@Inject(CACHE_MANAGER) public cacheManager: Cache) {}
 
+  async getGamesUs() {
+    const cached = await this.cacheManager.get<
+      (GameUS & { nintendoId: string })[]
+    >('eshop:games:america');
+    const games =
+      cached ||
+      (await getGamesAmerica()).map<GameUS & { nintendoId: string }>(
+        (item) => ({
+          ...item,
+          nintendoId: parseNSUID(item, 1),
+        }),
+      );
+    if (!cached) {
+      await this.cacheManager.set('eshop:games:america', games);
+    }
+    return games;
+  }
+
+  async getGamesEu() {
+    const cached = await this.cacheManager.get<
+      (GameEU & { nintendoId: string })[]
+    >('eshop:games:europe');
+    const games =
+      cached ||
+      (await getGamesEurope()).map<GameEU & { nintendoId: string }>((item) => ({
+        ...item,
+        nintendoId: parseNSUID(item, 2),
+      }));
+    if (!cached) {
+      await this.cacheManager.set('eshop:games:europe', games);
+    }
+    return games;
+  }
+
+  async getGamesJp() {
+    const cached = await this.cacheManager.get<
+      (GameJP & { nintendoId: string })[]
+    >('eshop:games:japan');
+    const games =
+      cached ||
+      (await getGamesJapan()).map<GameJP & { nintendoId: string }>((item) => ({
+        ...item,
+        nintendoId: parseNSUID(item, 3),
+      }));
+    if (!cached) {
+      await this.cacheManager.set('eshop:games:japan', games);
+    }
+    return games;
+  }
+
+  async getGamesHk() {
+    const cached = await this.cacheManager.get<
+      (GameHk & { nintendoId: string })[]
+    >('eshop:games:hk');
+    const games =
+      cached ||
+      (
+        await axios.get<(GameHk & { nintendoId: string })[]>(
+          'https://www.nintendo.com.hk/data/json/switch_software.json',
+        )
+      ).data
+        .filter((item) => item.media === 'eshop')
+        .map<GameHk & { nintendoId: string }>((item) => ({
+          ...item,
+          nintendoId: parseNSUID({ LinkURL: item.link } as GameJP, 3),
+        }));
+    if (!cached) {
+      await this.cacheManager.set('eshop:games:hk', games);
+    }
+    return games;
+  }
+
   async findGameByUsId(id: string) {
     const cached = await this.cacheManager.get<GameUS[]>('eshop:games:america');
     const games = cached || (await getGamesAmerica());
@@ -66,44 +138,24 @@ export class EshopService {
   async findGameByEuId(id: string) {
     if (id) {
       const cached = await this.cacheManager.get<GameEU[]>(
-        'eshop:games:europa',
+        'eshop:games:europe',
       );
       const games = cached || (await getGamesEurope());
       if (!cached) {
-        await this.cacheManager.set('eshop:games:europa', games);
+        await this.cacheManager.set('eshop:games:europe', games);
       }
       return games.find((item) => parseNSUID(item, 2) === id?.toString());
     }
   }
 
-  async findGameByJpId(productCode: string) {
-    const cached = await this.cacheManager.get<GameJP[]>('eshop:games:japan');
-    const games = cached || (await getGamesJapan());
-    if (!cached) {
-      await this.cacheManager.set('eshop:games:japan', games);
-    }
+  findGameByJpId(productCode: string, games: GameJP[]) {
     return games.find((item) => parseGameCode(item, 3) === productCode);
   }
 
-  async findGameByHkId(productCode: string) {
-    const cached = await this.cacheManager.get<GameHk[]>('eshop:games:hk');
-    try {
-      const games =
-        cached ||
-        (
-          await axios.get<GameHk[]>(
-            'https://www.nintendo.com.hk/data/json/switch_software.json',
-          )
-        ).data.filter((item) => item.media === 'eshop');
-      if (!cached) {
-        await this.cacheManager.set('eshop:games:hk', games);
-      }
-      return games.find(
-        (item) => this.parseGameHkCode(item.product_code) === productCode,
-      );
-    } catch (error) {
-      return undefined;
-    }
+  findGameByHkId(productCode: string, gameHk: GameHk[]) {
+    return gameHk.find(
+      (item) => this.parseGameHkCode(item.product_code) === productCode,
+    );
   }
 
   async getPrices(ids: string[], country: string) {

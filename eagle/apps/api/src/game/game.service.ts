@@ -4,14 +4,20 @@ import { Cache } from 'cache-manager';
 import { Document, LeanDocument } from 'mongoose';
 import { Game } from '@infra/infra/game-repository/game.schema';
 import { SimpleDetail } from '@infra/infra/game-repository/SimpleDetail';
+import { SonicService } from '@infra/infra/sonic/sonic.service';
 
 @Injectable()
 export class GameService {
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @Inject('GAME_REPOSITORY') private gameRepository: GameRepositoryService,
+    @Inject('SONIC_SERVICE') private sonicService: SonicService,
   ) {}
 
+  async search(search: string, page: number) {
+    const ids = await this.sonicService.searchGames(search, page);
+    return this.gameRepository.findGamesSimpleDetail({ ids });
+  }
   async getOneGame(id: string) {
     const cached = await this.cacheManager.get<SimpleDetail>(`game:${id}`);
     if (cached) return cached;

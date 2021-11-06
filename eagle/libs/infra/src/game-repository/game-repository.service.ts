@@ -10,43 +10,34 @@ import { SimpleDetail } from './SimpleDetail';
 export class GameRepositoryService {
   constructor(@InjectModel(Game.name) private gameModel: Model<GameDocument>) {}
 
-  async saveGameDetail({
-    euEshopDetail,
-    usEshopDetail,
-    jpEshopDetail,
-    hkEshopDetail,
-    usEshopId,
-    euEshopId,
-    jpEshopId,
-    hkEshopId,
-  }: {
-    euEshopDetail?: GameEU;
-    usEshopDetail?: GameUS;
-    jpEshopDetail?: GameJP;
-    hkEshopDetail?: GameHk;
-    usEshopId: string;
-    euEshopId?: string;
-    jpEshopId?: string;
-    hkEshopId?: string;
-  }) {
-    await this.gameModel.findOneAndUpdate(
-      { usEshopId: usEshopId },
-      {
-        euEshopDetail,
-        usEshopDetail,
-        hkEshopDetail,
-        jpEshopDetail,
-        euEshopId,
-        usEshopId,
-        jpEshopId,
-        hkEshopId,
-      },
-      { upsert: true },
-    );
+  async saveAllGameDetail(
+    games: {
+      euEshopDetail?: GameEU;
+      usEshopDetail?: GameUS;
+      jpEshopDetail?: GameJP;
+      hkEshopDetail?: GameHk;
+      usEshopId?: string;
+      euEshopId?: string;
+      jpEshopId?: string;
+      hkEshopId?: string;
+      active: boolean;
+      platform: string;
+    }[],
+  ) {
+    await this.gameModel.insertMany(games);
   }
 
   async getAllUsId() {
     return this.gameModel.find({}, 'usEshopId').lean();
+  }
+
+  async getTotalGames() {
+    return this.gameModel.count();
+  }
+
+  async getGamesPagination(page = 1) {
+    const skip = (page - 1) * 500;
+    return this.gameModel.find().limit(500).skip(skip);
   }
 
   async getAllEshopIds() {
@@ -102,6 +93,17 @@ export class GameRepositoryService {
     } as unknown as SimpleDetail;
     if (value.prices) gameDetail.prices = value.prices;
     return gameDetail;
+  }
+
+  async findByExternalId<T>(id: string) {
+    return this.gameModel
+      .find(
+        {
+          [id]: { $exists: true, $ne: null },
+        },
+        id,
+      )
+      .lean<T[]>();
   }
 
   async findGamesSimpleDetail(

@@ -31,4 +31,12 @@ export class GameController {
   ) {
     return this.service.getManyGameFull(ids?.split(','), search, page);
   }
+
+  @Get('search')
+  async gameSearch(
+    @Query()
+    { q, page }: { q?: string; page: number },
+  ) {
+    return await this.service.search(q, page);
+  }
 }
