@@ -38,6 +38,7 @@ jobs:
       REPO_USER: ${{ secrets.REPO_USER }}
       REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
       SWARM_ID: ${{ secrets.SWARM_ID }}
+      STACK_ENV_SONIC_PASSWORD: ${{ secrets.SONIC_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
       - name: Install

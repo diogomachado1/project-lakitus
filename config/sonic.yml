@@ -2,15 +2,15 @@ version: '3.2'
 
 services:
   sonic:
-      build: 
-        context: ./sonic
-        dockerfile: Dockerfile
+      image: diogo8machado/sonic
       ports:
         - 1491:1491
       networks:
         - traefik-new
       volumes:
         - "sonic:/var/lib/sonic/store/"
+      environment: 
+        - SONIC_PASSWORD=${SONIC_PASSWORD}
 volumes:
   sonic:
 
