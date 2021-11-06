@@ -1,0 +1,46 @@
+name: CD-sonic
+
+on:
+  push:
+    branches: [main]
+    paths: 
+      - 'sonic/**'
+      - '.github/workflows/cd-sonic-build.yaml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./sonic
+    steps:
+      - uses: actions/checkout@v2
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: diogo8machado/sonic
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          workdir: ./sonic
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    container: node:14-alpine
+    defaults:
+      run:
+        working-directory: ./ci-cd
+    env:
+      STACK_NAME: "sonic"
+      STACK_FILE: "/config/sonic.yml"
+      PORTAINER_URL: ${{ secrets.PORTAINER_URL }}
+      PORTAINER_USER: ${{ secrets.PORTAINER_USER }}
+      PORTAINER_PASSWORD: ${{ secrets.PORTAINER_PASSWORD }}
+      REPO_USER: ${{ secrets.REPO_USER }}
+      REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
+      SWARM_ID: ${{ secrets.SWARM_ID }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install
+        run: yarn install
+      - name: Deploy 
+        run: node ./main

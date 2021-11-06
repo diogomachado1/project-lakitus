@@ -50,6 +50,12 @@ services:
       ports:
           - 27017:27017
       restart: unless-stopped
+  sonic:
+    build: 
+      context: ./sonic
+      dockerfile: Dockerfile
+    ports:
+      - 1491:1491
   eagle:
       build: ./eagle
       command: yarn start:dev

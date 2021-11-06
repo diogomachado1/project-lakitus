@@ -1,0 +1,19 @@
+version: '3.2'
+
+services:
+  sonic:
+      build: 
+        context: ./sonic
+        dockerfile: Dockerfile
+      ports:
+        - 1491:1491
+      networks:
+        - traefik-new
+      volumes:
+        - "sonic:/var/lib/sonic/store/"
+volumes:
+  sonic:
+
+networks:
+  traefik-new:
+    external: true
