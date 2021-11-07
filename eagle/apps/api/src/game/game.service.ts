@@ -14,9 +14,11 @@ export class GameService {
     @Inject('SONIC_SERVICE') private sonicService: SonicService,
   ) {}
 
-  async search(search: string, page: number) {
+  async search(search: string, page: number, full: boolean) {
     const ids = await this.sonicService.searchGames(search, page);
-    return this.gameRepository.findGames({ ids }, undefined, true);
+    return full
+      ? this.gameRepository.findGames({ ids }, undefined, true)
+      : this.gameRepository.findGamesSimpleDetail({ ids });
   }
 
   async getOneGame(id: string) {

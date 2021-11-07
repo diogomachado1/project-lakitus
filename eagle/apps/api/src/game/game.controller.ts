@@ -35,8 +35,8 @@ export class GameController {
   @Get('search')
   async gameSearch(
     @Query()
-    { q, page }: { q?: string; page: number },
+    { q, page, full = false }: { q?: string; page: number; full: boolean },
   ) {
-    return await this.service.search(q, page);
+    return await this.service.search(q, page, full);
   }
 }
