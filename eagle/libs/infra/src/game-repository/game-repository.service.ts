@@ -118,6 +118,7 @@ export class GameRepositoryService {
   async findGames(
     { ids, search }: { ids?: string[]; search?: string },
     page = 1,
+    allFields = false,
   ) {
     const searchRegex = new RegExp(search, 'i');
     const filter =
@@ -134,7 +135,9 @@ export class GameRepositoryService {
     const games = await this.gameModel
       .find(
         filter,
-        '_id usEshopDetail euEshopDetail usEshopId euEshopId hkEshopId jpEshopId createdAt updatedAt',
+        allFields
+          ? undefined
+          : '_id usEshopDetail euEshopDetail usEshopId euEshopId hkEshopId jpEshopId createdAt updatedAt',
       )
       .limit(20)
       .skip(20 * (page - 1))

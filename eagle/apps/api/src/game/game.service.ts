@@ -16,7 +16,7 @@ export class GameService {
 
   async search(search: string, page: number) {
     const ids = await this.sonicService.searchGames(search, page);
-    return this.gameRepository.findGames({ ids });
+    return this.gameRepository.findGames({ ids }, undefined, true);
   }
 
   async getOneGame(id: string) {
