@@ -2,6 +2,9 @@ import { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { http } from "../../util/http";
+import { useRouter } from "next/router";
+
+import { Button } from "@chakra-ui/react";
 
 interface GamesHomeProps {
   game: {
@@ -17,13 +20,11 @@ interface GamesHomeProps {
 }
 
 const GamesHome: NextPage<GamesHomeProps> = ({ game }) => {
+  const router = useRouter();
+
   return (
     <div>
-      <Link href={`/games`}>
-        <a>
-          <h2>Voltar</h2>
-        </a>
-      </Link>
+      <Button onClick={() => router.back()}>Voltar</Button>
       <h1>{game?.title}</h1>
       <ul>
         <li>

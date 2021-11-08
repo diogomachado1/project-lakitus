@@ -8,20 +8,28 @@
     "start": "next start"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^1.0.17",
+    "@chakra-ui/react": "^1.6.12",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
     "@react-keycloak/ssr": "^3.3.0",
     "axios": "^0.23.0",
     "cookie": "^0.4.1",
+    "framer-motion": "^4",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "keycloak-js": "^15.0.2",
     "next": "11.1.2",
+    "nprogress": "^0.2.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "simplebar-react": "^2.3.6"
   },
   "devDependencies": {
     "@types/cookie": "^0.4.1",
     "@types/js-cookie": "^3.0.0",
     "@types/jsonwebtoken": "^8.5.5",
+    "@types/nprogress": "^0.2.0",
     "@types/react": "17.0.30",
     "eslint": "^8.0.1",
     "eslint-config-next": "11.1.2",
