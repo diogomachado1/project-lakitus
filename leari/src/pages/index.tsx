@@ -128,7 +128,7 @@ export async function getStaticProps() {
   console.log("aaa");
   return {
     props: {
-      data: (await http.get<any[]>("game/detail")).data.slice(0, 10),
+      data: (await http.get<any[]>("game/detail")).data.slice(0, 5),
     },
     revalidate: 60 * 60,
   };
