@@ -17,6 +17,8 @@ services:
         - SONIC_HOST=${SONIC_HOST}
         - SONIC_PASSWORD=${SONIC_PASSWORD}
         - SONIC_PORT=${SONIC_PORT}
+        - OPEN_EXCHANGE_TOKEN=${OPEN_EXCHANGE_TOKEN}
+        - REDIS_HOST=${REDIS_HOST}
       networks:
         - traefik-new
       command: yarn start:prod:api
