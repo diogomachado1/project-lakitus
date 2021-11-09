@@ -82,8 +82,11 @@ export class GameRepositoryService {
       publisher:
         value.usEshopDetail?.publishers?.[0] || value.euEshopDetail?.publisher,
       image:
-        value.euEshopDetail?.image_url ||
+        value.euEshopDetail?.image_url_sq_s ||
         value.usEshopDetail?.horizontalHeaderImage,
+      horizontalImage:
+        value.usEshopDetail?.horizontalHeaderImage ||
+        value.euEshopDetail?.image_url_h2x1_s,
       releaseDate:
         value.usEshopDetail?.releaseDateDisplay ||
         value.euEshopDetail?.date_from,

@@ -1,5 +1,11 @@
 version: '3.7'
 services:
+  redis:
+    image: redis:alpine
+    volumes:
+        - ./db/storage/cache:/data:cached
+    networks:
+        - traefik-new
   eagle-api:
       image: diogo8machado/eagle
       environment: 
