@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CurrencyService } from './currency.service';
 
-@Controller('currency')
+@Controller('game/currency')
 export class CurrencyController {
   constructor(private service: CurrencyService) {}
 
