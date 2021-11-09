@@ -13,6 +13,7 @@ import {
   InputRightElement,
   IconButton,
   List,
+  Grid,
 } from "@chakra-ui/react";
 
 import Navbar from "../components/navbar";
@@ -40,7 +41,7 @@ const GamesHome: NextPage<GamesHomeProps> = (props) => {
           mx="2"
           py="6"
           px="2"
-          backgroundColor="blue.900"
+          backgroundColor="gray.700"
           boxShadow="md"
           rounded="md"
           flexDir="column"
@@ -85,7 +86,7 @@ const GamesHome: NextPage<GamesHomeProps> = (props) => {
             </InputRightElement>
           </InputGroup>
         </Center>
-        <Flex flexWrap="wrap" alignItems="center">
+        <Flex flexDir="column" alignItems="center">
           {[
             "BEST PRICES",
             "POP ‘n’ CHEAP",
@@ -94,26 +95,15 @@ const GamesHome: NextPage<GamesHomeProps> = (props) => {
             "EDITOR’S CHOICE",
             "Last Reviews",
           ].map((category) => (
-            <Box
-              minW="340px"
-              w="30%"
-              flexGrow={1}
-              px={[4, 8, 12]}
-              py="8"
-              backgroundColor="blue.900"
-              boxShadow="md"
-              rounded="md"
-              key={category}
-              m="2"
-            >
-              <Heading color="white" size="md" mb="6">
+            <Box flexGrow={1} py="2" rounded="md" key={category} m="2">
+              <Heading size="md" mb="6">
                 {category}
               </Heading>
-              <List>
+              <Grid templateColumns="repeat(5, 1fr)" as={List} display="flex">
                 {props.data.map((item, index) => (
                   <GameItem key={item.id} game={item} />
                 ))}
-              </List>
+              </Grid>
             </Box>
           ))}
         </Flex>
@@ -133,10 +123,3 @@ export async function getStaticProps() {
     revalidate: 60 * 60,
   };
 }
-
-// export const getServerSideProps = async (ctx: any) => {
-//   const { data } = await http.get("game/detail", { params: ctx.query });
-//   return {
-//     props: { data },
-//   };
-// };

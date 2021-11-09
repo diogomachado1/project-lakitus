@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
 
   const Links: React.FC<{ href: string }> = ({ children, href }) => (
     <Button
-      background={router.asPath === href ? "whiteAlpha.200" : "blue.900"}
+      background={router.asPath === href ? "whiteAlpha.200" : "gray.700"}
       _hover={{ background: "whiteAlpha.300" }}
       _active={{ background: "whiteAlpha.400" }}
       onClick={() => router.push(href)}
@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
       top="0px"
       zIndex="999"
       boxShadow="md"
-      backgroundColor="blue.900"
+      backgroundColor="gray.700"
       as="nav"
       p="3"
       color="white"

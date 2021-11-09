@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ListItem, Flex, Box, Heading } from "@chakra-ui/react";
+import { ListItem, Flex, Box, Heading, Grid } from "@chakra-ui/react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -27,41 +27,49 @@ const GameItem: React.FC<{
   game: { title: string; image: string; id: string };
 }> = ({ game }) => {
   return (
-    <ListItem color="black">
-      <Flex h="70px" backgroundColor="white" mb="3" rounded="3xl">
+    <ListItem w="100%" maxW="250px" m={[1, 2, 3]}>
+      <Flex w="100%" rounded="3xl">
         <Link href={`/games/${game.id}`} passHref>
-          <Flex w="100%" as="a">
+          <Grid templateRows="1fr, 50px" flexDir="column" w="100%" as="a">
             {game.image && (
-              <Box
-                flexShrink={0}
-                minW="70px"
+              <Flex
+                maxW="250px"
                 rounded="3xl"
-                mr="2"
+                mb="2"
                 overflow="hidden"
+                boxShadow="lg"
               >
                 <Image
                   alt=""
-                  width="70px"
-                  height="70px"
+                  width="250px"
+                  height="250px"
                   placeholder="blur"
                   blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                    shimmer(70, 70)
+                    shimmer(250, 250)
                   )}`}
                   src={game.image}
                 />
-              </Box>
+              </Flex>
             )}
-            <Flex w="100%" overflow="hidden" p="2" alignItems="center">
+            <Flex
+              overflow="hidden"
+              maxH="50px"
+              p="2"
+              maxW="100%"
+              justifyContent="center"
+            >
               <Heading
-                whiteSpace="nowrap"
+                maxW="100%"
                 textOverflow="ellipsis"
+                whiteSpace="nowrap"
                 size="sm"
                 overflow="hidden"
+                textAlign="center"
               >
                 {game.title}
               </Heading>
             </Flex>
-          </Flex>
+          </Grid>
         </Link>
       </Flex>
     </ListItem>

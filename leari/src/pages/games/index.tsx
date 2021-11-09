@@ -82,7 +82,7 @@ const Games: NextPage<GamesProps> = (props) => {
           rounded="md"
           m="2"
         >
-          <List>
+          <List display="flex" flexWrap="wrap">
             {props.data.map((item, index) => (
               <GameItem key={item.id} game={item} />
             ))}
@@ -96,8 +96,8 @@ const Games: NextPage<GamesProps> = (props) => {
 export default Games;
 
 export const getServerSideProps = async (ctx: any) => {
-  const { data } = await http.get("game/search", {
-    params: { q: ctx.query.search },
+  const { data } = await http.get("game/detail", {
+    params: ctx.query,
   });
   return {
     props: { data },
