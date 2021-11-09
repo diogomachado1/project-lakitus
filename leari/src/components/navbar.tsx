@@ -7,18 +7,25 @@ import {
   IconButton,
   useColorMode,
   Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
-import React from "react";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import React, { useContext } from "react";
+import { MoonIcon, SunIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useKeycloak } from "@react-keycloak/ssr";
 import { KeycloakInstance } from "keycloak-js";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { context } from "./currencyContext";
+import { countries } from "../util/countries";
 
 const Navbar: React.FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { keycloak } = useKeycloak<KeycloakInstance>();
   const router = useRouter();
+  const { currency: defaultCurrency, changeCurrency } = useContext(context);
 
   const { login = () => {}, authenticated } = keycloak || {};
 
@@ -64,6 +71,26 @@ const Navbar: React.FC = () => {
             <Links href="/wishlist">My Wishlist</Links>
           </Flex>
           <Flex>
+            <Menu>
+              <MenuButton m="2" as={Button} rightIcon={<ChevronDownIcon />}>
+                {defaultCurrency === "all"
+                  ? "Select Currency"
+                  : defaultCurrency}
+              </MenuButton>
+              <MenuList maxH="300px" overflowY="scroll">
+                <MenuItem onClick={() => changeCurrency("all")} key={"all"}>
+                  {"None"}
+                </MenuItem>
+                {countries
+                  .map((item) => item.currency)
+                  .filter((v, i, a) => a.indexOf(v) === i)
+                  .map((item) => (
+                    <MenuItem onClick={() => changeCurrency(item)} key={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+              </MenuList>
+            </Menu>
             <IconButton
               aria-label="toggle color mode"
               colorScheme="blue"

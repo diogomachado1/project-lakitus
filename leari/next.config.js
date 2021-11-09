@@ -2,6 +2,6 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ['assets.nintendo.com', 'cdn01.nintendo-europe.com'],
-  } 
+    domains: ['assets.nintendo.com', 'cdn01.nintendo-europe.com', 'purecatamphetamine.github.io'],
+  }
 } 

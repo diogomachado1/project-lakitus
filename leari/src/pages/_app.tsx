@@ -10,10 +10,13 @@ import "simplebar/dist/simplebar.min.css";
 import "./style.css";
 import SimpleBar from "simplebar-react";
 import Router from "next/router";
+import React from "react";
+import CurrencyContext from "../components/currencyContext";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
+
 function MyApp({ Component, pageProps, cookies }: AppProps & { cookies: any }) {
   console.log(KEYCLOAK_CONFIG);
   return (
@@ -28,11 +31,13 @@ function MyApp({ Component, pageProps, cookies }: AppProps & { cookies: any }) {
             : null,
       }}
     >
-      <ChakraProvider>
-        <SimpleBar style={{ maxHeight: "100vh" }}>
-          <Component {...pageProps} />
-        </SimpleBar>
-      </ChakraProvider>
+      <SimpleBar style={{ maxHeight: "100vh" }}>
+        <ChakraProvider>
+          <CurrencyContext>
+            <Component {...pageProps} />
+          </CurrencyContext>
+        </ChakraProvider>
+      </SimpleBar>
     </SSRKeycloakProvider>
   );
 }
