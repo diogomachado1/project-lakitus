@@ -30,7 +30,7 @@ interface GamesHomeProps {
 const GamesHome: NextPage<GamesHomeProps> = (props) => {
   const router = useRouter();
   const [searchField, setSearchField] = useState("");
-  console.log(props.data.length);
+
   return (
     <>
       <Navbar />
@@ -115,7 +115,6 @@ const GamesHome: NextPage<GamesHomeProps> = (props) => {
 export default GamesHome;
 
 export async function getStaticProps() {
-  console.log("aaa");
   return {
     props: {
       data: (await http.get<any[]>("game/detail")).data.slice(0, 5),

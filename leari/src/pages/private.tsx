@@ -11,7 +11,7 @@ interface PrivatePageProps {
 
 const PrivatePage: NextPage<PrivatePageProps> = (props) => {
   const { initialized, keycloak } = useKeycloak<KeycloakInstance>();
-  console.log(props.payload);
+
   return (
     <div>
       Pagina privada{" "}
@@ -31,7 +31,7 @@ export default PrivatePage;
 
 export const getServerSideProps = async (ctx: any) => {
   const auth = validateAuth(ctx.req);
-  console.log(auth);
+
   if (!auth) {
     return {
       redirect: {
@@ -41,7 +41,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
   }
   const token = auth.token;
-  console.log(token);
+
   const { data } = await http.get("games", {
     headers: {
       Authorization: `Bearer ${token}`,

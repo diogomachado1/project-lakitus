@@ -18,7 +18,6 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 function MyApp({ Component, pageProps, cookies }: AppProps & { cookies: any }) {
-  console.log(KEYCLOAK_CONFIG);
   return (
     <SSRKeycloakProvider
       keycloakConfig={KEYCLOAK_CONFIG as any}

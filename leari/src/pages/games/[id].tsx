@@ -178,7 +178,6 @@ const GamesHome: NextPage<GamesHomeProps> = ({
                 <YAxis />
                 <Tooltip content={(data) => {
                   const payload = data?.payload?.[0];
-                  console.log()
                   return (<Flex color="blackAlpha.700" flexDirection="column" p="2" backgroundColor="whiteAlpha.600" rounded="md">
                     <Text>{payload?.payload?.date}</Text>
                     <Text>{payload?.payload?.price}</Text>

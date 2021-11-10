@@ -8,7 +8,6 @@ const LoginPage = () => {
 
   const { login = () => {}, authenticated } = keycloak || {};
   useEffect(() => {
-    console.log(initialized, authenticated);
     if (!initialized) {
       return;
     }
