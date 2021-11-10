@@ -44,6 +44,10 @@ export class RabbitService {
     await this.batchPublish('game-price', 'game-price', gamesIds);
   }
 
+  async sendBatchToBestPrice(gamesIds: any[]) {
+    await this.batchPublish('save-best-price', 'save-best-price', gamesIds);
+  }
+
   async sendBatchToGamePriceHistory(gamesIds: any[]) {
     await this.batchPublish(
       'game-price-history',

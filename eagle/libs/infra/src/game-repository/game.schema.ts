@@ -19,6 +19,9 @@ export class Game {
   @Prop({ type: {} })
   hkEshopDetail: GameHk;
 
+  @Prop({ type: {} })
+  bestPrice: any;
+
   @Prop()
   usEshopId: string;
 

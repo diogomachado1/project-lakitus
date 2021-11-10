@@ -109,6 +109,7 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
                   },
                 );
               }
+              console.log(error);
               this.logger.error(
                 JSON.stringify({
                   error: error.message,
@@ -144,7 +145,10 @@ export class RabbitClient extends Server implements CustomTransportStrategy {
 
   async listen(callback: () => void) {
     await this.createQueues();
-    await this.createFanoutQueue('price-updated', ['game-price-history']);
+    await this.createFanoutQueue('price-updated', [
+      'game-price-history',
+      'save-best-price',
+    ]);
     await this.createConsumers();
     callback();
   }

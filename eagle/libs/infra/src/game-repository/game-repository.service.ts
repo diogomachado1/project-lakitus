@@ -27,6 +27,10 @@ export class GameRepositoryService {
     await this.gameModel.insertMany(games);
   }
 
+  async updateGame(gameId: string, game: Partial<Game>) {
+    await this.gameModel.findByIdAndUpdate(gameId, game);
+  }
+
   async getAllUsId() {
     return this.gameModel.find({}, 'usEshopId').lean();
   }

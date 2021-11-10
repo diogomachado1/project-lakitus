@@ -6,6 +6,8 @@ import { RabbitService } from '@infra/infra/rabbit/rabbit.service';
 import { EshopService } from '@infra/infra/eshop/eshop.service';
 import { PriceRepositoryService } from '@infra/infra/price-repository/price-repository.service';
 import { countries } from '@infra/infra/countries';
+import axios from 'axios';
+import { Price } from '@infra/infra/price-repository/price.schema';
 @Injectable()
 export class PriceService {
   constructor(
@@ -21,6 +23,65 @@ export class PriceService {
     '3': 'jpEshopId',
     '4': 'hkEshopId',
   };
+
+  async saveBestPrice(gameId: string) {
+    console.log(gameId);
+    const [prices, currency] = await Promise.all([
+      this.repository.getPriceByGameId(gameId),
+      (async () =>
+        (
+          await axios.get<{ rates: { [x: string]: number } }>(
+            'https://api.leari.xyz/game/currency',
+          )
+        ).data.rates)(),
+    ]);
+    const bestPrice = prices.reduce(
+      (acc, item) => {
+        const currentPrice = Number(
+          item?.discountPrice?.rawValue || item?.regularPrice?.rawValue,
+        );
+        const currencyPrice = item?.regularPrice?.currency;
+        if (currentPrice) {
+          const currentPriceInDollar = currentPrice / currency[currencyPrice];
+
+          return currentPriceInDollar < acc.priceInDollar
+            ? {
+                ...item,
+                priceInDollar: Math.round(currentPriceInDollar * 100) / 100,
+              }
+            : acc;
+        } else {
+          return acc;
+        }
+      },
+      { priceInDollar: 99999999999999 } as { priceInDollar: number } & Price,
+    );
+    const bestPriceFormated = {
+      discountPrice: bestPrice.discountPrice,
+      regularPrice: bestPrice.regularPrice,
+      country: 'AR',
+      priceInDollar: bestPrice.priceInDollar,
+      discountPercentage: bestPrice.discountPrice?.rawValue
+        ? Math.round(
+            100 -
+              (Number(bestPrice?.discountPrice.rawValue) /
+                Number(bestPrice?.regularPrice.rawValue)) *
+                100,
+          )
+        : null,
+      discountedValue: bestPrice.discountPrice?.rawValue
+        ? Math.round(
+            (Number(bestPrice?.regularPrice.rawValue) /
+              currency[bestPrice?.regularPrice?.currency] -
+              Number(bestPrice?.priceInDollar)) *
+              100,
+          ) / 100
+        : null,
+    };
+    await this.gameRepository.updateGame(gameId, {
+      bestPrice: bestPriceFormated,
+    });
+  }
 
   async getAndSavePriceData(
     games: {
@@ -115,6 +176,15 @@ export class PriceService {
     const priceMessages = this.chunkGameArray(games);
 
     await this.rabbitService.sendBatchToGamePrice(priceMessages);
+    return { status: 'success' };
+  }
+
+  async getBestPriceMessages() {
+    const games = await this.gameRepository.getAllEshopIds();
+
+    const priceMessages = games.map((item) => ({ gameId: item._id }));
+
+    await this.rabbitService.sendBatchToBestPrice(priceMessages);
     return { status: 'success' };
   }
 

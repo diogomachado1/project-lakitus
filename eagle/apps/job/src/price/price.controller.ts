@@ -23,4 +23,14 @@ export class PriceController {
   async startGamePrice() {
     await this.gameService.getPriceMessages();
   }
+
+  @MessagePattern('save-best-price')
+  async saveBestPrice({ gameId }: { gameId: string }) {
+    await this.gameService.saveBestPrice(gameId);
+  }
+
+  @MessagePattern('save-best-price-starter')
+  async startBestPrice() {
+    await this.gameService.getBestPriceMessages();
+  }
 }

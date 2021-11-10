@@ -276,3 +276,13 @@ export const countries = [
     region: 4,
   },
 ];
+
+export const countryToCurrency = countries.reduce(
+  (acc, item) => ({ ...acc, [item.code]: item.currency }),
+  {},
+) as { [x: string]: string };
+
+export const countryCodeToName = countries.reduce(
+  (acc, item) => ({ ...acc, [item.code]: item.country }),
+  {},
+) as { [x: string]: string };
