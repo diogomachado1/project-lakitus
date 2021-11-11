@@ -24,7 +24,8 @@ import GameItem from "../components/GameItem";
 
 interface GamesHomeProps {
   data: { title: string; image: string; id: string }[];
-  payload: any;
+  newReleased: { title: string; image: string; id: string }[];
+  bestDiscount: { title: string; image: string; id: string }[];
 }
 
 const GamesHome: NextPage<GamesHomeProps> = (props) => {
@@ -87,11 +88,29 @@ const GamesHome: NextPage<GamesHomeProps> = (props) => {
           </InputGroup>
         </Center>
         <Flex flexDir="column" alignItems="center">
+          <Box flexGrow={1} py="2" rounded="md" key="NEW GAMES" m="2">
+            <Heading size="md" mb="6">
+              NEW GAMES
+            </Heading>
+            <Grid templateColumns="repeat(5, 1fr)" as={List} display="flex">
+              {props.newReleased.map((item, index) => (
+                <GameItem key={item.id} game={item} />
+              ))}
+            </Grid>
+          </Box>
+          <Box flexGrow={1} py="2" rounded="md" key="BEST PRICES" m="2">
+            <Heading size="md" mb="6">
+              BEST PRICES
+            </Heading>
+            <Grid templateColumns="repeat(5, 1fr)" as={List} display="flex">
+              {props.bestDiscount.map((item, index) => (
+                <GameItem key={item.id} game={item} />
+              ))}
+            </Grid>
+          </Box>
           {[
-            "BEST PRICES",
             "POP ‘n’ CHEAP",
             "Top reviews",
-            "NEW GAMES",
             "EDITOR’S CHOICE",
             "Last Reviews",
           ].map((category) => (
@@ -118,6 +137,12 @@ export async function getStaticProps() {
   return {
     props: {
       data: (await http.get<any[]>("game/detail")).data.slice(0, 5),
+      newReleased: (
+        await http.get<any[]>("game/detail?sort=release&asc=desc")
+      ).data.slice(0, 5),
+      bestDiscount: (
+        await http.get<any[]>("game/detail?sort=bestDiscount&asc=desc")
+      ).data.slice(0, 5),
     },
     revalidate: 60 * 60,
   };

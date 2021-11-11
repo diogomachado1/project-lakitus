@@ -40,6 +40,7 @@ const GameItem: React.FC<{
                 boxShadow="lg"
               >
                 <Image
+                  priority
                   quality="40"
                   alt=""
                   width="250px"

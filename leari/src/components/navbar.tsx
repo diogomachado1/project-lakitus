@@ -3,7 +3,7 @@ import {
   Container,
   Flex,
   Heading,
-  Text,
+  DarkMode,
   IconButton,
   useColorMode,
   Button,
@@ -71,26 +71,28 @@ const Navbar: React.FC = () => {
             <Links href="/wishlist">My Wishlist</Links>
           </Flex>
           <Flex>
-            <Menu>
-              <MenuButton m="2" as={Button} rightIcon={<ChevronDownIcon />}>
-                {defaultCurrency === "all"
-                  ? "Select Currency"
-                  : defaultCurrency}
-              </MenuButton>
-              <MenuList maxH="300px" overflowY="scroll">
-                <MenuItem onClick={() => changeCurrency("all")} key={"all"}>
-                  {"None"}
-                </MenuItem>
-                {countries
-                  .map((item) => item.currency)
-                  .filter((v, i, a) => a.indexOf(v) === i)
-                  .map((item) => (
-                    <MenuItem onClick={() => changeCurrency(item)} key={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-              </MenuList>
-            </Menu>
+            <DarkMode>
+              <Menu>
+                <MenuButton m="2" as={Button} rightIcon={<ChevronDownIcon />}>
+                  {defaultCurrency === "all"
+                    ? "Select Currency"
+                    : defaultCurrency}
+                </MenuButton>
+                <MenuList maxH="300px" overflowY="scroll">
+                  <MenuItem onClick={() => changeCurrency("all")} key={"all"}>
+                    {"None"}
+                  </MenuItem>
+                  {countries
+                    .map((item) => item.currency)
+                    .filter((v, i, a) => a.indexOf(v) === i)
+                    .map((item) => (
+                      <MenuItem onClick={() => changeCurrency(item)} key={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                </MenuList>
+              </Menu>
+            </DarkMode>
             <IconButton
               aria-label="toggle color mode"
               colorScheme="blue"
@@ -108,7 +110,7 @@ const Navbar: React.FC = () => {
                 )
               }
             />
-            {!authenticated ? (
+            {/* {!authenticated ? (
               <Button
                 m="2"
                 background="whiteAlpha.200"
@@ -129,7 +131,7 @@ const Navbar: React.FC = () => {
               >
                 Logout
               </Button>
-            )}
+            )} */}
           </Flex>
         </Flex>
       </Container>

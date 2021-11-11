@@ -77,10 +77,10 @@ const GamesHome: NextPage<GamesHomeProps> = ({
           }
         }).reverse()
       setSelectedHistoryPrice(prices)
-    } else if(selectedCountry){
+    } else if (selectedCountry) {
       const prices = priceHistory
         .map((item) => {
-          const price = item.prices.find(x=> x.country === selectedCountry)
+          const price = item.prices.find(x => x.country === selectedCountry)
           return {
             date: item.date,
             price: price?.value || 0,
@@ -113,9 +113,8 @@ const GamesHome: NextPage<GamesHomeProps> = ({
     priceType: "regularPrice" | "discountPrice"
   ) => {
     return defaultCurrency !== "all"
-      ? `${getSymbolFromCurrency(defaultCurrency)} ${price?.lastValue}`
-      : `${getSymbolFromCurrency(price?.[priceType].currency)} ${price?.[priceType].rawValue
-      }`;
+      ? `${getSymbolFromCurrency(defaultCurrency)} ${convertMoney(price?.[priceType].rawValue, price?.regularPrice?.currency)}`
+      : `${getSymbolFromCurrency(price?.[priceType].currency)} ${price?.[priceType].rawValue}`;
   };
   return (
     <>
@@ -145,6 +144,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
           >
             {game?.horizontalImage && (
               <Image
+                priority
                 alt=""
                 width="1200px"
                 height="700px"
@@ -219,6 +219,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
                           {index + 1}
                         </Heading>
                         <Image
+                          priority
                           width="50px"
                           height="50px"
                           alt="United States"
@@ -234,7 +235,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
                             mr="2"
                             icon={<WarningIcon />}
                             rounded="50%"
-                            onClick={() =>  setSelectedCountry(price.country=== selectedCountry?'':price.country)}
+                            onClick={() => setSelectedCountry(price.country === selectedCountry ? '' : price.country)}
                           />
                         </DarkMode>
                         <Stat size="sm">
