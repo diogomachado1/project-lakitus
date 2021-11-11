@@ -153,6 +153,7 @@ export class GameRepositoryService {
       title: 'usEshopDetail.title',
     };
     const filter = {};
+    if (sort) filter['usEshopDetail'] = { $exists: true };
     if (sort === 'release') {
       filter['usEshopDetail.releaseDateDisplay'] = new RegExp(
         /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/,
@@ -186,7 +187,6 @@ export class GameRepositoryService {
       .skip(20 * (page - 1))
       .lean();
     if (sort) {
-      filter['usEshopDetail'] = { $exists: true };
       query.sort({
         [sortsFields[sort]]: asc?.toLowerCase() === 'desc' ? 'desc' : 'asc',
       });
