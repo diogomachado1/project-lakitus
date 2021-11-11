@@ -14,9 +14,12 @@ export class GameController {
   @Get('/detail/')
   async getMany(
     @Query()
-    { ids, search, page }: GameFilter,
+    { ids, search, page, sort, asc, genres }: GameFilter,
   ) {
-    return this.service.getManyGame(ids?.split(','), search, page);
+    console.log(genres?.split(','));
+    return this.service.getManyGame(ids?.split(','), search, page, sort, asc, {
+      genres: genres?.split(','),
+    });
   }
 
   @Get('/detail-full/:id')
@@ -27,9 +30,16 @@ export class GameController {
   @Get('/detail-full/')
   async getManyFull(
     @Query()
-    { ids, search, page }: GameFilter,
+    { ids, search, page, sort, asc, genres }: GameFilter,
   ) {
-    return this.service.getManyGameFull(ids?.split(','), search, page);
+    return this.service.getManyGameFull(
+      ids?.split(','),
+      search,
+      page,
+      sort,
+      asc,
+      { genres: genres?.split(',') },
+    );
   }
 
   @Get('search')

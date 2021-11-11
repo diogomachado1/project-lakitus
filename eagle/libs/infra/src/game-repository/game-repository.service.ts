@@ -95,6 +95,9 @@ export class GameRepositoryService {
         value.usEshopDetail?.releaseDateDisplay ||
         value.euEshopDetail?.date_from,
       popularity: value.euEshopDetail?.popularity,
+      bestPrice: value.bestPrice,
+      genres: value.usEshopDetail?.genres,
+      metacritics: value.metacritics,
       createdAt: value.createdAt,
       updatedAt: value.updatedAt,
     } as unknown as SimpleDetail;
@@ -116,8 +119,20 @@ export class GameRepositoryService {
   async findGamesSimpleDetail(
     { ids, search }: { ids?: string[]; search?: string },
     page = 1,
+    sort: string = undefined,
+    asc: string = undefined,
+    filter: {
+      genres?: string[];
+    } = {},
   ) {
-    const games = await this.findGames({ ids, search }, page);
+    const games = await this.findGames(
+      { ids, search },
+      page,
+      false,
+      sort,
+      asc,
+      filter,
+    );
 
     return games.map(this.trasformData);
   }
@@ -126,9 +141,30 @@ export class GameRepositoryService {
     { ids, search }: { ids?: string[]; search?: string },
     page = 1,
     allFields = false,
+    sort: string = undefined,
+    asc: string = undefined,
+    filtersToAdds: {
+      genres?: string[];
+    } = {},
   ) {
+    const sortsFields = {
+      bestDiscount: 'bestPrice.discountedValue',
+      release: 'usEshopDetail.releaseDateDisplay',
+      title: 'usEshopDetail.title',
+    };
+    const filter = {};
+    if (sort === 'release') {
+      filter['usEshopDetail.releaseDateDisplay'] = new RegExp(
+        /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/,
+      );
+      filter['usEshopDetail.availability'] = 'Available now';
+    }
+    if (filtersToAdds.genres)
+      filter['usEshopDetail.genres'] = filtersToAdds.genres;
+
+    console.log(filter);
     const searchRegex = new RegExp(search, 'i');
-    const filter =
+    const filters =
       search || ids
         ? search
           ? {
@@ -138,17 +174,26 @@ export class GameRepositoryService {
               ],
             }
           : { _id: { $in: ids } }
-        : {};
-    const games = await this.gameModel
+        : { ...filter };
+    const query = this.gameModel
       .find(
-        filter,
+        filters,
         allFields
           ? undefined
-          : '_id usEshopDetail euEshopDetail usEshopId euEshopId hkEshopId jpEshopId createdAt updatedAt',
+          : '_id usEshopDetail euEshopDetail usEshopId euEshopId hkEshopId bestPrice jpEshopId createdAt updatedAt',
       )
       .limit(20)
       .skip(20 * (page - 1))
       .lean();
+    if (sort) {
+      console.log({
+        [sortsFields[sort]]: asc?.toLowerCase() === 'desc' ? 'desc' : 'asc',
+      });
+      query.sort({
+        [sortsFields[sort]]: asc?.toLowerCase() === 'desc' ? 'desc' : 'asc',
+      });
+    }
+    const games = await query;
 
     return games;
   }

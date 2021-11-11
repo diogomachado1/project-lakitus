@@ -5,5 +5,11 @@ export class GameFilter {
 
   page?: number;
 
+  sort?: string;
+
+  asc?: string;
+
+  genres?: string;
+
   fullDetail?: boolean;
 }

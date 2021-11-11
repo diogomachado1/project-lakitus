@@ -44,11 +44,42 @@ export class GameService {
     return game;
   }
 
-  async getManyGame(ids?: string[], search?: string, page?: number) {
-    return this.gameRepository.findGamesSimpleDetail({ ids, search }, page);
+  async getManyGame(
+    ids?: string[],
+    search?: string,
+    page?: number,
+    sort?: string,
+    asc?: string,
+    filter: {
+      genres?: string[];
+    } = {},
+  ) {
+    return this.gameRepository.findGamesSimpleDetail(
+      { ids, search },
+      page,
+      sort,
+      asc,
+      filter,
+    );
   }
 
-  async getManyGameFull(ids?: string[], search?: string, page?: number) {
-    return this.gameRepository.findGames({ ids, search }, page);
+  async getManyGameFull(
+    ids?: string[],
+    search?: string,
+    page?: number,
+    sort?: string,
+    asc?: string,
+    filter: {
+      genres?: string[];
+    } = {},
+  ) {
+    return this.gameRepository.findGames(
+      { ids, search },
+      page,
+      false,
+      sort,
+      asc,
+      filter,
+    );
   }
 }

@@ -59,7 +59,7 @@ export class PriceService {
     const bestPriceFormated = {
       discountPrice: bestPrice.discountPrice,
       regularPrice: bestPrice.regularPrice,
-      country: 'AR',
+      country: bestPrice.country,
       priceInDollar: bestPrice.priceInDollar,
       discountPercentage: bestPrice.discountPrice?.rawValue
         ? Math.round(

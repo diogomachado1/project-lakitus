@@ -40,6 +40,7 @@ export class Game {
   @Prop()
   active: boolean;
 
+  metacritics: number;
   prices: any[];
   createdAt: Date;
   updatedAt: Date;
