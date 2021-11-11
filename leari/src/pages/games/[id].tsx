@@ -162,7 +162,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
             <Text>{game?.description}</Text>
           </Flex>
           <Flex h="400px" justifyContent="center">
-            <ResponsiveContainer width="90%" height="100%">
+            <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 width={500}
                 height={400}
@@ -198,7 +198,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
               flexDir="column"
               mb="8"
               p="4"
-              w="50%"
+              w="100%"
               backgroundColor="gray.700"
               rounded="md"
               color="white"
@@ -225,7 +225,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
                           alt="United States"
                           src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${price.country}.svg`}
                         />
-                        <Text ml="2"> {price.country}: </Text>
+                        <Text ml="2"> {countryCodeToName[price.country]} </Text>
                       </Flex>
                       <Flex alignItems="center">
                         <DarkMode>
