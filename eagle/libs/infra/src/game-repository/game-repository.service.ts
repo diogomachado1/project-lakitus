@@ -186,9 +186,7 @@ export class GameRepositoryService {
       .skip(20 * (page - 1))
       .lean();
     if (sort) {
-      console.log({
-        [sortsFields[sort]]: asc?.toLowerCase() === 'desc' ? 'desc' : 'asc',
-      });
+      filter['usEshopDetail'] = { $exists: true };
       query.sort({
         [sortsFields[sort]]: asc?.toLowerCase() === 'desc' ? 'desc' : 'asc',
       });
