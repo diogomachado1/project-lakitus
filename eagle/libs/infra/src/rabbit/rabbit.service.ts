@@ -48,6 +48,14 @@ export class RabbitService {
     await this.batchPublish('save-best-price', 'save-best-price', gamesIds);
   }
 
+  async sendBatchToMetacriticScoreNintendo(message: any[]) {
+    await this.batchPublish(
+      'metacritic-score-nintendo-switch-game',
+      'metacritic-score-nintendo-switch-game',
+      message,
+    );
+  }
+
   async sendBatchToGamePriceHistory(gamesIds: any[]) {
     await this.batchPublish(
       'game-price-history',

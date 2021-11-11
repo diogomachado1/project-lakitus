@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const puppeteer = require('puppeteer-core');
 import { Inject, Injectable } from '@nestjs/common';
 import { GameRepositoryService } from '@infra/infra/game-repository/game-repository.service';
 import {
@@ -12,6 +14,8 @@ import { NsgService } from '@infra/infra/nsg/nsg.service';
 import { NsgGame } from '@infra/infra/nsg/interfaces/NsgGame';
 import { Game } from '@infra/infra/game-repository/game.schema';
 import { SonicService } from '@infra/infra/sonic/sonic.service';
+import { parse } from 'node-html-parser';
+import { RabbitService } from '@infra/infra/rabbit/rabbit.service';
 
 @Injectable()
 export class GameService {
@@ -20,6 +24,7 @@ export class GameService {
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
     @Inject('NSG_SERVICE') private nsgService: NsgService,
     @Inject('SONIC_SERVICE') private sonicService: SonicService,
+    @Inject('RABBIT_SERVICE') private rabbitService: RabbitService,
   ) {}
 
   async gameIndex() {
@@ -32,6 +37,77 @@ export class GameService {
         games.map((game) => this.sonicService.saveGameDetail(game)),
       );
     }
+  }
+
+  async getNintendoMetacriticScore(pageNumber = 0) {
+    const browser = await puppeteer.launch({
+      headless: true,
+      executablePath: process.env.CHROME_BIN || null,
+      args: [
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--disable-setuid-sandbox',
+        '--no-sandbox',
+      ],
+    });
+    const page = await browser.newPage();
+    await page.goto(
+      `https://www.metacritic.com/browse/games/release-date/available/switch/metascore?page=${pageNumber}`,
+    );
+
+    const data = await page.evaluate(
+      /* istanbul ignore next */
+      () => {
+        return document.querySelector('*').outerHTML;
+      },
+    );
+    await browser.close();
+    const html = parse(data);
+    const metacriticData = html
+      .querySelectorAll(`.clamp-summary-wrap`)
+      .map((item) => ({
+        title: item.querySelector('>a>h3').innerHTML,
+        url: `https://www.metacritic.com${
+          item.querySelector('>a').attributes.href
+        }`,
+        score: Number(item.querySelector('>div>a>div').innerHTML),
+      }));
+    const games = await this.gameRepository.getGamesTitle();
+    const gamesFormated = games.map((item) => ({
+      ...item,
+      title: item?.title
+        ?.replace(/™/g, '')
+        .replace(/®/g, '')
+        .replace('’', "'")
+        .replace(/–/g, '-')
+        .toUpperCase(),
+    }));
+    const gamesNotMatched = [];
+    const gamesMatched: { gameId: string }[] = [];
+    metacriticData.forEach((item) => {
+      const game = gamesFormated.find(
+        (game) => game.title === item.title.toUpperCase(),
+      );
+      if (game) {
+        gamesMatched.push({ ...item, gameId: game._id });
+      } else {
+        gamesNotMatched.push(item);
+      }
+    });
+    if (pageNumber === 0) {
+      const pageTotal = Number(
+        html.querySelector('.page.last_page>a').innerHTML,
+      );
+      const newMessages = [...Array(pageTotal + 1).keys()]
+        .filter((item) => item !== 0)
+        .map((item) => ({ page: item }));
+      this.rabbitService.sendBatchToMetacriticScoreNintendo(newMessages);
+    }
+    await Promise.all(
+      gamesMatched.map(({ gameId, ...item }) =>
+        this.gameRepository.updateGame(gameId, { metacritics: item }),
+      ),
+    );
   }
 
   async verifyNewNintendoGame() {

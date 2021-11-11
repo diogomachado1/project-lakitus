@@ -11,6 +11,11 @@ export class GameController {
     await this.service.verifyNewNintendoGame();
   }
 
+  @MessagePattern('metacritic-score-nintendo-switch-game')
+  async getNintendoMetacriticScore({ page = 0 }: { page: number }) {
+    await this.service.getNintendoMetacriticScore(page);
+  }
+
   @MessagePattern('game-sonic-index')
   async gameIndex() {
     await this.service.gameIndex();

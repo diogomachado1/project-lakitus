@@ -35,6 +35,17 @@ export class GameRepositoryService {
     return this.gameModel.find({}, 'usEshopId').lean();
   }
 
+  async getGamesTitle() {
+    return (
+      await this.gameModel
+        .find({}, 'usEshopDetail.title euEshopDetail.title _id')
+        .lean()
+    ).map((item) => ({
+      _id: item._id,
+      title: item.usEshopDetail?.title || item.euEshopDetail?.title,
+    }));
+  }
+
   async getTotalGames() {
     return this.gameModel.count();
   }
@@ -151,6 +162,7 @@ export class GameRepositoryService {
       bestDiscount: 'bestPrice.discountedValue',
       release: 'usEshopDetail.releaseDateDisplay',
       title: 'usEshopDetail.title',
+      metacritics: 'metacritics.score',
     };
     const filter = {};
     if (sort) filter['usEshopDetail'] = { $exists: true };
@@ -163,7 +175,6 @@ export class GameRepositoryService {
     if (filtersToAdds.genres)
       filter['usEshopDetail.genres'] = filtersToAdds.genres;
 
-    console.log(filter);
     const searchRegex = new RegExp(search, 'i');
     const filters =
       search || ids
@@ -181,7 +192,7 @@ export class GameRepositoryService {
         filters,
         allFields
           ? undefined
-          : '_id usEshopDetail euEshopDetail usEshopId euEshopId hkEshopId bestPrice jpEshopId createdAt updatedAt',
+          : '_id usEshopDetail euEshopDetail usEshopId euEshopId hkEshopId bestPrice metacritics jpEshopId createdAt updatedAt',
       )
       .limit(20)
       .skip(20 * (page - 1))
