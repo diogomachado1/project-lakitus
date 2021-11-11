@@ -14,8 +14,7 @@ RUN set -x \
     && apk add --no-cache \
     udev \
     ttf-freefont \
-    chromium \
-    && npm install puppeteer@1.10.0
+    chromium 
 
 RUN yarn
 
