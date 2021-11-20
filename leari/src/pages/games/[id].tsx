@@ -44,7 +44,7 @@ interface GamesHomeProps {
     image: string;
     horizontalImage: string;
     description: string;
-    prices: Price[];
+    prices?: Price[];
   };
   priceHistory: { prices: { country: string, value: number }[], date: string }[];
   currency: { [x: string]: number };
@@ -62,7 +62,6 @@ const GamesHome: NextPage<GamesHomeProps> = ({
   const [selectedCountry, setSelectedCountry] = useState<string>('')
   useEffect(() => {
     if (priceHistory && !selectedCountry) {
-
       const prices = priceHistory
         .map((item) => {
 
@@ -90,6 +89,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
       setSelectedHistoryPrice(prices)
     }
   }, [priceHistory, selectedCountry])
+  useEffect(()=>console.log(priceHistory),[priceHistory])
   if (!game || !priceHistory) return <></>;
   const convertMoney = (value: string, priceCurrency: string) => {
     const priceInDollar = Number(value) / (currency[priceCurrency] || 1);
@@ -99,14 +99,13 @@ const GamesHome: NextPage<GamesHomeProps> = ({
       ) / 100
     );
   };
-  const pricesConverteds = game.prices
-    .map((item) => ({
-      ...item,
-      lastValue: convertMoney(
-        item?.discountPrice?.rawValue || item?.regularPrice?.rawValue,
-        item?.regularPrice?.currency
-      ),
-    }))
+  const pricesConverteds = game.prices?.map((item) => ({
+    ...item,
+    lastValue: convertMoney(
+      item?.discountPrice?.rawValue || item?.regularPrice?.rawValue,
+      item?.regularPrice?.currency
+    ),
+  }))
     .sort((a, b) => a.lastValue - b.lastValue);
   const getFormatedPrice = (
     price: Price & { lastValue: number },
@@ -161,7 +160,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
           >
             <Text>{game?.description}</Text>
           </Flex>
-          <Flex h="400px" justifyContent="center">
+          {!!selectedHistoryPrice?.length && (<Flex h="400px" justifyContent="center">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 width={500}
@@ -192,7 +191,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
                 />
               </AreaChart>
             </ResponsiveContainer>
-          </Flex>
+          </Flex>)}
           <Flex>
             <Flex
               flexDir="column"
@@ -203,10 +202,10 @@ const GamesHome: NextPage<GamesHomeProps> = ({
               rounded="md"
               color="white"
             >
-              {pricesConverteds.map(
+              {game.prices ? pricesConverteds?.map(
                 (price, index) =>
                   price?.regularPrice && (
-                    <Text
+                    <Flex
                       key={price.country}
                       display="flex"
                       alignItems="center"
@@ -268,9 +267,9 @@ const GamesHome: NextPage<GamesHomeProps> = ({
                           )}
                         </Stat>
                       </Flex>
-                    </Text>
+                    </Flex>
                   )
-              )}
+              ) : (<Text>No price data</Text>)}
             </Flex>
           </Flex>
         </Flex>

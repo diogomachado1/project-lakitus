@@ -12,6 +12,7 @@ import SimpleBar from "simplebar-react";
 import Router from "next/router";
 import React from "react";
 import CurrencyContext from "../components/currencyContext";
+import theme from "../util/theme";
 
 Router.events.on("routeChangeStart", () => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
@@ -31,7 +32,7 @@ function MyApp({ Component, pageProps, cookies }: AppProps & { cookies: any }) {
       }}
     >
       <SimpleBar style={{ maxHeight: "100vh" }}>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <CurrencyContext>
             <Component {...pageProps} />
           </CurrencyContext>
