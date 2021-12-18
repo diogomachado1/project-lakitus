@@ -16,6 +16,7 @@ import { Game } from '@infra/infra/game-repository/game.schema';
 import { SonicService } from '@infra/infra/sonic/sonic.service';
 import { parse } from 'node-html-parser';
 import { RabbitService } from '@infra/infra/rabbit/rabbit.service';
+import { ElasticService } from '@infra/infra/elastic/elastic.service';
 
 @Injectable()
 export class GameService {
@@ -24,6 +25,7 @@ export class GameService {
     @Inject('ESHOP_SERVICE') private eshopService: EshopService,
     @Inject('NSG_SERVICE') private nsgService: NsgService,
     @Inject('SONIC_SERVICE') private sonicService: SonicService,
+    @Inject('ELASTIC_SERVICE') private elasticService: ElasticService,
     @Inject('RABBIT_SERVICE') private rabbitService: RabbitService,
   ) {}
 
@@ -36,6 +38,16 @@ export class GameService {
       await Promise.all(
         games.map((game) => this.sonicService.saveGameDetail(game)),
       );
+    }
+  }
+
+  async gameElasticIndex() {
+    const totalGames = await this.gameRepository.getTotalGames();
+    const pages = Math.ceil(totalGames / 500);
+    await this.elasticService.deleteAll();
+    for (let index = 1; index <= pages; index++) {
+      const games = await this.gameRepository.getGamesPagination(index);
+      await this.elasticService.saveGameDetail(games);
     }
   }
 

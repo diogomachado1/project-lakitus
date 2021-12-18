@@ -20,4 +20,9 @@ export class GameController {
   async gameIndex() {
     await this.service.gameIndex();
   }
+
+  @MessagePattern('game-elastic-index')
+  async gameElasticIndex() {
+    await this.service.gameElasticIndex();
+  }
 }
