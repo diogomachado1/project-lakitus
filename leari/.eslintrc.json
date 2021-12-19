@@ -7,10 +7,10 @@
   "extends": ["next", "prettier"],
   "plugins": ["prettier"],
   "parserOptions": {
-    "ecmaVersion": 13,
     "sourceType": "module"
   },
   "rules": {
+    "react-hooks/exhaustive-deps": "off",
     "prettier/prettier": "error"
   }
 }   
