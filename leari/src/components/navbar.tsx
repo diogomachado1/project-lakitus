@@ -38,7 +38,7 @@ import { context } from "./currencyContext";
 import { countries } from "../util/countries";
 import Image from "next/image";
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ search?: boolean }> = ({ search = true }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const { keycloak } = useKeycloak<KeycloakInstance>();
   const { currency: defaultCurrency, changeCurrency } = useContext(context);
@@ -51,8 +51,7 @@ const Navbar: React.FC = () => {
 
   const Links: React.FC<{ href: string }> = ({ children, href }) => (
     <Link href={href} passHref>
-      <Heading
-        size="xs"
+      <Box
         as="a"
         background={router.asPath === href ? "whiteAlpha.200" : "gray.900"}
         _hover={{ background: "whiteAlpha.300" }}
@@ -65,7 +64,7 @@ const Navbar: React.FC = () => {
         alignItems="center"
       >
         {children}
-      </Heading>
+      </Box>
     </Link>
   );
   const ConfigButtons: React.FC<{ mobile?: boolean }> = ({
@@ -124,53 +123,60 @@ const Navbar: React.FC = () => {
       >
         <Container maxW="container.xl">
           <Flex flexDir="column">
-            <Flex text justifyContent="space-between">
+            <Flex justifyContent="space-between">
               <Link href="/" passHref>
-                <Heading
+                <Box
                   as="a"
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
                   maxW="50px"
                 >
-                  <Image width="200px" height="200px" src="/logo.svg" />
-                </Heading>
-              </Link>
-              <Flex
-                mx="2"
-                alignItems="center"
-                flexGrow={1}
-                justifyContent="center"
-              >
-                <InputGroup color="black" maxW="600px">
-                  <Input
-                    _placeholder={{ color: "blackAlpha.600" }}
-                    backgroundColor="white"
-                    placeholder="Search"
-                    value={searchField}
-                    onChange={(e) => setSearchField(e.target.value)}
-                    onKeyUp={(e) => {
-                      if (e.key === "Enter") {
-                        router.push(`/games?search=${searchField}`);
-                      }
-                    }}
+                  <Image
+                    alt="logo"
+                    width="200px"
+                    height="200px"
+                    src="/logo.svg"
                   />
-                  <InputRightElement>
-                    <IconButton
-                      background="blackAlpha.100"
-                      _hover={{ background: "blackAlpha.300" }}
-                      _active={{ background: "blackAlpha.400" }}
-                      aria-label="search"
-                      h="1.75rem"
-                      size="sm"
-                      onClick={() =>
-                        router.push(`/games?search=${searchField}`)
-                      }
-                      icon={<Search2Icon color="black" />}
+                </Box>
+              </Link>
+              {search && (
+                <Flex
+                  mx="2"
+                  alignItems="center"
+                  flexGrow={1}
+                  justifyContent="center"
+                >
+                  <InputGroup color="black" maxW="600px">
+                    <Input
+                      _placeholder={{ color: "blackAlpha.600" }}
+                      backgroundColor="white"
+                      placeholder="Search"
+                      value={searchField}
+                      onChange={(e) => setSearchField(e.target.value)}
+                      onKeyUp={(e) => {
+                        if (e.key === "Enter") {
+                          router.push(`/games?search=${searchField}`);
+                        }
+                      }}
                     />
-                  </InputRightElement>
-                </InputGroup>
-              </Flex>
+                    <InputRightElement>
+                      <IconButton
+                        background="blackAlpha.100"
+                        _hover={{ background: "blackAlpha.300" }}
+                        _active={{ background: "blackAlpha.400" }}
+                        aria-label="search"
+                        h="1.75rem"
+                        size="sm"
+                        onClick={() =>
+                          router.push(`/games?search=${searchField}`)
+                        }
+                        icon={<Search2Icon color="black" />}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                </Flex>
+              )}
               <Flex>
                 <DarkMode>
                   <IconButton
@@ -211,7 +217,7 @@ const Navbar: React.FC = () => {
             <Flex
               display={["none", "none", "none", "flex"]}
               alignItems="center"
-              pt="4"
+              pt="1"
             >
               <Links href="/onsale">On sale</Links>
               <Links href="/best-games">Best Games</Links>
