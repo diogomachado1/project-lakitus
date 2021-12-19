@@ -1,7 +1,7 @@
-version: '3.7'
-services: 
+version: "3.7"
+services:
   postgres:
-    build: 
+    build:
       context: ./keycloak
       dockerfile: db-dockerfile
     volumes:
@@ -28,7 +28,7 @@ services:
     ports:
       - 8080:8080
     depends_on:
-        - postgres
+      - postgres
   api-gateway:
     build: ./api-gateway
     ports:
@@ -38,46 +38,83 @@ services:
       KONG_PLUGINS: kong-jwt2header,jwt
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ERROR_LOG: /dev/stderr
-      KONG_ADMIN_LISTEN: '0.0.0.0:8001'
-      KONG_DATABASE: 'off'
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: kong.yml
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
   mongodb:
-      image : mongo
-      volumes:
-          - /home/database:/data/db 
-      ports:
-          - 27017:27017
-      restart: unless-stopped
+    image: mongo
+    volumes:
+      - /home/database:/data/db
+    ports:
+      - 27017:27017
+    restart: unless-stopped
   sonic:
-    build: 
+    build:
       context: ./sonic
       dockerfile: Dockerfile
     ports:
       - 1491:1491
-  eagle:
-      build: ./eagle
-      command: yarn start:dev
-      volumes:
-        - ./eagle/src:/home/app/src:cached
-        - ./eagle/package.json:/home/app/package.json:cached
-      environment: 
-        MONGO_URL: mongodb://mongodb:27017/games
-        RABBIT_HOST: rabbit
-        RABBIT_USER: guest
-        RABBIT_PASSWORD: guest
-      depends_on:
-        - rabbit
-        - mongodb
+  raggiana:
+    build: ./raggiana
+    command: yarn start:dev
+    volumes:
+      - ./raggiana/src:/home/app/src:cached
+      - ./raggiana/package.json:/home/app/package.json:cached
+    ports:
+      - "5000:3000"
+    # environment:
+    # MONGO_URL: mongodb://mongodb:27017/games
+    # RABBIT_HOST: rabbit
+    # RABBIT_USER: guest
+    # RABBIT_PASSWORD: guest
+    depends_on:
+      - mongodb
+      - keycloak
+      - api-gateway
+      - eagle-api
+  redis:
+    image: redis:alpine
+  eagle-api:
+    build: ./eagle
+    command: yarn start:dev api
+    volumes:
+      - ./eagle/src:/home/app/src:cached
+      - ./eagle/package.json:/home/app/package.json:cached
+    environment:
+      RABBIT_HOST: rabbit
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - rabbit
+      - mongodb
+      - sonic
+      - redis
+  eagle-job:
+    build: ./eagle
+    command: yarn start:dev
+    volumes:
+      - ./eagle/src:/home/app/src:cached
+      - ./eagle/package.json:/home/app/package.json:cached
+    environment:
+      MONGO_URL: mongodb://mongodb:27017/games
+      RABBIT_HOST: rabbit
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+    depends_on:
+      - rabbit
+      - mongodb
   rabbit:
-      hostname: mabbit
-      image: rabbitmq:management-alpine
-      ports:
-          - 5672:5672
-          - 15672:15672
-      volumes:
-        - "rabbitmq:/var/lib/rabbitmq/mnesia/"
+    hostname: mabbit
+    image: rabbitmq:management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - "rabbitmq:/var/lib/rabbitmq/mnesia/"
 volumes:
   rabbitmq:
   postgres:
