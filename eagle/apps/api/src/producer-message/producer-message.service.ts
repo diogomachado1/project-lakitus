@@ -12,18 +12,8 @@ export class ProducerGameDetailService {
     @Inject('RABBIT_SERVICE') private rabbitService: RabbitService,
   ) {}
 
-  async sendGamesMessage(sendAll = false) {
-    const [nsgGames, savedGamesUsId] = await Promise.all([
-      this.nsgServices.getGames(),
-      this.gameRepository.getAllUsId(),
-    ]);
-
-    const gamesIds = sendAll
-      ? this.getAllGames(nsgGames)
-      : this.getNewGames(nsgGames, savedGamesUsId);
-
-    await this.rabbitService.sendBatchToGameDetail(gamesIds);
-    return gamesIds;
+  async sendGamesMessage() {
+    await this.rabbitService.sendBatchToGameDetail();
   }
   getNewGames(nsgGames: NsgGame[], savedGamesUsId: { usEshopId: string }[]) {
     const usIdHashTable = this.createHatableUsIdEshop(savedGamesUsId);

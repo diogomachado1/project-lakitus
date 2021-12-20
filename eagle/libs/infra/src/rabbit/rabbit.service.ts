@@ -36,8 +36,12 @@ export class RabbitService {
     await this.batchPublish('price-updated', '', datas);
   }
 
-  async sendBatchToGameDetail(gamesIds: { usId: number; euId: number }[]) {
-    await this.batchPublish('game-detail', 'game-detail', gamesIds);
+  async sendBatchToGameDetail() {
+    await this.batchPublish(
+      'new-game-detail-nintendo',
+      'new-game-detail-nintendo',
+      [{}],
+    );
   }
 
   async sendBatchToGamePrice(gamesIds: any[]) {
