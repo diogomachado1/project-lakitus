@@ -30,7 +30,7 @@ export class ProducerGameDetailService {
     return nsgGames
       .filter(
         (item) =>
-          item.nsuid_na && !usIdHashTable.includes(item.nsuid_na.toString()),
+          item.nsuid_na && !usIdHashTable.includes(item?.nsuid_na?.toString()),
       )
       .map((item) => ({ usId: item.nsuid_na, euId: item.nsuid_eu }));
   }
