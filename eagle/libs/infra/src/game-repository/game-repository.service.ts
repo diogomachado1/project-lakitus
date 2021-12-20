@@ -159,7 +159,7 @@ export class GameRepositoryService {
     } = {},
   ) {
     const sortsFields = {
-      bestDiscount: 'bestPrice.discountedValue',
+      bestDiscount: 'bestPrice.discountPercentage',
       release: 'usEshopDetail.releaseDateDisplay',
       title: 'usEshopDetail.title',
       metacritics: 'metacritics.score',
@@ -184,6 +184,7 @@ export class GameRepositoryService {
                 { 'euEshopDetail.title': searchRegex },
                 { 'usEshopDetail.title': searchRegex },
               ],
+              ...filter,
             }
           : { _id: { $in: ids } }
         : { ...filter };
