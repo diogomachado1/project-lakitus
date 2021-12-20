@@ -189,6 +189,7 @@ export class GameRepositoryService {
       filtersToAdds,
     )
       .limit(undefined)
+      .skip(0)
       .count();
 
     return games;
