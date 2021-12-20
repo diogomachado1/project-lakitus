@@ -50,7 +50,6 @@ const GamesHome: NextPage<GamesHomeProps> = ({
   useEffect(() => {
     setAllCurrency(currency);
   }, [currency]);
-  console.log(bestGames);
   const lists = [
     {
       title: "NEW GAMES",

@@ -158,8 +158,54 @@ export class GameRepositoryService {
       genres?: string[];
     } = {},
   ) {
+    const games = await this.makeQuery(
+      { ids, search },
+      page,
+      allFields,
+      sort,
+      asc,
+      filtersToAdds,
+    );
+
+    return games;
+  }
+
+  async findGamesCount(
+    { ids, search }: { ids?: string[]; search?: string },
+    page = 1,
+    allFields = false,
+    sort: string = undefined,
+    asc: string = undefined,
+    filtersToAdds: {
+      genres?: string[];
+    } = {},
+  ) {
+    const games = await this.makeQuery(
+      { ids, search },
+      page,
+      allFields,
+      sort,
+      asc,
+      filtersToAdds,
+    )
+      .limit(undefined)
+      .count();
+
+    return games;
+  }
+
+  makeQuery(
+    { ids, search }: { ids?: string[]; search?: string },
+    page = 1,
+    allFields = false,
+    sort: string = undefined,
+    asc: string = undefined,
+    filtersToAdds: {
+      genres?: string[];
+    } = {},
+  ) {
     const sortsFields = {
-      bestDiscount: 'bestPrice.discountPercentage',
+      bestDiscount: 'bestPrice.discountedValue',
       release: 'usEshopDetail.releaseDateDisplay',
       title: 'usEshopDetail.title',
       metacritics: 'metacritics.score',
@@ -184,7 +230,6 @@ export class GameRepositoryService {
                 { 'euEshopDetail.title': searchRegex },
                 { 'usEshopDetail.title': searchRegex },
               ],
-              ...filter,
             }
           : { _id: { $in: ids } }
         : { ...filter };
@@ -203,8 +248,6 @@ export class GameRepositoryService {
         [sortsFields[sort]]: asc?.toLowerCase() === 'desc' ? 'desc' : 'asc',
       });
     }
-    const games = await query;
-
-    return games;
+    return query;
   }
 }

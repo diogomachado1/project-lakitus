@@ -1,4 +1,5 @@
-import { Controller, Param, Get, Query } from '@nestjs/common';
+import { Controller, Param, Get, Query, Response } from '@nestjs/common';
+import { Response as Res } from 'express';
 import { GameService } from './game.service';
 import { GameFilter } from './GameFilter';
 
@@ -15,11 +16,20 @@ export class GameController {
   async getMany(
     @Query()
     { ids, search, page, sort, asc, genres }: GameFilter,
+    @Response() res: Res,
   ) {
-    console.log(genres?.split(','));
-    return this.service.getManyGame(ids?.split(','), search, page, sort, asc, {
-      genres: genres?.split(','),
-    });
+    const { pages, data } = await this.service.getManyGame(
+      ids?.split(','),
+      search,
+      page,
+      sort,
+      asc,
+      {
+        genres: genres?.split(','),
+      },
+    );
+
+    res.set('pages-total', pages.toString()).json(data);
   }
 
   @Get('/detail-full/:id')

@@ -25,7 +25,6 @@ export class PriceService {
   };
 
   async saveBestPrice(gameId: string) {
-    console.log(gameId);
     const [prices, currency] = await Promise.all([
       this.repository.getPriceByGameId(gameId),
       (async () =>

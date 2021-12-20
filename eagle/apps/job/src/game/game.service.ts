@@ -32,7 +32,6 @@ export class GameService {
     const pages = Math.ceil(totalGames / 500);
     for (let index = 1; index <= pages; index++) {
       const games = await this.gameRepository.getGamesPagination(index);
-      console.log(games.length, index);
       await Promise.all(
         games.map((game) => this.sonicService.saveGameDetail(game)),
       );

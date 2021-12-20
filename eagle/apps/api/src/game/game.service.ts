@@ -54,13 +54,25 @@ export class GameService {
       genres?: string[];
     } = {},
   ) {
-    return this.gameRepository.findGamesSimpleDetail(
-      { ids, search },
-      page,
-      sort,
-      asc,
-      filter,
-    );
+    const [totalPages, data] = await Promise.all([
+      this.gameRepository.findGamesCount(
+        { ids, search },
+        page,
+        false,
+        sort,
+        asc,
+        filter,
+      ),
+      this.gameRepository.findGamesSimpleDetail(
+        { ids, search },
+        page,
+        sort,
+        asc,
+        filter,
+      ),
+    ]);
+
+    return { pages: Math.ceil(totalPages / 20), data };
   }
 
   async getManyGameFull(
