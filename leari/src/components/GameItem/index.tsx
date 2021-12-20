@@ -87,7 +87,7 @@ const GameItem: React.FC<{
                 >
                   {game.title}
                 </Heading>
-                {game.bestPrice.regularPrice && (
+                {game?.bestPrice?.regularPrice && (
                   <Flex alignItems="center">
                     <Text fontSize="md" mr="2" fontWeight="bold">
                       {bestPrice(game)}
@@ -116,7 +116,7 @@ const GameItem: React.FC<{
                     )}
                   </Flex>
                 )}
-                {game.bestPrice.discountPrice && (
+                {game?.bestPrice?.discountPrice && (
                   <Flex my="1" alignItems="center">
                     <Text
                       as="del"
