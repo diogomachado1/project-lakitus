@@ -190,6 +190,7 @@ export class GameRepositoryService {
     )
       .limit(undefined)
       .skip(0)
+      .sort(undefined)
       .count();
 
     return games;
