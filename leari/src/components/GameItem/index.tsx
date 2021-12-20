@@ -54,18 +54,20 @@ const GameItem: React.FC<{
               boxShadow="lg"
               alignItems="center"
             >
-              <Image
-                priority
-                quality="40"
-                alt=""
-                width="250px"
-                height="250px"
-                placeholder="blur"
-                blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                  shimmer(250, 250)
-                )}`}
-                src={game.image}
-              />
+              {game.image && (
+                <Image
+                  priority
+                  quality="40"
+                  alt=""
+                  width="250px"
+                  height="250px"
+                  placeholder="blur"
+                  blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                    shimmer(250, 250)
+                  )}`}
+                  src={game.image}
+                />
+              )}
             </Flex>
             <Flex
               borderBottomRadius="3xl"

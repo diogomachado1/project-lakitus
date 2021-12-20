@@ -35,10 +35,10 @@ const PaginationButtons: React.FC<{
           //@ts-ignore
           [...Array(totalPages).keys()]
             .filter((item) => item > 0)
-            .filter((item) => item >= -4 + page && item <= page + 4)
+            .filter((item) => item >= -4 + page && item <= page + 5)
             .map((item) => iconPage(item))
         }
-        {totalPages >= 10 && page <= totalPages - 6 && iconPage(totalPages - 1)}
+        {totalPages >= 10 && page <= totalPages && iconPage(totalPages)}
       </Flex>
     </>
   );

@@ -31,6 +31,7 @@ interface GamesProps {
   data: IListGame[];
   currency: { [x: string]: number };
   payload: any;
+  pages: number;
 }
 
 const Games: NextPage<GamesProps> = (props) => {
@@ -40,6 +41,10 @@ const Games: NextPage<GamesProps> = (props) => {
   useEffect(() => {
     setAllCurrency(props.currency);
   }, [props.currency]);
+
+  useEffect(() => {
+    console.log(props.pages);
+  }, [props.pages]);
   const [searchField, setSearchField] = useState<string>(
     (router.query.search as string) || ""
   );
@@ -168,7 +173,7 @@ const Games: NextPage<GamesProps> = (props) => {
             onChange={(newPage) => {
               setPage(newPage);
             }}
-            totalPages={100}
+            totalPages={props.pages}
           />
         </Flex>
 
@@ -185,7 +190,7 @@ const Games: NextPage<GamesProps> = (props) => {
             onChange={(newPage) => {
               setPage(newPage);
             }}
-            totalPages={100}
+            totalPages={props.pages}
           />
         </Flex>
       </Container>
@@ -196,7 +201,10 @@ export default Games;
 
 export const getServerSideProps = async (ctx: any) => {
   const [
-    { data },
+    {
+      data,
+      headers: { "pages-total": pages },
+    },
     {
       data: { rates: currency },
     },
@@ -205,6 +213,6 @@ export const getServerSideProps = async (ctx: any) => {
     http.get<{ rates: { [x: string]: number }[] }>(`game/currency`),
   ]);
   return {
-    props: { data, currency },
+    props: { data, currency, pages: Number(pages) },
   };
 };

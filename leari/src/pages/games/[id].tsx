@@ -33,6 +33,7 @@ import { useContext, useEffect, useState } from "react";
 import { context } from "../../components/currencyContext";
 import { countryCodeToName, countryToCurrency } from "../../util/countries";
 import { Price } from "../../Interface/IPrice";
+import Head from "next/head";
 
 interface GamesHomeProps {
   game: {
@@ -118,6 +119,9 @@ const GamesHome: NextPage<GamesHomeProps> = ({
 
   return (
     <>
+      <Head>
+        <title>{game.title}</title>
+      </Head>
       <Navbar />
       <Container p="4" maxW="container.xl">
         <Flex flexDir="column">
