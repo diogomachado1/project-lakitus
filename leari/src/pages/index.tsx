@@ -109,111 +109,113 @@ const GamesHome: NextPage<GamesHomeProps> = ({
                   slidesToScroll={1}
                   arrows={false}
                 >
-                  {bestGames.map((game, index) => (
-                    <Flex key={game.id} w="100%" px="1" rounded="3xl">
-                      <Grid
-                        templateRows="1fr, 50px"
-                        w="100%"
-                        as="a"
-                        position="relative"
-                      >
-                        {game.image && (
-                          <Flex
-                            maxW="1400px"
-                            rounded="3xl"
-                            overflow="hidden"
-                            boxShadow="lg"
-                          >
-                            <Image
-                              alt=""
-                              width="1400px"
-                              height="800px"
-                              src={game?.horizontalImage}
-                            />
-                          </Flex>
-                        )}
-                        <Link href={`/games/${game.id}`} passHref>
-                          <Flex
-                            as="a"
-                            borderBottomRadius="3xl"
-                            overflow="hidden"
-                            position="absolute"
-                            maxH="100%"
-                            w="100%"
-                            bottom="0"
-                            left="0"
-                            backgroundColor="blackAlpha.800"
-                            p="2"
-                            px="3"
-                            maxW="100%"
-                          >
-                            <Flex flexDir="column">
-                              <Heading
-                                mb="2"
-                                maxW="100%"
-                                textOverflow="ellipsis"
-                                whiteSpace="nowrap"
-                                size="lg"
-                                overflow="hidden"
-                              >
-                                {game.title}
-                              </Heading>
-                              <Flex alignItems="center" mb="1"></Flex>
-                              <Flex alignItems="center">
-                                <Text fontSize="md" mr="2" fontWeight="bold">
-                                  {bestPrice(game)}
-                                </Text>
-                                <Image
-                                  priority
-                                  width="25px"
-                                  height="25px"
-                                  alt="United States"
-                                  src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${game.bestPrice.country}.svg`}
-                                />
-                                <Flex maxH="20px" ml="3" mr="1">
-                                  <Image
-                                    alt="metacritics"
-                                    src="/Metacritic.svg"
-                                    width="20"
-                                    height="20"
-                                  />
-                                </Flex>
-                                <Text fontSize="md" fontWeight="extrabold">
-                                  {game.metacritics.score}
-                                </Text>
-                              </Flex>
-                              {game.bestPrice.discountPrice && (
-                                <Flex my="1" alignItems="center">
-                                  <Text
-                                    as="del"
-                                    fontStyle="oblique"
-                                    opacity="0.5"
-                                    fontSize="md"
-                                    mr="2"
-                                  >
-                                    {formatedPrice(
-                                      game.bestPrice,
-                                      "regularPrice"
-                                    )}
-                                  </Text>
-                                  <Text
-                                    backgroundColor="red.600"
-                                    px="2"
-                                    borderRadius="lg"
-                                    fontSize="md"
-                                    mr="2"
-                                    fontWeight="bold"
-                                  >
-                                    {game.bestPrice.discountPercentage}% OFF
-                                  </Text>
-                                </Flex>
-                              )}
+                  {bestGames.map((game, index) => {
+                    game.bestPrice && (
+                      <Flex key={game.id} w="100%" px="1" rounded="3xl">
+                        <Grid
+                          templateRows="1fr, 50px"
+                          w="100%"
+                          as="a"
+                          position="relative"
+                        >
+                          {game.image && (
+                            <Flex
+                              maxW="1400px"
+                              rounded="3xl"
+                              overflow="hidden"
+                              boxShadow="lg"
+                            >
+                              <Image
+                                alt=""
+                                width="1400px"
+                                height="800px"
+                                src={game?.horizontalImage}
+                              />
                             </Flex>
-                          </Flex>
-                        </Link>
-                      </Grid>
-                    </Flex>
-                  ))}
+                          )}
+                          <Link href={`/games/${game.id}`} passHref>
+                            <Flex
+                              as="a"
+                              borderBottomRadius="3xl"
+                              overflow="hidden"
+                              position="absolute"
+                              maxH="100%"
+                              w="100%"
+                              bottom="0"
+                              left="0"
+                              backgroundColor="blackAlpha.800"
+                              p="2"
+                              px="3"
+                              maxW="100%"
+                            >
+                              <Flex flexDir="column">
+                                <Heading
+                                  mb="2"
+                                  maxW="100%"
+                                  textOverflow="ellipsis"
+                                  whiteSpace="nowrap"
+                                  size="lg"
+                                  overflow="hidden"
+                                >
+                                  {game.title}
+                                </Heading>
+                                <Flex alignItems="center" mb="1"></Flex>
+                                <Flex alignItems="center">
+                                  <Text fontSize="md" mr="2" fontWeight="bold">
+                                    {bestPrice(game)}
+                                  </Text>
+                                  <Image
+                                    priority
+                                    width="25px"
+                                    height="25px"
+                                    alt="United States"
+                                    src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${game.bestPrice.country}.svg`}
+                                  />
+                                  <Flex maxH="20px" ml="3" mr="1">
+                                    <Image
+                                      alt="metacritics"
+                                      src="/Metacritic.svg"
+                                      width="20"
+                                      height="20"
+                                    />
+                                  </Flex>
+                                  <Text fontSize="md" fontWeight="extrabold">
+                                    {game.metacritics.score}
+                                  </Text>
+                                </Flex>
+                                {game.bestPrice.discountPrice && (
+                                  <Flex my="1" alignItems="center">
+                                    <Text
+                                      as="del"
+                                      fontStyle="oblique"
+                                      opacity="0.5"
+                                      fontSize="md"
+                                      mr="2"
+                                    >
+                                      {formatedPrice(
+                                        game.bestPrice,
+                                        "regularPrice"
+                                      )}
+                                    </Text>
+                                    <Text
+                                      backgroundColor="red.600"
+                                      px="2"
+                                      borderRadius="lg"
+                                      fontSize="md"
+                                      mr="2"
+                                      fontWeight="bold"
+                                    >
+                                      {game.bestPrice.discountPercentage}% OFF
+                                    </Text>
+                                  </Flex>
+                                )}
+                              </Flex>
+                            </Flex>
+                          </Link>
+                        </Grid>
+                      </Flex>
+                    );
+                  })}
                 </Slider>
               </Box>
             </Box>

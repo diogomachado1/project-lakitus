@@ -43,8 +43,8 @@ const CurrencyContext: React.FC = ({ children }) => {
   };
 
   function bestPrice(game: IListGame) {
-    if (currency && allCurrency) {
-      return game.bestPrice.discountPrice
+    if (currency && allCurrency && game.bestPrice) {
+      return game.bestPrice?.discountPrice
         ? getFormatedPrice(
             game.bestPrice,
             "discountPrice",

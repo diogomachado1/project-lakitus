@@ -16,11 +16,13 @@ export interface IListGame {
   publisher: string;
   releaseDate: string;
   popularity: number;
-  bestPrice: Price & {
-    priceInDollar: number;
-    discountPercentage: number | null;
-    discountedValue: number | null;
-  };
+  bestPrice:
+    | (Price & {
+        priceInDollar: number;
+        discountPercentage: number | null;
+        discountedValue: number | null;
+      })
+    | null;
   genres: ["Platformer", "Action"];
   metacritics: {
     title: string;
