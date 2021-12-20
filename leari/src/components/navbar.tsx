@@ -95,7 +95,7 @@ const Navbar: React.FC<{ search?: boolean }> = ({ search = true }) => {
             ))}
         </MenuList>
       </Menu>
-      <IconButton
+      {/* <IconButton
         aria-label="toggle color mode"
         m="2"
         onClick={toggleColorMode}
@@ -106,7 +106,7 @@ const Navbar: React.FC<{ search?: boolean }> = ({ search = true }) => {
             <SunIcon color="white" />
           )
         }
-      />
+      /> */}
     </Flex>
   );
   return (
@@ -214,7 +214,7 @@ const Navbar: React.FC<{ search?: boolean }> = ({ search = true }) => {
             )} */}
               </Flex>
             </Flex>
-            <Flex
+            {/* <Flex
               display={["none", "none", "none", "flex"]}
               alignItems="center"
               pt="1"
@@ -222,7 +222,7 @@ const Navbar: React.FC<{ search?: boolean }> = ({ search = true }) => {
               <Links href="/onsale">On sale</Links>
               <Links href="/best-games">Best Games</Links>
               <Links href="/newest">Newest</Links>
-            </Flex>
+            </Flex> */}
           </Flex>
         </Container>
       </Box>
@@ -231,9 +231,9 @@ const Navbar: React.FC<{ search?: boolean }> = ({ search = true }) => {
         <DrawerContent backgroundColor="gray.900">
           <DrawerCloseButton />
           <DrawerBody pr="12" flexDir="column" display="flex">
-            <Links href="/onsale">On sale</Links>
+            {/* <Links href="/onsale">On sale</Links>
             <Links href="/best-games">Best Games</Links>
-            <Links href="/newest">Newest</Links>
+            <Links href="/newest">Newest</Links> */}
             <ConfigButtons mobile />
           </DrawerBody>
         </DrawerContent>

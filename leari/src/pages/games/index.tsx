@@ -25,6 +25,7 @@ import { Select as SelectMulti } from "chakra-react-select";
 import { genres } from "../../util/genres";
 import { context } from "../../components/currencyContext";
 import PaginationButtons from "../../components/PaginationButtons";
+import Head from "next/head";
 
 interface GamesProps {
   data: IListGame[];
@@ -90,6 +91,9 @@ const Games: NextPage<GamesProps> = (props) => {
   };
   return (
     <>
+      <Head>
+        <title>Search</title>
+      </Head>
       <Navbar search={false} />
       <Container maxW="container.xl">
         <Flex
