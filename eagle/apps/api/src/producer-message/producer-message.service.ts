@@ -28,7 +28,10 @@ export class ProducerGameDetailService {
   getNewGames(nsgGames: NsgGame[], savedGamesUsId: { usEshopId: string }[]) {
     const usIdHashTable = this.createHatableUsIdEshop(savedGamesUsId);
     return nsgGames
-      .filter((item) => !usIdHashTable.includes(item.nsuid_na.toString()))
+      .filter(
+        (item) =>
+          item.nsuid_na && !usIdHashTable.includes(item.nsuid_na.toString()),
+      )
       .map((item) => ({ usId: item.nsuid_na, euId: item.nsuid_eu }));
   }
 
