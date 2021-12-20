@@ -43,7 +43,7 @@ export class ProducerGameDetailService {
   }
 
   createHatableUsIdEshop(savedGamesUsId: { usEshopId: string }[]) {
-    return savedGamesUsId.map((item) => item.usEshopId.toString());
+    return savedGamesUsId.map((item) => item?.usEshopId?.toString());
   }
 
   async getPriceMessages() {
