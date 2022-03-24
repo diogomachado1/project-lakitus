@@ -260,7 +260,7 @@ export const countries = [
   {
     code: "IL",
     country: "Israel",
-    currency: "ILS",
+    currency: "EUR",
     region: 2,
   },
   {

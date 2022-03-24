@@ -57,8 +57,12 @@ const GamesHome: NextPage<GamesHomeProps> = ({
   priceHistory,
 }) => {
   const router = useRouter();
-  const { setAllCurrency, formatedPrice, convertCurrency } =
-    useContext(context);
+  const {
+    setAllCurrency,
+    formatedPrice,
+    convertCurrency,
+    currency: currentCurrency,
+  } = useContext(context);
   const [selectedHistoryPrice, setSelectedHistoryPrice] =
     useState<{ date: string; price?: number; country?: string }[]>();
   const [selectedCountry, setSelectedCountry] = useState<string>("");
@@ -84,7 +88,10 @@ const GamesHome: NextPage<GamesHomeProps> = ({
           );
           return {
             date: item.date,
-            price: bestPrice.value,
+            price:
+              currentCurrency === "all"
+                ? bestPrice.value
+                : convertCurrency(bestPrice.value.toString(), "USD"),
             country: bestPrice.country,
           };
         })
@@ -103,8 +110,8 @@ const GamesHome: NextPage<GamesHomeProps> = ({
         .reverse();
       setSelectedHistoryPrice(prices);
     }
-  }, [priceHistory, selectedCountry]);
-  useEffect(() => console.log(priceHistory), [priceHistory]);
+  }, [priceHistory, selectedCountry, currentCurrency]);
+
   if (!game || !priceHistory) return <></>;
 
   const pricesConverteds = game.prices
@@ -148,7 +155,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
           >
             {game?.horizontalImage && (
               <Image
-                priority
+                unoptimized
                 alt=""
                 width="1200px"
                 height="700px"
@@ -238,7 +245,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
                             {index + 1}
                           </Heading>
                           <Image
-                            priority
+                            unoptimized
                             width="50px"
                             height="50px"
                             alt="United States"

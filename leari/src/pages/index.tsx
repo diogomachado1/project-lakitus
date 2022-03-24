@@ -130,6 +130,7 @@ const GamesHome: NextPage<GamesHomeProps> = ({
                                   width="1400px"
                                   height="800px"
                                   src={game?.horizontalImage}
+                                  unoptimized
                                 />
                               </Flex>
                             )}

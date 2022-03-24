@@ -56,8 +56,6 @@ const GameItem: React.FC<{
             >
               {game.image && (
                 <Image
-                  priority
-                  quality="40"
                   alt=""
                   width="250px"
                   height="250px"
@@ -65,6 +63,7 @@ const GameItem: React.FC<{
                   blurDataURL={`data:image/svg+xml;base64,${toBase64(
                     shimmer(250, 250)
                   )}`}
+                  unoptimized
                   src={game.image}
                 />
               )}

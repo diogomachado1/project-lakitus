@@ -10,7 +10,7 @@ import "simplebar/dist/simplebar.min.css";
 import "./style.css";
 import SimpleBar from "simplebar-react";
 import Router from "next/router";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import CurrencyContext from "../components/currencyContext";
 import theme from "../util/theme";
 
@@ -19,26 +19,20 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 function MyApp({ Component, pageProps, cookies }: AppProps & { cookies: any }) {
+  const ref = useRef<any>();
+
+  useEffect(() => {
+    const scrollEl = ref?.current.getScrollElement();
+    scrollEl.scrollTop = 0;
+  });
   return (
-    <SSRKeycloakProvider
-      keycloakConfig={KEYCLOAK_CONFIG as any}
-      persistor={SSRCookies(cookies)}
-      initOptions={{
-        onLoad: "check-sso",
-        silentCheckSsoRedirectUri:
-          typeof window !== "undefined"
-            ? `${window.location.origin}/silent-check-sso.html`
-            : null,
-      }}
-    >
-      <SimpleBar style={{ maxHeight: "100vh" }}>
-        <ChakraProvider theme={theme}>
-          <CurrencyContext>
-            <Component {...pageProps} />
-          </CurrencyContext>
-        </ChakraProvider>
-      </SimpleBar>
-    </SSRKeycloakProvider>
+    <SimpleBar ref={ref} style={{ maxHeight: "100vh" }}>
+      <ChakraProvider theme={theme}>
+        <CurrencyContext>
+          <Component {...pageProps} />
+        </CurrencyContext>
+      </ChakraProvider>
+    </SimpleBar>
   );
 }
 

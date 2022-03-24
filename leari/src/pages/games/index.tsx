@@ -42,9 +42,6 @@ const Games: NextPage<GamesProps> = (props) => {
     setAllCurrency(props.currency);
   }, [props.currency]);
 
-  useEffect(() => {
-    console.log(props.pages);
-  }, [props.pages]);
   const [searchField, setSearchField] = useState<string>(
     (router.query.search as string) || ""
   );
